@@ -11,12 +11,9 @@ class AboutSectionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * Menampilkan halaman untuk mengelola section 'About'.
      */
     public function index()
     {
-        // Kita asumsikan hanya ada satu baris data untuk 'About Section'.
-        // firstOrCreate akan mencari data pertama, jika tidak ada, maka akan membuat data baru dengan nilai default.
         $aboutSection = AboutSection::firstOrCreate([], [
             'title' => 'Tentang Kami',
             'description' => 'Isi deskripsi singkat tentang perusahaan Anda di sini.',
@@ -27,33 +24,35 @@ class AboutSectionController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * Memperbarui data 'About Section' di database.
      */
     public function update(Request $request, AboutSection $aboutSection)
     {
-        // Validasi input dari form
+        // 1. Validasi input (Gunakan 'illustration', bukan 'illustration_image')
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'illustration_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'illustration' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
-        $data = $request->except('illustration_image');
+        // 2. Ambil semua data KECUALI file gambar (karena akan diproses manual)
+        $data = $request->except('illustration');
 
-        // Cek apakah ada file gambar baru yang di-upload
-        if ($request->hasFile('illustration_image')) {
+        // 3. Cek apakah ada file gambar baru yang di-upload
+        if ($request->hasFile('illustration')) {
+
             // Hapus gambar lama jika ada
-            if ($aboutSection->illustration_image && Storage::disk('public')->exists($aboutSection->illustration_image)) {
-                Storage::disk('public')->delete($aboutSection->illustration_image);
+            // Perhatikan kita menggunakan $aboutSection->illustration (sesuai nama kolom DB)
+            if ($aboutSection->illustration && Storage::disk('public')->exists($aboutSection->illustration)) {
+                Storage::disk('public')->delete($aboutSection->illustration);
             }
-            // Simpan gambar baru dan dapatkan path-nya
-            $data['illustration_image'] = $request->file('illustration_image')->store('about', 'public');
+
+            // Simpan gambar baru dan masukkan path-nya ke array $data
+            $data['illustration'] = $request->file('illustration')->store('about', 'public');
         }
 
-        // Update data di database
+        // 4. Update data ke database
         $aboutSection->update($data);
 
-        // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('admin.about-sections.index')->with('success', 'About section updated successfully.');
     }
 }

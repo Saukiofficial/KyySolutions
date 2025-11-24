@@ -9,17 +9,19 @@ class Service extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * Atribut yang dapat diisi secara massal.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'icon',
         'title',
         'description',
-        'icon',
+        'tagline',
+        'features',
+        'benefits',
+        'color',
+        'image',
+    ];
+
+    protected $casts = [
+        'features' => 'array',
+        'benefits' => 'array',
     ];
 }
-

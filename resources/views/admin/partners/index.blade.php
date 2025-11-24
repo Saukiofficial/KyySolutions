@@ -1,7 +1,7 @@
 <x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Services Manager') }}
+            {{ __('Partner Manager') }}
         </h2>
     </x-slot>
 
@@ -29,15 +29,15 @@
                 <div class="px-6 py-5 border-b border-gray-700/50">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-100">All Services</h3>
-                            <p class="mt-1 text-sm text-gray-400">Manage your company services here</p>
+                            <h3 class="text-lg font-semibold text-gray-100">All Partners</h3>
+                            <p class="mt-1 text-sm text-gray-400">Manage your company partners and clients here</p>
                         </div>
-                        <a href="{{ route('admin.services.create') }}"
+                        <a href="{{ route('admin.partners.create') }}"
                            class="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-lg shadow-blue-500/20">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
-                            Add New Service
+                            Add New Partner
                         </a>
                     </div>
                 </div>
@@ -47,11 +47,11 @@
                     <table class="min-w-full divide-y divide-gray-700/50">
                         <thead>
                             <tr class="bg-gray-800/30">
-                                <th scope="col" class="w-20 px-6 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                    Icon
+                                <th scope="col" class="w-32 px-6 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    Logo
                                 </th>
                                 <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                    Title
+                                    Partner Name
                                 </th>
                                 <th scope="col" class="w-48 px-6 py-3.5 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
                                     Actions
@@ -59,29 +59,29 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-700/30">
-                            @forelse ($services as $service)
+                            @forelse ($partners as $partner)
                                 <tr class="hover:bg-gray-700/20 transition-colors duration-150">
                                     <td class="px-6 py-4">
-                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                                            <span class="text-xl font-bold text-white">{{ strtoupper(substr($service->icon, 0, 1)) }}</span>
+                                        <div class="w-20 h-12 bg-white/10 rounded-lg flex items-center justify-center p-1">
+                                            <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="max-w-full max-h-full object-contain">
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-semibold text-gray-100">{{ $service->title }}</div>
-                                        <div class="text-xs text-gray-400 mt-0.5">ID: {{ $service->id }}</div>
+                                        <div class="text-sm font-semibold text-gray-100">{{ $partner->name }}</div>
+                                        <div class="text-xs text-gray-400 mt-0.5">ID: {{ $partner->id }}</div>
                                     </td>
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex items-center justify-end space-x-2">
-                                            <a href="{{ route('admin.services.edit', $service->id) }}"
+                                            <a href="{{ route('admin.partners.edit', $partner->id) }}"
                                                class="inline-flex items-center px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 text-sm font-medium rounded-md border border-blue-500/20 transition-colors duration-150">
                                                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                                 </svg>
                                                 Edit
                                             </a>
-                                            <form action="{{ route('admin.services.destroy', $service->id) }}"
+                                            <form action="{{ route('admin.partners.destroy', $partner->id) }}"
                                                   method="POST"
-                                                  onsubmit="return confirm('Are you sure you want to delete this service?');"
+                                                  onsubmit="return confirm('Are you sure you want to delete this partner?');"
                                                   class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
@@ -102,17 +102,17 @@
                                         <div class="flex flex-col items-center">
                                             <div class="w-16 h-16 bg-gray-700/30 rounded-full flex items-center justify-center mb-4">
                                                 <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                                 </svg>
                                             </div>
-                                            <h4 class="text-sm font-medium text-gray-300 mb-1">No services found</h4>
-                                            <p class="text-sm text-gray-500 mb-4">Get started by creating your first service</p>
-                                            <a href="{{ route('admin.services.create') }}"
+                                            <h4 class="text-sm font-medium text-gray-300 mb-1">No partners found</h4>
+                                            <p class="text-sm text-gray-500 mb-4">Get started by adding your first partner</p>
+                                            <a href="{{ route('admin.partners.create') }}"
                                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                                                 </svg>
-                                                Create Service
+                                                Add Partner
                                             </a>
                                         </div>
                                     </td>
@@ -123,90 +123,30 @@
                 </div>
 
                 {{-- Pagination --}}
-                @if($services->hasPages())
+                @if($partners->hasPages())
                     <div class="px-6 py-4 border-t border-gray-700/50">
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-400">
-                                Showing <span class="font-medium text-gray-300">{{ $services->firstItem() }}</span> to
-                                <span class="font-medium text-gray-300">{{ $services->lastItem() }}</span> of
-                                <span class="font-medium text-gray-300">{{ $services->total() }}</span> services
-                            </div>
-                            <div>
-                                {{ $services->links() }}
-                            </div>
-                        </div>
+                        {{ $partners->links() }}
                     </div>
                 @endif
             </div>
 
-            {{-- Stats Cards --}}
+            {{-- Stats Card (Simple Version) --}}
             <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
                 <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-5 hover:border-gray-600/50 transition-colors duration-200">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                 </svg>
                             </div>
                         </div>
                         <div class="ml-4 flex-1">
-                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Services</p>
-                            <p class="mt-1 text-2xl font-semibold text-gray-100">{{ $services->total() }}</p>
+                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Partners</p>
+                            <p class="mt-1 text-2xl font-semibold text-gray-100">{{ $partners->total() }}</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-5 hover:border-gray-600/50 transition-colors duration-200">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Active Rate</p>
-                            <p class="mt-1 text-2xl font-semibold text-gray-100">100%</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-5 hover:border-gray-600/50 transition-colors duration-200">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Last Updated</p>
-                            <p class="mt-1 text-2xl font-semibold text-gray-100">Today</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-5 hover:border-gray-600/50 transition-colors duration-200">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Visibility</p>
-                            <p class="mt-1 text-2xl font-semibold text-gray-100">Public</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
         </div>

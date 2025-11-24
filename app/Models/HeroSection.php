@@ -16,12 +16,12 @@ class HeroSection extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'headline',
-        'subheadline',
-        'cta_text',
-        'cta_url',
-        'background_image',
-    ];
+   protected $fillable = [
+    'headline',
+    'subheadline',
+    'cta_text',
+    'background_image',
+    'hero_image', // <--- Tambahkan baris ini
+];
 }
 

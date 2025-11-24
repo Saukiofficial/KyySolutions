@@ -9,32 +9,12 @@ class Setting extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * Atribut yang dapat diisi secara massal.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'company_name',
-        'address',
-        'email',
-        'phone',
-        'logo',
-        'favicon',
-        'social_media',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * Mengubah tipe data atribut.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'social_media' => 'array',
+        'company_name', // Asumsi kolom lama
+        'logo',         // Asumsi kolom lama
+        'footer_text',  // Asumsi kolom lama
+        'phone',        // Asumsi kolom lama
+        'tawk_property_id', // TAMBAHAN BARU
+        'tawk_widget_id',   // TAMBAHAN BARU
     ];
 }
-
