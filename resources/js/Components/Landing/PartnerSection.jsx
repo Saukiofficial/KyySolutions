@@ -67,7 +67,7 @@ const PartnerSection = ({ partners }) => {
                             <Shield className="w-7 h-7 text-orange-600" />
                         </div>
                         <div className="text-4xl font-bold bg-gradient-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
-                            10+
+                            5+
                         </div>
                         <div className="text-sm text-gray-600 font-medium">Years</div>
                     </div>

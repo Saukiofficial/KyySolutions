@@ -117,7 +117,7 @@ const ProfessionalHero = ({ hero }) => {
                 <div className="relative bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
                   <div className="aspect-[4/3] relative group">
 
-                    {/* 2. LOGIKA GAMBAR SAMPING (Hero Image) */}
+                    {/* 2. LOGIKA GAMBAR SAMPING (Hero Image) - TANPA TOMBOL PLAY */}
                     {hero.hero_image ? (
                       // Jika Admin upload gambar, tampilkan gambar tersebut
                       <img
@@ -131,13 +131,6 @@ const ProfessionalHero = ({ hero }) => {
                         <span className="text-white/50 text-lg font-medium">Team Collaboration</span>
                       </div>
                     )}
-
-                    {/* Tombol Play (Overlay) */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <button className="w-20 h-20 bg-blue-600/90 hover:bg-blue-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300 shadow-2xl backdrop-blur-sm border border-white/20 group-hover:scale-110">
-                        <Play className="w-8 h-8 ml-1" fill="white" />
-                      </button>
-                    </div>
                   </div>
                 </div>
 

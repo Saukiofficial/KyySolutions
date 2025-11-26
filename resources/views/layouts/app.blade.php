@@ -6,6 +6,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- === SETTING FAVICON (LOGO DI TAB) === -->
+        <!-- Prioritas 1: Format PNG (Logo Asli Anda) -->
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
+        <!-- Prioritas 2: Format ICO (Fallback/Cadangan) -->
+        <link rel="icon" href="{{ asset('favicon.ico') }}">
+
         <!-- Fonts: Outfit (Premium & Elegant) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

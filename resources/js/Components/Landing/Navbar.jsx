@@ -37,8 +37,8 @@ const ElegantNavbar = ({ settings }) => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-100'
-          : 'bg-white/80 backdrop-blur-md'
+          ? 'bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 backdrop-blur-xl shadow-2xl shadow-blue-900/50 border-b border-blue-700/30'
+          : 'bg-gradient-to-r from-blue-900/95 via-blue-800/95 to-indigo-900/95 backdrop-blur-md'
       }`}
     >
       <div className="container mx-auto px-6 lg:px-8">
@@ -48,48 +48,48 @@ const ElegantNavbar = ({ settings }) => {
           <a href="#home" className="flex items-center gap-3 group relative z-10">
             <div className="relative">
               {/* Logo Container with Gradient Border */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 rounded-2xl blur-md opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-              <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:scale-105 shadow-md group-hover:shadow-xl group-hover:shadow-blue-500/30">
+              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-lg group-hover:shadow-2xl group-hover:shadow-cyan-400/50 border border-white/20">
                 {settings?.logo ? (
                   <img
                     src={`/storage/${settings.logo}`}
                     alt="Logo"
-                    className="w-6 h-6 object-contain"
+                    className="w-7 h-7 object-contain"
                   />
                 ) : (
-                  <span className="text-white font-bold text-lg">K</span>
+                  <span className="text-white font-bold text-xl drop-shadow-lg">K</span>
                 )}
               </div>
             </div>
 
             {/* Company Name - Clean Typography */}
             <div className="flex flex-col">
-              <span className="font-bold text-xl text-gray-900 tracking-tight group-hover:text-blue-600 transition-colors duration-300">
+              <span className="font-bold text-xl text-white tracking-tight group-hover:text-cyan-300 transition-colors duration-300 drop-shadow-lg">
                 {settings?.company_name || 'KyySolutions'}
               </span>
-              <span className="text-xs text-gray-500 font-medium">Professional Solutions</span>
+              <span className="text-xs text-blue-200 font-medium">Professional Solutions</span>
             </div>
           </a>
 
           {/* Desktop Menu - Glass Morphism Style */}
           <div className="hidden lg:flex items-center">
-            <div className="flex items-center gap-1 bg-gray-50/50 backdrop-blur-sm rounded-2xl px-2 py-2 border border-gray-100/50">
+            <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md rounded-2xl px-2 py-2 border border-white/20 shadow-xl shadow-black/20">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
                   className={`relative px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                     activeSection === item.href.slice(1)
-                      ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/30'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-white/80'
+                      ? 'text-blue-900 bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 shadow-lg shadow-cyan-400/50'
+                      : 'text-white/90 hover:text-white hover:bg-white/20'
                   }`}
                 >
                   {item.name}
 
                   {/* Active Indicator Dot */}
                   {activeSection === item.href.slice(1) && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full"></span>
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-900 rounded-full shadow-lg"></span>
                   )}
                 </a>
               ))}
@@ -99,21 +99,16 @@ const ElegantNavbar = ({ settings }) => {
           {/* CTA Buttons - Modern Gradient */}
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="#login"
-              className="px-5 py-2.5 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-300 rounded-xl hover:bg-gray-50"
-            >
-              Login
-            </a>
-
-            <a
-              href="#contact"
-              className="group relative px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-sm font-bold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/30 hover:scale-105"
+              href="https://wa.me/6281232916758"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative px-6 py-2.5 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 text-blue-900 text-sm font-bold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 border border-white/30"
             >
               {/* Shine Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
 
               <span className="relative flex items-center gap-2">
-                Daftar Sekarang
+                Hubungi Admin
                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -124,7 +119,7 @@ const ElegantNavbar = ({ settings }) => {
           {/* Mobile Menu Button - Sleek Design */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden relative p-2.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-300 hover:scale-105"
+            className="lg:hidden relative p-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 border border-white/20"
           >
             {isOpen ? <X size={22} strokeWidth={2.5} /> : <Menu size={22} strokeWidth={2.5} />}
           </button>
@@ -134,7 +129,7 @@ const ElegantNavbar = ({ settings }) => {
         <div className={`lg:hidden overflow-hidden transition-all duration-500 ease-out ${
           isOpen ? 'max-h-[600px] opacity-100 pb-6' : 'max-h-0 opacity-0'
         }`}>
-          <div className="flex flex-col gap-2 bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 shadow-xl border border-gray-100 mt-4">
+          <div className="flex flex-col gap-2 bg-gradient-to-br from-blue-800/90 to-indigo-900/90 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-white/20 mt-4">
             {navItems.map((item, index) => (
               <a
                 key={item.name}
@@ -142,8 +137,8 @@ const ElegantNavbar = ({ settings }) => {
                 onClick={() => setIsOpen(false)}
                 className={`relative px-5 py-3.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                   activeSection === item.href.slice(1)
-                    ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20'
-                    : 'text-gray-700 hover:bg-white hover:shadow-md'
+                    ? 'text-blue-900 bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 shadow-lg shadow-cyan-400/30'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white hover:shadow-md'
                 }`}
                 style={{
                   animation: isOpen ? `slideDown 0.4s ease-out ${index * 60}ms both` : 'none'
@@ -152,32 +147,25 @@ const ElegantNavbar = ({ settings }) => {
                 <span className="flex items-center justify-between">
                   {item.name}
                   {activeSection === item.href.slice(1) && (
-                    <span className="w-2 h-2 bg-white rounded-full"></span>
+                    <span className="w-2 h-2 bg-blue-900 rounded-full shadow-lg"></span>
                   )}
                 </span>
               </a>
             ))}
 
             {/* Mobile CTA Buttons */}
-            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-gray-200">
+            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/20">
               <a
-                href="#login"
-                className="px-5 py-3.5 text-sm font-semibold text-gray-700 text-center rounded-xl bg-white hover:bg-gray-50 shadow-sm transition-all duration-300"
+                href="https://wa.me/6281232916758"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3.5 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 text-blue-900 text-sm font-bold text-center rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-white/30"
                 style={{
                   animation: isOpen ? `slideDown 0.4s ease-out ${navItems.length * 60}ms both` : 'none'
                 }}
               >
-                Login
-              </a>
-              <a
-                href="#contact"
-                className="px-5 py-3.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-sm font-bold text-center rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                style={{
-                  animation: isOpen ? `slideDown 0.4s ease-out ${(navItems.length + 1) * 60}ms both` : 'none'
-                }}
-              >
                 <span className="flex items-center justify-center gap-2">
-                  Daftar Sekarang
+                  Hubungi Admin
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
