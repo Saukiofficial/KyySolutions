@@ -9,12 +9,26 @@ use Illuminate\Support\Facades\Storage;
 
 class HeroSectionController extends Controller
 {
+    /**
+     * Display the form for editing the hero section.
+     */
     public function index()
     {
-        $heroSection = HeroSection::firstOrCreate([]);
+        // PERBAIKAN: Tambahkan data default array kedua
+        // Jika data belum ada, Laravel akan membuatnya dengan data ini
+        $heroSection = HeroSection::firstOrCreate([], [
+            'headline' => 'Wujudkan Ide Menjadi Nyata',
+            'subheadline' => 'Kami menghadirkan pengalaman digital luar biasa melalui website inovatif.',
+            'cta_text' => 'Get Started',
+            // background_image dan hero_image boleh null, jadi tidak wajib diisi di sini
+        ]);
+
         return view('admin.hero.index', compact('heroSection'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, HeroSection $heroSection)
     {
         $request->validate([
