@@ -15,8 +15,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     </head>
-    <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
-        <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <body class="font-sans antialiased bg-gradient-to-br from-blue-950 via-slate-900 to-blue-950">
+        <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
             @include('layouts.partials.sidebar')
 
@@ -25,12 +25,12 @@
                 <!-- Topbar -->
                 @include('layouts.partials.topbar')
 
-                <!-- Page Content -->
-                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900">
+                <!-- Page Content with Elegant Blue Background -->
+                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
                     <div class="container mx-auto px-6 py-8">
                         <!-- Page Heading -->
                         @if (isset($header))
-                            <header class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6">
+                            <header class="bg-gradient-to-r from-blue-900/40 to-blue-800/40 backdrop-blur-sm border border-blue-700/30 shadow-xl rounded-xl mb-6">
                                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                                     {{ $header }}
                                 </div>
@@ -42,6 +42,47 @@
                 </main>
             </div>
         </div>
+
+        <!-- Optional: Background Pattern Overlay -->
+        <style>
+            /* Elegant scrollbar */
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: rgba(15, 23, 42, 0.5);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: rgba(37, 99, 235, 0.5);
+                border-radius: 5px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(59, 130, 246, 0.7);
+            }
+
+            /* Smooth scrolling */
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* Background animation */
+            @keyframes gradient-shift {
+                0%, 100% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+            }
+
+            body {
+                background-size: 200% 200%;
+                animation: gradient-shift 15s ease infinite;
+            }
+        </style>
     </body>
 </html>
-
