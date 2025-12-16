@@ -33,7 +33,7 @@
                     <img src="{{ asset('images/logo.png') }}"
                          alt="Logo"
                          class="relative w-12 h-12 object-contain rounded-lg group-hover:scale-110 transition-transform duration-300"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 @endif
                 <!-- Fallback SVG Logo if image not found -->
                 <div class="relative w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg" style="{{ file_exists(public_path('images/logo.png')) ? 'display:none;' : '' }}">
@@ -148,6 +148,20 @@
             </div>
             <span class="ml-3 font-medium">Partner Manager</span>
             @if(request()->routeIs('admin.partners.*'))
+            <div class="ml-auto w-1.5 h-8 bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/50"></div>
+            @endif
+        </a>
+
+        <!-- News/Articles Manager (ADDED) -->
+        <a href="{{ route('admin.articles.index') }}"
+           class="group flex items-center px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('admin.articles.*') ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/50 scale-105' : 'text-blue-100 hover:bg-blue-800/40 hover:text-white hover:translate-x-1' }}">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg {{ request()->routeIs('admin.articles.*') ? 'bg-white/20' : 'bg-blue-900/50 group-hover:bg-blue-800/50' }} transition-all duration-300">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+            </div>
+            <span class="ml-3 font-medium">News / Articles</span>
+            @if(request()->routeIs('admin.articles.*'))
             <div class="ml-auto w-1.5 h-8 bg-cyan-300 rounded-full shadow-lg shadow-cyan-400/50"></div>
             @endif
         </a>

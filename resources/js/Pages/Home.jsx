@@ -9,15 +9,25 @@ import AboutSection from '@/Components/Landing/AboutSection';
 import ServicesSection from '@/Components/Landing/ServicesSection';
 import PortfolioSection from '@/Components/Landing/PortfolioSection';
 import TeamSection from '@/Components/Landing/TeamSection';
+import NewsSection from '@/Components/Landing/NewsSection'; // Import NewsSection (Pastikan file ini ada)
 import ContactSection from '@/Components/Landing/ContactSection';
 import Footer from '@/Components/Landing/Footer';
-import TawkWidget from '@/Components/Landing/TawkWidget'; // Import TawkWidget
+import TawkWidget from '@/Components/Landing/TawkWidget';
 
 export default function Home() {
-  // Ambil props dari Inertia
-  const { settings, hero, partners, about, services, portfolios, team } = usePage().props;
+  // Ambil semua props dari Inertia (dikirim dari HomeController)
+  const {
+    settings,
+    hero,
+    partners,
+    about,
+    services,
+    portfolios,
+    team,
+    articles // Data artikel berita terbaru
+  } = usePage().props;
 
-  // Loading state
+  // Loading state sederhana (jika data krusial belum siap)
   if (!settings || !hero) {
     return (
         <div className="min-h-screen bg-slate-900 flex justify-center items-center text-white">
@@ -44,7 +54,7 @@ export default function Home() {
         @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
         @keyframes ping-slow { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(1.5); opacity: 0; } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } } /* typo fix: translateX */
         @keyframes slideInUp { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -82,25 +92,39 @@ export default function Home() {
         img[src$=""]::after { content: 'Gambar tidak tersedia'; }
       `}</style>
 
-      {/* === Sections === */}
+      {/* === 1. NAVBAR === */}
       <AnimatedNavbar settings={settings} />
 
       <main>
+        {/* === 2. HERO SECTION === */}
         <HeroSection hero={hero} />
 
-        {/* Partner Section */}
-        <PartnerSection partners={partners} />
+        {/* === 3. PARTNER SECTION (LOGO) === */}
+        {partners && <PartnerSection partners={partners} />}
 
+        {/* === 4. ABOUT US SECTION === */}
         {about && <AboutSection about={about} />}
+
+        {/* === 5. SERVICES SECTION === */}
         {services && <ServicesSection services={services} />}
+
+        {/* === 6. PORTFOLIO SECTION === */}
         {portfolios && <PortfolioSection portfolios={portfolios} />}
+
+        {/* === 7. TEAM SECTION === */}
         {team && <TeamSection team={team} />}
+
+        {/* === 8. NEWS / ARTICLES SECTION (BARU) === */}
+        {articles && articles.length > 0 && <NewsSection articles={articles} />}
+
+        {/* === 9. CONTACT SECTION === */}
         <ContactSection />
       </main>
 
+      {/* === 10. FOOTER === */}
       <Footer settings={settings} />
 
-      {/* Tawk.to Widget akan otomatis muncul jika ID sudah diisi di Admin Panel -> Settings */}
+      {/* === 11. LIVE CHAT WIDGET === */}
       <TawkWidget settings={settings} />
     </div>
   );
