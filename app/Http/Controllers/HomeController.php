@@ -12,7 +12,8 @@ use App\Models\Team;
 use App\Models\Setting;
 use App\Models\Contact;
 use App\Models\Partner;
-use App\Models\Article; // Pastikan Model Article sudah di-import
+use App\Models\Article;
+use App\Models\Tutorial; // Import Model Tutorial (PENTING)
 
 class HomeController extends Controller
 {
@@ -21,27 +22,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // 1. Ambil data single (First)
         $heroSection = HeroSection::first();
         $aboutSection = AboutSection::first();
         $settings = Setting::first();
 
-        // 2. Ambil data list (All / Latest)
         $services = Service::all();
         $teams = Team::all();
         $partners = Partner::all();
-
-        // Ambil portfolio terbaru
         $portfolios = Portfolio::latest()->get();
 
-        // Ambil 3 artikel terbaru yang published untuk ditampilkan di Home (Section News)
+        // Ambil 3 artikel terbaru untuk section News di Home
         try {
             $articles = Article::where('is_published', true)->latest()->take(3)->get();
         } catch (\Exception $e) {
-            $articles = []; // Fallback jika tabel articles belum ada
+            $articles = [];
         }
 
-        // 3. Kirim ke React (Inertia)
         return Inertia::render('Home', [
             'hero' => $heroSection,
             'about' => $aboutSection,
@@ -49,7 +45,7 @@ class HomeController extends Controller
             'portfolios' => $portfolios,
             'team' => $teams,
             'partners' => $partners,
-            'articles' => $articles, // Data berita untuk section News di Home
+            'articles' => $articles,
             'settings' => $settings,
             'flash' => [
                 'success' => session('success'),
@@ -60,18 +56,18 @@ class HomeController extends Controller
 
     /**
      * Menampilkan Halaman Portal Berita (Semua Berita).
-     * Diakses via route: /news
+     * Route: /news
      */
     public function indexNews()
     {
         $settings = Setting::first();
 
-        // Ambil semua artikel dengan pagination (misal 9 per halaman)
+        // Ambil artikel dengan pagination
         $articles = Article::where('is_published', true)
             ->latest()
             ->paginate(9);
 
-        // Ambil artikel pilihan (Featured) untuk bagian atas (misal 3 terbaru)
+        // Ambil artikel featured (3 terbaru)
         $featuredArticles = Article::where('is_published', true)
             ->latest()
             ->take(3)
@@ -85,14 +81,13 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Halaman Detail Berita.
-     * Diakses via route: /news/{slug}
+     * Menampilkan Detail Berita.
+     * Route: /news/{slug}
      */
     public function showArticle(Article $article)
     {
         $settings = Setting::first();
 
-        // Ambil artikel lain untuk rekomendasi "Baca Juga"
         $relatedArticles = Article::where('id', '!=', $article->id)
             ->where('is_published', true)
             ->latest()
@@ -107,8 +102,51 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Halaman Detail Service.
-     * Diakses via route: /service/{id}
+     * Menampilkan Halaman Portal Tutorial (Semua Tutorial).
+     * Route: /tutorials
+     * (Fungsi ini yang sebelumnya hilang)
+     */
+    public function indexTutorials()
+    {
+        $settings = Setting::first();
+
+        // Ambil tutorial yang published dengan pagination
+        $tutorials = Tutorial::where('is_published', true)
+            ->latest()
+            ->paginate(9);
+
+        return Inertia::render('TutorialIndex', [
+            'tutorials' => $tutorials,
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Menampilkan Detail Tutorial.
+     * Route: /tutorials/{slug}
+     */
+    public function showTutorial(Tutorial $tutorial)
+    {
+        $settings = Setting::first();
+
+        // Ambil tutorial lain dengan kategori sama
+        $relatedTutorials = Tutorial::where('id', '!=', $tutorial->id)
+            ->where('category', $tutorial->category)
+            ->where('is_published', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return Inertia::render('TutorialDetail', [
+            'tutorial' => $tutorial,
+            'relatedTutorials' => $relatedTutorials,
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Menampilkan Detail Service.
+     * Route: /service/{id}
      */
     public function showService(Service $service)
     {
@@ -121,7 +159,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Menangani pengiriman pesan dari form kontak.
+     * Kirim Pesan Kontak.
      */
     public function storeContact(Request $request)
     {

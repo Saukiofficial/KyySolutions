@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link } from '@inertiajs/react'; // Import Link Inertia
 
 const ElegantNavbar = ({ settings }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  // State untuk dropdown di mobile
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // Logika Scroll Spy (Hanya jalan di Halaman Utama)
       if (window.location.pathname === '/') {
           const sections = ['home', 'about', 'services', 'portfolio', 'team', 'contact'];
           const current = sections.find(section => {
@@ -26,23 +27,35 @@ const ElegantNavbar = ({ settings }) => {
       }
     };
 
-    // Set active 'news' jika sedang di halaman berita
     if (window.location.pathname.startsWith('/news')) {
-        setActiveSection('news');
+        setActiveSection('blog');
+    }
+    if (window.location.pathname.startsWith('/tutorials')) {
+        setActiveSection('blog');
     }
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Daftar Menu: Campuran Link (Pindah Halaman) & Anchor (Scroll)
+  // Konfigurasi Menu dengan Dropdown
   const navItems = [
     { name: 'Home', href: '/', type: 'link', id: 'home' },
     { name: 'About', href: '/#about', type: 'anchor', id: 'about' },
     { name: 'Services', href: '/#services', type: 'anchor', id: 'services' },
     { name: 'Portfolio', href: '/#portfolio', type: 'anchor', id: 'portfolio' },
     { name: 'Team', href: '/#team', type: 'anchor', id: 'team' },
-    { name: 'News', href: route('news.index'), type: 'link', id: 'news' }, // Menu Blog/Berita
+    // MENU DROPDOWN (BLOG)
+    {
+      name: 'Blog',
+      type: 'dropdown',
+      id: 'blog',
+      children: [
+        { name: 'Berita IT', href: route('news.index') },
+        // Pastikan Anda nanti membuat route/halaman untuk '/tutorials' ya
+        { name: 'Tutorial', href: '/tutorials' }
+      ]
+    },
     { name: 'Contact', href: '/#contact', type: 'anchor', id: 'contact' },
   ];
 
@@ -80,8 +93,42 @@ const ElegantNavbar = ({ settings }) => {
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center">
             <div className="flex items-center gap-1 bg-white/10 backdrop-blur-md rounded-2xl px-2 py-2 border border-white/20 shadow-xl shadow-black/20">
-              {navItems.map((item) => (
-                item.type === 'link' ? (
+              {navItems.map((item) => {
+                // RENDER DROPDOWN (DESKTOP)
+                if (item.type === 'dropdown') {
+                    return (
+                        <div key={item.name} className="relative group">
+                            <button
+                                className={`flex items-center gap-1 relative px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                                    activeSection === item.id
+                                    ? 'text-blue-900 bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 shadow-lg shadow-cyan-400/50'
+                                    : 'text-white/90 hover:text-white hover:bg-white/20'
+                                }`}
+                            >
+                                {item.name}
+                                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+                            </button>
+
+                            {/* Dropdown Content */}
+                            <div className="absolute top-full right-0 pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                                <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1">
+                                    {item.children.map((child) => (
+                                        <Link
+                                            key={child.name}
+                                            href={child.href}
+                                            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                        >
+                                            {child.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
+                // RENDER LINK BIASA
+                return item.type === 'link' ? (
                     <Link
                         key={item.name}
                         href={item.href}
@@ -108,8 +155,8 @@ const ElegantNavbar = ({ settings }) => {
                             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-900 rounded-full shadow-lg"></span>
                         )}
                     </a>
-                )
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -145,8 +192,44 @@ const ElegantNavbar = ({ settings }) => {
           isOpen ? 'max-h-[600px] opacity-100 pb-6' : 'max-h-0 opacity-0'
         }`}>
           <div className="flex flex-col gap-2 bg-gradient-to-br from-blue-800/90 to-indigo-900/90 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-white/20 mt-4">
-            {navItems.map((item, index) => (
-              item.type === 'link' ? (
+            {navItems.map((item, index) => {
+              // RENDER DROPDOWN (MOBILE)
+              if (item.type === 'dropdown') {
+                  return (
+                    <div key={item.name} className="relative">
+                        <button
+                            onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+                            className={`w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                                activeSection === item.id
+                                ? 'text-blue-900 bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300'
+                                : 'text-white/90 hover:bg-white/10'
+                            }`}
+                        >
+                            {item.name}
+                            <ChevronDown size={16} className={`transition-transform duration-300 ${mobileDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Submenu Mobile */}
+                        <div className={`overflow-hidden transition-all duration-300 ${mobileDropdownOpen ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                            <div className="bg-white/10 rounded-xl p-2 space-y-1">
+                                {item.children.map(child => (
+                                    <Link
+                                        key={child.name}
+                                        href={child.href}
+                                        onClick={() => setIsOpen(false)}
+                                        className="block px-4 py-2.5 text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                                    >
+                                        {child.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                  );
+              }
+
+              // RENDER LINK BIASA (MOBILE)
+              return item.type === 'link' ? (
                 <Link
                     key={item.name}
                     href={item.href}
@@ -179,8 +262,8 @@ const ElegantNavbar = ({ settings }) => {
                         )}
                     </span>
                 </a>
-              )
-            ))}
+              );
+            })}
 
             <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/20">
               <a

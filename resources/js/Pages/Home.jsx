@@ -9,13 +9,13 @@ import AboutSection from '@/Components/Landing/AboutSection';
 import ServicesSection from '@/Components/Landing/ServicesSection';
 import PortfolioSection from '@/Components/Landing/PortfolioSection';
 import TeamSection from '@/Components/Landing/TeamSection';
-import NewsSection from '@/Components/Landing/NewsSection'; // Import NewsSection (Pastikan file ini ada)
+import NewsSection from '@/Components/Landing/NewsSection';
 import ContactSection from '@/Components/Landing/ContactSection';
 import Footer from '@/Components/Landing/Footer';
 import TawkWidget from '@/Components/Landing/TawkWidget';
 
 export default function Home() {
-  // Ambil semua props dari Inertia (dikirim dari HomeController)
+  // Ambil semua props dari Inertia
   const {
     settings,
     hero,
@@ -24,10 +24,10 @@ export default function Home() {
     services,
     portfolios,
     team,
-    articles // Data artikel berita terbaru
+    articles
   } = usePage().props;
 
-  // Loading state sederhana (jika data krusial belum siap)
+  // Loading state
   if (!settings || !hero) {
     return (
         <div className="min-h-screen bg-slate-900 flex justify-center items-center text-white">
@@ -54,7 +54,7 @@ export default function Home() {
         @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
         @keyframes ping-slow { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(1.5); opacity: 0; } }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } } /* typo fix: translateX */
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -99,8 +99,7 @@ export default function Home() {
         {/* === 2. HERO SECTION === */}
         <HeroSection hero={hero} />
 
-        {/* === 3. PARTNER SECTION (LOGO) === */}
-        {partners && <PartnerSection partners={partners} />}
+        {/* PartnerSection dipindahkan dari sini */}
 
         {/* === 4. ABOUT US SECTION === */}
         {about && <AboutSection about={about} />}
@@ -114,8 +113,12 @@ export default function Home() {
         {/* === 7. TEAM SECTION === */}
         {team && <TeamSection team={team} />}
 
-        {/* === 8. NEWS / ARTICLES SECTION (BARU) === */}
+        {/* === 8. NEWS / ARTICLES SECTION === */}
         {articles && articles.length > 0 && <NewsSection articles={articles} />}
+
+        {/* === 3. PARTNER SECTION (MOVED HERE) === */}
+        {/* Sekarang posisi Partner ada di bawah News, tepat sebelum Contact */}
+        {partners && <PartnerSection partners={partners} />}
 
         {/* === 9. CONTACT SECTION === */}
         <ContactSection />

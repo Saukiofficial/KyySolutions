@@ -18,7 +18,8 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PartnerController;
-use App\Http\Controllers\Admin\ArticleController; // TAMBAHAN: Controller Berita
+use App\Http\Controllers\Admin\ArticleController; // Controller Berita
+use App\Http\Controllers\Admin\TutorialController; // TAMBAHAN: Controller Tutorial
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,10 @@ Route::get('/news', [HomeController::class, 'indexNews'])->name('news.index');
 
 // Halaman Baca Berita (Detail Artikel) - Menggunakan Slug SEO Friendly
 Route::get('/news/{article:slug}', [HomeController::class, 'showArticle'])->name('article.show');
+
+// TAMBAHAN: Halaman Portal Tutorial
+Route::get('/tutorials', [HomeController::class, 'indexTutorials'])->name('tutorials.index');
+Route::get('/tutorials/{tutorial:slug}', [HomeController::class, 'showTutorial'])->name('tutorials.show');
 
 // Kirim Pesan Kontak
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
@@ -76,22 +81,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Hero Section Manager
+    // Admin Resources
     Route::get('/hero-sections', [HeroSectionController::class, 'index'])->name('hero-sections.index');
     Route::put('/hero-sections/{heroSection}', [HeroSectionController::class, 'update'])->name('hero-sections.update');
 
-    // About Section Manager
     Route::get('/about-sections', [AboutSectionController::class, 'index'])->name('about-sections.index');
     Route::put('/about-sections/{aboutSection}', [AboutSectionController::class, 'update'])->name('about-sections.update');
 
-    // Resource Controllers (CRUD Lengkap)
     Route::resource('services', ServiceController::class);
     Route::resource('portfolios', PortfolioController::class);
     Route::resource('teams', TeamController::class);
     Route::resource('partners', PartnerController::class);
 
-    // TAMBAHAN: Route Manajemen Artikel Berita
+    // Route Manajemen Artikel Berita
     Route::resource('articles', ArticleController::class);
+
+    // TAMBAHAN: Route Manajemen Tutorial
+    Route::resource('tutorials', TutorialController::class);
 
     // Contact Messages (Hanya Index, Show, Destroy)
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
