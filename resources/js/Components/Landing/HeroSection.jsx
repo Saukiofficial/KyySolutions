@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, CheckCircle, Play } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const ProfessionalHero = ({ hero }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
+    setMousePosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePosition({ x: 0, y: 0 });
+    setIsHovering(false);
+  };
 
   if (!hero) return null;
 
@@ -103,39 +117,71 @@ const ProfessionalHero = ({ hero }) => {
               </div>
             </div>
 
-            {/* KONTEN KANAN (Gambar Samping / Kotak Video) */}
+            {/* KONTEN KANAN (Gambar Langsung dengan Animasi Interaktif) */}
             <div
               className={`relative transition-all duration-1000 delay-300 ${
                 isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
               }`}
             >
               <div className="relative">
-                {/* Hiasan Lingkaran Belakang */}
-                <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-500 rounded-full opacity-20"></div>
+                {/* Hiasan Lingkaran Belakang - Animasi Floating */}
+                <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-500 rounded-full opacity-20 animate-pulse"></div>
 
-                {/* Container Gambar */}
-                <div className="relative bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
-                  <div className="aspect-[4/3] relative group">
-
-                    {/* 2. LOGIKA GAMBAR SAMPING (Hero Image) - TANPA TOMBOL PLAY */}
-                    {hero.hero_image ? (
-                      // Jika Admin upload gambar, tampilkan gambar tersebut
-                      <img
-                        src={`/storage/${hero.hero_image}`}
-                        alt="Hero Preview"
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                      />
-                    ) : (
-                      // Jika TIDAK ada gambar upload, tampilkan gradient default
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 flex items-center justify-center">
-                        <span className="text-white/50 text-lg font-medium">Team Collaboration</span>
+                {/* GAMBAR KARAKTER LANGSUNG - Full Display Tanpa Kotak */}
+                <div
+                  className="relative cursor-pointer"
+                  onMouseMove={handleMouseMove}
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={handleMouseLeave}
+                  style={{
+                    transform: `perspective(1000px) rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg) scale(${isHovering ? 1.05 : 1})`,
+                    transition: 'transform 0.3s ease-out'
+                  }}
+                >
+                  {/* 2. LOGIKA GAMBAR SAMPING (Hero Image) - KARAKTER FULL TANPA BACKGROUND */}
+                  {hero.hero_image ? (
+                    // Jika Admin upload gambar, tampilkan gambar tersebut dengan efek drop shadow
+                    <img
+                      src={`/storage/${hero.hero_image}`}
+                      alt="Hero Preview"
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      style={{
+                        filter: `drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3)) ${isHovering ? 'drop-shadow(0 0 40px rgba(59, 130, 246, 0.5))' : ''}`,
+                        transform: `translateY(${isHovering ? -10 : 0}px)`,
+                        transition: 'all 0.5s ease-out'
+                      }}
+                    />
+                  ) : (
+                    // Jika TIDAK ada gambar upload, tampilkan placeholder karakter
+                    <div className="w-full aspect-square flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-8xl mb-4">🤖</div>
+                        <span className="text-white/70 text-lg font-medium">Your Character Here</span>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* Efek Glow Mengikuti Mouse */}
+                  {isHovering && (
+                    <div
+                      className="absolute w-96 h-96 bg-blue-400 rounded-full opacity-20 blur-3xl pointer-events-none -z-10"
+                      style={{
+                        left: `${50 + mousePosition.x * 2}%`,
+                        top: `${50 + mousePosition.y * 2}%`,
+                        transform: 'translate(-50%, -50%)',
+                        transition: 'all 0.3s ease-out'
+                      }}
+                    />
+                  )}
                 </div>
 
-                {/* Kartu Melayang - Kiri Bawah */}
-                <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-5 shadow-2xl max-w-xs animate-bounce">
+                {/* Kartu Melayang - Kiri Bawah - Animasi Bounce */}
+                <div
+                  className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-5 shadow-2xl max-w-xs hover:scale-110 transition-transform duration-300 cursor-pointer"
+                  style={{
+                    animation: 'bounce 3s ease-in-out infinite'
+                  }}
+                >
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
                       <CheckCircle className="w-6 h-6 text-white" />
@@ -147,14 +193,41 @@ const ProfessionalHero = ({ hero }) => {
                   </div>
                 </div>
 
-                {/* Hiasan Lingkaran Bawah */}
-                <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20 blur-2xl"></div>
+                {/* Hiasan Lingkaran Bawah - Animasi Pulse */}
+                <div
+                  className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20 blur-2xl"
+                  style={{
+                    animation: 'pulse 4s ease-in-out infinite'
+                  }}
+                />
               </div>
             </div>
 
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.2;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.3;
+            transform: scale(1.1);
+          }
+        }
+      `}</style>
     </section>
   );
 };
