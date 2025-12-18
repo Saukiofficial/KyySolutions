@@ -1,7 +1,7 @@
 <x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Add New Project') }}
+            {{ __('Add New Portfolio') }}
         </h2>
     </x-slot>
 
@@ -9,61 +9,66 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold mb-4">Project Information</h3>
 
                     <form method="POST" action="{{ route('admin.portfolios.store') }}" enctype="multipart/form-data">
                         @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                        <!-- Title -->
-                        <div class="mb-4">
-                            <label for="title" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Title</label>
-                            <input id="title" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500" type="text" name="title" value="{{ old('title') }}" required autofocus />
-                            @error('title')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
+                            <!-- KIRI: Info Dasar -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Project Title</label>
+                                    <input type="text" name="title" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required placeholder="Judul Proyek..." />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Client Name</label>
+                                    <input type="text" name="client_name" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Nama Klien..." />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Category</label>
+                                    <select name="category" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        @foreach($categories as $cat)
+                                            <option value="{{ $cat }}">{{ $cat }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Short Description (Card)</label>
+                                    <textarea name="description" rows="4" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required placeholder="Deskripsi singkat..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Main Thumbnail</label>
+                                    <input type="file" name="image" class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 dark:bg-gray-700 dark:text-white cursor-pointer p-2" required />
+                                    <p class="text-xs text-gray-500 mt-1">Gambar utama yang muncul di halaman depan.</p>
+                                </div>
+                            </div>
+
+                            <!-- KANAN: Detail & Galeri -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Technologies Used</label>
+                                    <input type="text" name="technologies" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="e.g. Laravel, React, Tailwind (Pisahkan dengan koma)" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Key Features (One per line)</label>
+                                    <textarea name="features" rows="5" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="- Login System&#10;- Payment Gateway&#10;- Realtime Chat"></textarea>
+                                    <p class="text-xs text-gray-500 mt-1">Pisahkan setiap fitur dengan baris baru (Enter).</p>
+                                </div>
+
+                                <!-- PROJECT GALLERY UPLOAD -->
+                                <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600">
+                                    <label class="block text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">Project Gallery (Multiple)</label>
+                                    <input type="file" name="gallery[]" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-600 dark:file:text-white" />
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                        Anda bisa memilih <strong>banyak gambar sekaligus</strong> (Ctrl+Click). Gambar-gambar ini akan ditampilkan di halaman detail sebagai galeri showcase.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Category -->
-                        <div class="mb-4">
-                            <label for="category" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Category</label>
-                            <select id="category" name="category" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="" disabled selected>Select a category</option>
-                                <option value="Website" @selected(old('category') == 'Website')>Website</option>
-                                <option value="Mobile" @selected(old('category') == 'Mobile')>Mobile</option>
-                                <option value="Design" @selected(old('category') == 'Design')>Design</option>
-                                <option value="Game" @selected(old('category') == 'Game')>Game</option>
-                            </select>
-                            @error('category')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-4">
-                            <label for="description" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Description</label>
-                            <textarea id="description" name="description" rows="4" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
-                            @error('description')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Image -->
-                        <div class="mb-4">
-                            <label for="image" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Project Image</label>
-                            <input id="image" type="file" name="image" class="block mt-1 w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG, or WEBP (MAX. 2MB). Recommended dimension: 600x400px.</p>
-                            @error('image')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-
-                        <div class="flex items-center justify-end mt-6">
-                             <a href="{{ route('admin.portfolios.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                Cancel
-                            </a>
-                            <button type="submit" class="ml-4 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Save Project
+                        <div class="mt-8 flex justify-end pt-6 border-t border-gray-700">
+                            <button type="submit" class="bg-indigo-600 text-white py-3 px-8 rounded-lg hover:bg-indigo-700 font-bold shadow-lg transition-all transform hover:scale-105">
+                                Save Portfolio
                             </button>
                         </div>
                     </form>

@@ -1,7 +1,7 @@
 <x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Project') }}
+            {{ __('Edit Portfolio') }}
         </h2>
     </x-slot>
 
@@ -9,68 +9,91 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold mb-4">Edit Project Information</h3>
-
                     <form method="POST" action="{{ route('admin.portfolios.update', $portfolio->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
-                        <!-- Title -->
-                        <div class="mb-4">
-                            <label for="title" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Title</label>
-                            <input id="title" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500" type="text" name="title" value="{{ old('title', $portfolio->title) }}" required autofocus />
-                            @error('title')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                            <!-- KIRI: Info Dasar -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Project Title</label>
+                                    <input type="text" name="title" value="{{ old('title', $portfolio->title) }}" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Client Name</label>
+                                    <input type="text" name="client_name" value="{{ old('client_name', $portfolio->client_name) }}" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Category</label>
+                                    <select name="category" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        @foreach($categories as $cat)
+                                            <option value="{{ $cat }}" {{ $portfolio->category == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Short Description (Card)</label>
+                                    <textarea name="description" rows="4" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>{{ old('description', $portfolio->description) }}</textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Main Thumbnail</label>
+                                    @if($portfolio->image)
+                                        <div class="mb-2">
+                                            <img src="{{ asset('storage/' . $portfolio->image) }}" class="h-32 w-auto rounded border border-gray-600" />
+                                        </div>
+                                    @endif
+                                    <input type="file" name="image" class="w-full text-sm border border-gray-300 rounded-md bg-gray-50 dark:bg-gray-700 dark:text-white cursor-pointer p-2" />
+                                    <p class="text-xs text-gray-500 mt-1">Upload baru untuk mengganti thumbnail utama.</p>
+                                </div>
+                            </div>
+
+                            <!-- KANAN: Detail & Galeri -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Technologies Used</label>
+                                    <input type="text" name="technologies" value="{{ is_array($portfolio->technologies) ? implode(', ', $portfolio->technologies) : $portfolio->technologies }}" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="e.g. Laravel, React" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Key Features (One per line)</label>
+                                    <textarea name="features" rows="5" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ is_array($portfolio->features) ? implode("\n", $portfolio->features) : $portfolio->features }}</textarea>
+                                </div>
+
+                                <!-- MANAGE GALLERY -->
+                                <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-300 dark:border-gray-600">
+                                    <label class="block text-sm font-bold mb-3 text-indigo-600 dark:text-indigo-400">Manage Project Gallery</label>
+
+                                    <!-- List Gambar Lama -->
+                                    @if($portfolio->gallery && count($portfolio->gallery) > 0)
+                                        <div class="grid grid-cols-3 gap-2 mb-4">
+                                            @foreach($portfolio->gallery as $galImg)
+                                                <div class="relative group border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden h-24">
+                                                    <img src="{{ asset('storage/' . $galImg) }}" class="w-full h-full object-cover" />
+
+                                                    {{-- Checkbox Hapus (Muncul saat hover) --}}
+                                                    <label class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                                        <input type="checkbox" name="remove_gallery_images[]" value="{{ $galImg }}" class="form-checkbox h-5 w-5 text-red-600 rounded border-gray-300 focus:ring-red-500" />
+                                                        <span class="text-white text-xs font-bold mt-1">HAPUS</span>
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <p class="text-xs text-red-400 mb-4">*Centang gambar di atas jika ingin menghapusnya.</p>
+                                    @else
+                                        <p class="text-sm text-gray-500 italic mb-4">Belum ada gambar galeri tambahan.</p>
+                                    @endif
+
+                                    <!-- Upload Baru -->
+                                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Add More Images</label>
+                                    <input type="file" name="gallery[]" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-600 dark:file:text-white" />
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Category -->
-                        <div class="mb-4">
-                            <label for="category" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Category</label>
-                            <select id="category" name="category" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                <option value="" disabled>Select a category</option>
-                                <option value="Website" @selected(old('category', $portfolio->category) == 'Website')>Website</option>
-                                <option value="Mobile" @selected(old('category', $portfolio->category) == 'Mobile')>Mobile</option>
-                                <option value="Design" @selected(old('category', $portfolio->category) == 'Design')>Design</option>
-                                <option value="Game" @selected(old('category', $portfolio->category) == 'Game')>Game</option>
-                            </select>
-                            @error('category')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-4">
-                            <label for="description" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Description</label>
-                            <textarea id="description" name="description" rows="4" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $portfolio->description) }}</textarea>
-                            @error('description')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Image -->
-                        <div class="mb-4">
-                            <label for="image" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Project Image (Optional)</label>
-                            <input id="image" type="file" name="image" class="block mt-1 w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">Leave blank if you don't want to change the image. PNG, JPG, or WEBP (MAX. 2MB).</p>
-                            @error('image')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Current Image Preview -->
-                        <div class="mb-6">
-                            <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Current Image</label>
-                            <img src="{{ asset('storage/' . $portfolio->image) }}" alt="Current Image" class="mt-2 rounded-md max-w-sm">
-                        </div>
-
-
-                        <div class="flex items-center justify-end mt-6">
-                             <a href="{{ route('admin.portfolios.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                Cancel
-                            </a>
-                            <button type="submit" class="ml-4 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                Update Project
+                        <div class="mt-8 flex justify-end pt-6 border-t border-gray-700">
+                            <button type="submit" class="bg-indigo-600 text-white py-3 px-8 rounded-lg hover:bg-indigo-700 font-bold shadow-lg transition-all">
+                                Update Portfolio
                             </button>
                         </div>
                     </form>
@@ -79,4 +102,3 @@
         </div>
     </div>
 </x-admin-layout>
-

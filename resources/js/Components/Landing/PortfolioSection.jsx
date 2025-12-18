@@ -1,52 +1,105 @@
-import React, { useState, useMemo } from 'react';
-import { Sparkles, X, Eye, ArrowUpRight, Zap } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { X, Eye, ChevronLeft, ChevronRight, ExternalLink, Zap } from 'lucide-react';
 
 const PortfolioSection = ({ portfolios }) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [hoveredItem, setHoveredItem] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   if (!portfolios || portfolios.length === 0) return null;
 
   const filters = ['All', ...new Set(portfolios.map(p => p.category))];
+
   const filteredPortfolio = useMemo(() => {
     if (activeFilter === 'All') return portfolios;
     return portfolios.filter(item => item.category === activeFilter);
   }, [activeFilter, portfolios]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!selectedImage) return;
+      if (e.key === 'Escape') setSelectedImage(null);
+      if (e.key === 'ArrowRight') handleNext(e);
+      if (e.key === 'ArrowLeft') handlePrev(e);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, currentIndex, filteredPortfolio]);
+
+  const handleNext = (e) => {
+    if(e) e.stopPropagation();
+    const nextIndex = (currentIndex + 1) % filteredPortfolio.length;
+    setCurrentIndex(nextIndex);
+    setSelectedImage(filteredPortfolio[nextIndex]);
+  };
+
+  const handlePrev = (e) => {
+    if(e) e.stopPropagation();
+    const prevIndex = (currentIndex - 1 + filteredPortfolio.length) % filteredPortfolio.length;
+    setCurrentIndex(prevIndex);
+    setSelectedImage(filteredPortfolio[prevIndex]);
+  };
+
+  const openModal = (item) => {
+    const index = filteredPortfolio.findIndex(p => p.id === item.id);
+    setCurrentIndex(index);
+    setSelectedImage(item);
+  };
+
+  const getProjectUrl = (slug) => {
+      try {
+          if (typeof route === 'function' && slug) {
+              return route('portfolio.show', slug);
+          }
+      } catch (e) {
+          console.error("Route Error:", e);
+      }
+      return '#';
+  };
+
   return (
-    <>
-    <section id="portfolio" className="py-24 sm:py-32 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-20 right-20 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-20 left-20 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+    <section id="portfolio" className="py-12 sm:py-24 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-30">
+            <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,0,0,0.08) 1px, transparent 0)`,
+                backgroundSize: '40px 40px'
+            }} />
         </div>
 
+        {/* Geometric Shapes */}
+        <div className="absolute top-40 right-10 w-20 h-20 border-2 border-gray-400/30 rotate-45" />
+        <div className="absolute bottom-40 left-10 w-32 h-32 border-2 border-gray-500/30 rounded-full" />
+        <div className="absolute top-1/3 left-20 w-16 h-16 bg-gray-400/10 rotate-12" />
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full mb-6 shadow-lg border border-blue-200 animate-bounce">
-                    <Sparkles className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: '3s' }} />
-                    <span className="text-blue-600 font-semibold text-sm">Our Work</span>
+            {/* Header Section */}
+            <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-20">
+                <div className="inline-block mb-4 sm:mb-6">
+                    <div className="flex items-center gap-3 px-5 py-2 bg-white/80 backdrop-blur-sm border border-gray-300 rounded-lg shadow-sm">
+                        <div className="w-2 h-2 bg-gray-700 rounded-full" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-700 tracking-wider uppercase">Our Portfolio</span>
+                    </div>
                 </div>
-                <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                    Featured <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent animate-pulse">Projects</span>
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+                    Featured Projects
                 </h2>
-                <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                    Explore our latest creations and success stories
+                <p className="text-sm sm:text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                    Explore our collection of successful projects and creative solutions
                 </p>
             </div>
 
-            <div className="flex justify-center flex-wrap gap-3 mb-12">
-                {filters.map(filter => (
+            {/* Filter Buttons */}
+            <div className="flex justify-center flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-16">
+                {filters.map((filter) => (
                     <button
                         key={filter}
                         onClick={() => setActiveFilter(filter)}
-                        className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                        className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-300 ${
                             activeFilter === filter
-                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/40 animate-pulse'
-                                : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white shadow-md border border-blue-100 hover:border-blue-300 hover:shadow-xl'
+                                ? 'bg-gray-800 text-white shadow-lg'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:border-gray-800 hover:text-gray-900 shadow-sm'
                         }`}
                     >
                         {filter}
@@ -54,168 +107,200 @@ const PortfolioSection = ({ portfolios }) => {
                 ))}
             </div>
 
-            {/* Grid Portfolio - Ultra Attractive Design */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPortfolio.map((item) => (
+            {/* Portfolio Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
+                {filteredPortfolio.map((item, idx) => (
                     <div
                         key={item.id}
-                        className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105 hover:-translate-y-2"
+                        className="group relative"
                         onMouseEnter={() => setHoveredItem(item.id)}
                         onMouseLeave={() => setHoveredItem(null)}
-                        onClick={() => setSelectedImage(item)}
+                        onClick={() => openModal(item)}
+                        style={{
+                            animation: `fadeInUp 0.6s ease-out ${idx * 0.1}s backwards`
+                        }}
                     >
-                        {/* Glowing Border Effect */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-500 animate-pulse"></div>
+                        {/* Card Container */}
+                        <div className="relative cursor-pointer">
+                            {/* Background Card */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 rounded-2xl sm:rounded-3xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500" />
 
-                        {/* Main Card */}
-                        <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl border-2 border-blue-100 group-hover:border-transparent transition-all duration-500">
+                            {/* Main Card */}
+                            <div className="relative bg-white backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-300 shadow-xl group-hover:shadow-2xl transition-all duration-500">
+                                {/* Image Section with Frame */}
+                                <div className="relative p-3 sm:p-5">
+                                    {/* Decorative Corner Elements */}
+                                    <div className="absolute top-3 left-3 sm:top-5 sm:left-5 w-3 h-3 sm:w-4 sm:h-4 border-t-2 border-l-2 border-gray-500" />
+                                    <div className="absolute top-3 right-3 sm:top-5 sm:right-5 w-3 h-3 sm:w-4 sm:h-4 border-t-2 border-r-2 border-gray-600" />
 
-                            {/* Animated Corner Accent */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/20 via-indigo-500/10 to-transparent rounded-bl-full transform group-hover:scale-150 transition-transform duration-700"></div>
-                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-500/20 via-indigo-500/10 to-transparent rounded-tr-full transform group-hover:scale-150 transition-transform duration-700"></div>
+                                    {/* Image Container */}
+                                    <div className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 p-3 sm:p-4 flex items-center justify-center">
+                                        {/* Corner Cuts */}
+                                        <div className="absolute top-0 right-0 w-4 h-4 sm:w-6 sm:h-6 bg-white" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}} />
+                                        <div className="absolute bottom-0 left-0 w-4 h-4 sm:w-6 sm:h-6 bg-white" style={{clipPath: 'polygon(0 100%, 100% 100%, 0 0)'}} />
 
-                            {/* Floating Badge */}
-                            <div className="absolute top-4 left-4 z-20 transform group-hover:-translate-y-1 transition-transform duration-300">
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full text-xs font-bold text-white shadow-lg backdrop-blur-sm">
-                                    <Zap className="w-3 h-3 animate-pulse" />
-                                    {item.category}
-                                </div>
-                            </div>
+                                        <img
+                                            src={`/storage/${item.image}`}
+                                            alt={item.title}
+                                            className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700"
+                                        />
 
-                            {/* Image Container with Border Animation */}
-                            <div className="p-4 relative">
-                                <div className="relative overflow-hidden rounded-xl aspect-[4/3] bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-2 border-dashed border-blue-200 group-hover:border-blue-400 transition-all duration-500">
-
-                                    {/* Animated Border Lines */}
-                                    <div className="absolute inset-0 overflow-hidden rounded-xl">
-                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                        <div className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent transform translate-x-full group-hover:-translate-x-full transition-transform duration-1000"></div>
-                                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-purple-500 to-transparent transform -translate-y-full group-hover:translate-y-full transition-transform duration-1000"></div>
-                                        <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-blue-500 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000"></div>
-                                    </div>
-
-                                    <img
-                                        src={`/storage/${item.image}`}
-                                        alt={item.title}
-                                        className="w-full h-full object-contain p-3 relative z-10 transform group-hover:scale-105 transition-transform duration-500"
-                                    />
-
-                                    {/* Overlay dengan Shimmer Effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-indigo-600/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-
-                                    {/* Shimmer Animation */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                    </div>
-
-                                    {/* View Icon dengan Ripple Effect */}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                                        <div className="relative">
-                                            <div className="absolute inset-0 bg-white/30 rounded-full animate-ping"></div>
-                                            <div className="relative bg-white rounded-full p-4 shadow-2xl transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                                                <Eye className="w-7 h-7 text-blue-600 animate-pulse" />
+                                        {/* Hover Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/95 via-gray-800/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gray-800 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-100 scale-50 transition-transform duration-500">
+                                                    <Eye className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                                                </div>
                                             </div>
+                                        </div>
+
+                                        {/* Category Badge */}
+                                        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 py-1 sm:px-3 sm:py-1.5 bg-gray-800 backdrop-blur-sm rounded-lg border border-gray-700">
+                                            <span className="text-[9px] sm:text-xs font-bold text-white uppercase tracking-wider">{item.category}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Decorative Bottom Corner Elements */}
+                                    <div className="absolute bottom-20 sm:bottom-24 left-3 sm:left-5 w-3 h-3 sm:w-4 sm:h-4 border-b-2 border-l-2 border-gray-600" />
+                                    <div className="absolute bottom-20 sm:bottom-24 right-3 sm:right-5 w-3 h-3 sm:w-4 sm:h-4 border-b-2 border-r-2 border-gray-500" />
+                                </div>
+
+                                {/* Info Section */}
+                                <div className="px-3 sm:px-5 pb-4 sm:pb-5">
+                                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-gray-700 transition-colors duration-300">
+                                        {item.title}
+                                    </h3>
+
+                                    {/* Tech Indicator */}
+                                    <div className="flex gap-1 sm:gap-1.5">
+                                        <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-gray-600 to-gray-700 rounded-full" style={{width: '90%'}} />
+                                        </div>
+                                        <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-gray-700 to-gray-800 rounded-full" style={{width: '85%'}} />
+                                        </div>
+                                        <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-gray-500 to-gray-600 rounded-full" style={{width: '95%'}} />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Info Section dengan Slide Up Animation */}
-                            <div className="px-5 pb-5 pt-2 relative overflow-hidden">
-                                <div className="transform group-hover:translate-y-0 transition-transform duration-300">
-                                    <h3 className="text-gray-900 text-lg font-bold mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:bg-clip-text transition-all duration-300 line-clamp-2">
-                                        {item.title}
-                                    </h3>
-                                    <div className="flex items-center gap-2 text-blue-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                                        <span>View Project</span>
-                                        <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                                    </div>
-                                </div>
-
-                                {/* Bottom Wave Animation */}
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
         </div>
-    </section>
 
-    {/* Modal Lightbox - Enhanced */}
-    {selectedImage && (
-        <div
-            className="fixed inset-0 bg-gradient-to-br from-blue-950/95 via-indigo-950/95 to-purple-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn"
-            onClick={() => setSelectedImage(null)}
-        >
-            {/* Animated Background Particles */}
-            <div className="absolute inset-0">
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
-                <div className="absolute top-3/4 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute top-1/2 left-3/4 w-2 h-2 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
-            </div>
+        {/* Modal */}
+        {selectedImage && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
+                <div
+                    className="absolute inset-0 bg-gray-900/95 backdrop-blur-2xl"
+                    onClick={() => setSelectedImage(null)}
+                ></div>
 
-            <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all duration-300 hover:rotate-90 hover:scale-110 shadow-xl border border-white/20 z-50"
-            >
-                <X className="w-6 h-6" />
-            </button>
+                <div className="relative w-full max-w-6xl bg-white backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[95vh] border border-gray-300">
 
-            <div className="max-w-6xl w-full relative z-10" onClick={(e) => e.stopPropagation()}>
-                <div className="relative">
-                    {/* Glowing Border */}
-                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl opacity-75 blur-lg animate-pulse"></div>
+                    {/* Close Button */}
+                    <button
+                        onClick={() => setSelectedImage(null)}
+                        className="absolute top-3 right-3 sm:top-6 sm:right-6 z-30 p-2 sm:p-3 bg-gray-800 backdrop-blur-xl rounded-full text-white hover:bg-red-500 transition-all border border-gray-700"
+                    >
+                        <X size={18} className="sm:w-6 sm:h-6" />
+                    </button>
 
-                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-200">
-                        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-8 relative overflow-hidden">
-                            {/* Decorative Circles */}
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-200/30 rounded-full blur-2xl"></div>
-                            <div className="absolute bottom-0 left-0 w-40 h-40 bg-indigo-200/30 rounded-full blur-2xl"></div>
+                    {/* Image Side */}
+                    <div className="w-full md:w-3/5 bg-gray-100 relative flex items-center justify-center p-4 sm:p-10 h-[40vh] md:h-auto">
+                        {/* Decorative Corners */}
+                        <div className="absolute top-4 left-4 sm:top-8 sm:left-8 w-4 h-4 sm:w-6 sm:h-6 border-t-2 border-l-2 border-gray-500" />
+                        <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-4 h-4 sm:w-6 sm:h-6 border-t-2 border-r-2 border-gray-600" />
+                        <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 w-4 h-4 sm:w-6 sm:h-6 border-b-2 border-l-2 border-gray-600" />
+                        <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-4 h-4 sm:w-6 sm:h-6 border-b-2 border-r-2 border-gray-500" />
 
-                            <img
-                                src={`/storage/${selectedImage.image}`}
-                                alt={selectedImage.title}
-                                className="w-full h-auto max-h-[70vh] object-contain mx-auto relative z-10 animate-fadeIn"
-                            />
+                        <img
+                            src={`/storage/${selectedImage.image}`}
+                            alt={selectedImage.title}
+                            className="relative z-10 w-full h-full object-contain rounded-lg sm:rounded-2xl"
+                        />
+
+                        {/* Navigation */}
+                        <div className="absolute inset-x-0 bottom-4 flex justify-center gap-4 z-20">
+                             <button onClick={handlePrev} className="p-2 sm:p-3 bg-gray-800 backdrop-blur-md rounded-lg text-white border border-gray-700 hover:border-gray-600 transition-all">
+                                <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
+                            </button>
+                            <button onClick={handleNext} className="p-2 sm:p-3 bg-gray-800 backdrop-blur-md rounded-lg text-white border border-gray-700 hover:border-gray-600 transition-all">
+                                <ChevronRight size={20} className="sm:w-6 sm:h-6" />
+                            </button>
                         </div>
-                        <div className="p-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 relative overflow-hidden">
-                            {/* Animated Shine Effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full animate-shimmer"></div>
+                    </div>
 
-                            <div className="relative z-10">
-                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg text-xs font-bold text-white mb-3 border border-white/30">
-                                    <Zap className="w-3 h-3" />
+                    {/* Content Side */}
+                    <div className="w-full md:w-2/5 p-5 sm:p-8 md:p-10 flex flex-col bg-gray-50 backdrop-blur-xl overflow-y-auto custom-scrollbar h-[55vh] md:h-auto">
+                        <div className="flex-1">
+                            <div className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-800 border border-gray-700 rounded-lg mb-4 sm:mb-6">
+                                <span className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest">
                                     {selectedImage.category}
-                                </div>
-                                <h3 className="text-2xl font-bold text-white">
-                                    {selectedImage.title}
-                                </h3>
+                                </span>
                             </div>
+
+                            <h3 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-6 leading-tight">
+                                {selectedImage.title}
+                            </h3>
+
+                            <p className="text-xs sm:text-base leading-relaxed text-gray-700 mb-6 sm:mb-8">
+                                {selectedImage.description}
+                            </p>
+
+                            {selectedImage.technologies && (
+                                <div className="mb-6 sm:mb-8">
+                                    <h4 className="text-[10px] sm:text-xs font-bold text-gray-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                        <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
+                                        Tech Stack
+                                    </h4>
+                                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                                        {Array.isArray(selectedImage.technologies)
+                                            ? selectedImage.technologies.map((tech, i) => (
+                                                <span key={i} className="px-2 py-1 sm:px-3 sm:py-1.5 bg-white border border-gray-300 rounded-lg text-[10px] sm:text-sm font-medium text-gray-700">
+                                                    {tech}
+                                                </span>
+                                            ))
+                                            : <span className="text-xs text-gray-500">Not specified</span>
+                                        }
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Button */}
+                        <div className="pt-4 sm:pt-6 border-t border-gray-300 mt-auto">
+                             <a
+                                href={selectedImage.slug ? getProjectUrl(selectedImage.slug) : '#'}
+                                className="w-full flex items-center justify-center gap-2 px-6 py-3 sm:py-4 bg-gray-900 text-white rounded-xl text-xs sm:text-base font-bold hover:bg-gray-800 transition-all shadow-lg"
+                            >
+                                <span>Lihat Detail</span>
+                                <ExternalLink size={14} className="sm:w-5 sm:h-5" />
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )}
+        )}
 
-    <style jsx>{`
-      @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-      }
-      .animate-shimmer {
-        animation: shimmer 2s infinite;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-      }
-      .animate-fadeIn {
-        animation: fadeIn 0.3s ease-out;
-      }
-    `}</style>
-    </>
+        <style>{`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+          }
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+          .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+          .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+          .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+        `}</style>
+    </section>
   );
 };
 

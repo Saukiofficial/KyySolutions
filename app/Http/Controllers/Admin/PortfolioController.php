@@ -5,114 +5,157 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Portfolio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class PortfolioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * Menampilkan daftar semua item portofolio dengan filter.
-     */
     public function index(Request $request)
     {
         $query = Portfolio::query();
-        $categories = ['Website', 'Mobile', 'Design', 'Game'];
-
-        // Terapkan filter kategori jika ada
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
-
         $portfolios = $query->latest()->paginate(10)->withQueryString();
+        $categories = ['Website', 'Mobile', 'Design', 'Game'];
 
         return view('admin.portfolios.index', compact('portfolios', 'categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * Menampilkan form untuk membuat item portofolio baru.
-     */
     public function create()
     {
         $categories = ['Website', 'Mobile', 'Design', 'Game'];
         return view('admin.portfolios.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * Menyimpan item portofolio baru ke database.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string|in:Website,Mobile,Design,Game',
+            'category' => 'required|string',
+            'client_name' => 'nullable|string',
             'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'details' => 'nullable|string',
+            'image' => 'required|image|max:2048',
+            'technologies' => 'nullable|string',
+            'features' => 'nullable|string',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        // Upload gambar dan simpan path-nya
+        // Generate Slug
+        $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
+
+        if ($request->filled('technologies')) {
+            $validated['technologies'] = array_map('trim', explode(',', $request->technologies));
+        }
+
+        if ($request->filled('features')) {
+            $validated['features'] = array_filter(array_map('trim', explode("\n", $request->features)));
+        }
+
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('portfolios', 'public');
         }
 
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                $galleryPaths[] = $file->store('portfolios/gallery', 'public');
+            }
+            $validated['gallery'] = $galleryPaths;
+        }
+
         Portfolio::create($validated);
 
-        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio item created successfully.');
+        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * Menampilkan form untuk mengedit item portofolio.
-     */
     public function edit(Portfolio $portfolio)
     {
         $categories = ['Website', 'Mobile', 'Design', 'Game'];
         return view('admin.portfolios.edit', compact('portfolio', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * Memperbarui item portofolio di database.
-     */
     public function update(Request $request, Portfolio $portfolio)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string|in:Website,Mobile,Design,Game',
+            'category' => 'required|string',
+            'client_name' => 'nullable|string',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Gambar opsional saat update
+            'details' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+            'technologies' => 'nullable|string',
+            'features' => 'nullable|string',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        // Cek jika ada gambar baru yang di-upload
+        // FIX: Update slug jika judul berubah ATAU jika slug masih kosong (data lama)
+        if ($request->title !== $portfolio->title || empty($portfolio->slug)) {
+            $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
+        }
+
+        if ($request->filled('technologies')) {
+            $validated['technologies'] = array_map('trim', explode(',', $request->technologies));
+        }
+
+        if ($request->filled('features')) {
+            $validated['features'] = array_filter(array_map('trim', explode("\n", $request->features)));
+        }
+
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
             if ($portfolio->image && Storage::disk('public')->exists($portfolio->image)) {
                 Storage::disk('public')->delete($portfolio->image);
             }
-            // Upload gambar baru
             $validated['image'] = $request->file('image')->store('portfolios', 'public');
+        }
+
+        if ($request->hasFile('gallery')) {
+            $currentGallery = $portfolio->gallery ?? [];
+            $newGallery = [];
+            foreach ($request->file('gallery') as $file) {
+                $newGallery[] = $file->store('portfolios/gallery', 'public');
+            }
+            $validated['gallery'] = array_merge($currentGallery, $newGallery);
+        }
+
+        if ($request->filled('remove_gallery_images')) {
+            $imagesToRemove = $request->remove_gallery_images;
+            $currentGallery = $portfolio->gallery ?? [];
+
+            foreach ($imagesToRemove as $img) {
+                if (Storage::disk('public')->exists($img)) {
+                    Storage::disk('public')->delete($img);
+                }
+            }
+
+            if (!isset($validated['gallery'])) {
+                $validated['gallery'] = $currentGallery;
+            }
+
+            $validated['gallery'] = array_values(array_diff($validated['gallery'], $imagesToRemove));
         }
 
         $portfolio->update($validated);
 
-        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio item updated successfully.');
+        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * Menghapus item portofolio dari database.
-     */
     public function destroy(Portfolio $portfolio)
     {
-        // Hapus gambar dari storage sebelum menghapus record
         if ($portfolio->image && Storage::disk('public')->exists($portfolio->image)) {
             Storage::disk('public')->delete($portfolio->image);
         }
 
-        $portfolio->delete();
+        if ($portfolio->gallery) {
+            foreach ($portfolio->gallery as $galImg) {
+                if (Storage::disk('public')->exists($galImg)) {
+                    Storage::disk('public')->delete($galImg);
+                }
+            }
+        }
 
-        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio item deleted successfully.');
+        $portfolio->delete();
+        return redirect()->route('admin.portfolios.index')->with('success', 'Portfolio deleted successfully.');
     }
 }
-

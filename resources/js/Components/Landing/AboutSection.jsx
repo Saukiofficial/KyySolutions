@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Award, Clock, Shield } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Award, Clock, Shield, Sparkles, TrendingUp, Users } from 'lucide-react';
 
 const AboutSection = ({ about }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [scrollProgress, setScrollProgress] = useState(0);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [activeCard, setActiveCard] = useState(null);
+    const sectionRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -11,13 +13,9 @@ const AboutSection = ({ about }) => {
             if (section) {
                 const rect = section.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
-
-                if (rect.top < windowHeight * 0.75) {
+                if (rect.top < windowHeight * 0.7) {
                     setIsVisible(true);
                 }
-
-                const progress = Math.max(0, Math.min(1, 1 - (rect.top / windowHeight)));
-                setScrollProgress(progress);
             }
         };
 
@@ -26,233 +24,290 @@ const AboutSection = ({ about }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const handleMouseMove = (e) => {
+        if (sectionRef.current) {
+            const rect = sectionRef.current.getBoundingClientRect();
+            setMousePosition({
+                x: ((e.clientX - rect.left) / rect.width) * 100,
+                y: ((e.clientY - rect.top) / rect.height) * 100
+            });
+        }
+    };
+
     if (!about) return null;
 
-    const stats = [
-        { value: '10+', label: 'Years Experience', icon: Award },
-        { value: '24/7', label: 'Support Available', icon: Clock },
-        { value: '100%', label: 'Secure & Trusted', icon: Shield }
+    const features = [
+        {
+            value: '10+',
+            label: 'Years Excellence',
+            icon: Award,
+            color: 'from-blue-500 to-cyan-500',
+            description: 'Industry leadership'
+        },
+        {
+            value: '24/7',
+            label: 'Always Available',
+            icon: Clock,
+            color: 'from-purple-500 to-pink-500',
+            description: 'Round-the-clock support'
+        },
+        {
+            value: '100%',
+            label: 'Secure Platform',
+            icon: Shield,
+            color: 'from-orange-500 to-red-500',
+            description: 'Bank-level security'
+        }
     ];
 
     return (
-        <section id="about" className="py-32 bg-white relative overflow-hidden">
-            {/* Grid Pattern Background */}
-            <div className="absolute inset-0 opacity-[0.03]">
-                <div className="absolute inset-0" style={{
-                    backgroundImage: `
-                        linear-gradient(to right, #000 1px, transparent 1px),
-                        linear-gradient(to bottom, #000 1px, transparent 1px)
-                    `,
-                    backgroundSize: '80px 80px'
-                }}></div>
+        <section
+            id="about"
+            ref={sectionRef}
+            className="relative py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden"
+            onMouseMove={handleMouseMove}
+        >
+            {/* Dynamic gradient background that follows mouse */}
+            <div
+                className="absolute inset-0 opacity-30 transition-all duration-700 ease-out pointer-events-none"
+                style={{
+                    background: `radial-gradient(circle 800px at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.1), transparent 70%)`
+                }}
+            />
+
+            {/* Animated mesh gradient - Hide on mobile */}
+            <div className="hidden md:block absolute top-0 left-0 w-full h-full opacity-20">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+                <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-gradient-to-br from-orange-300 to-yellow-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
             </div>
 
-            {/* Dot Pattern Overlay */}
-            <div className="absolute inset-0 opacity-[0.02]">
-                <div className="absolute inset-0" style={{
-                    backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
-                    backgroundSize: '40px 40px'
-                }}></div>
-            </div>
+            {/* Minimalist line accents - Hide on mobile */}
+            <div className="hidden lg:block absolute top-20 left-0 w-px h-32 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+            <div className="hidden lg:block absolute bottom-20 right-0 w-px h-32 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
 
-            {/* Gradient Orbs */}
-            <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[120px] opacity-[0.08]"></div>
-            <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-purple-600 rounded-full blur-[120px] opacity-[0.08]"></div>
-
-            {/* Geometric Shapes */}
-            <div className="absolute top-40 left-10 w-32 h-32 border border-gray-200 rotate-45 opacity-20"></div>
-            <div className="absolute bottom-40 right-10 w-24 h-24 border-2 border-gray-200 rounded-full opacity-20"></div>
-            <div className="absolute top-1/2 left-1/4 w-16 h-16 border border-gray-200 opacity-10"></div>
-
-            {/* Animated Lines */}
-            <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="grid-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#000" strokeWidth="1"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-            </svg>
-
-            <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
-                <div className="grid lg:grid-cols-2 gap-20 items-center">
-                    {/* Left Content */}
-                    <div
-                        className="space-y-8"
-                        style={{
-                            opacity: isVisible ? 1 : 0,
-                            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                            transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
-                        }}
-                    >
-                        {/* Label */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-full text-sm font-medium tracking-wide">
-                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
-                            ABOUT US
-                        </div>
-
-                        {/* Title with line accent */}
-                        <div className="relative">
-                            <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.1] tracking-tight">
-                                {about.title}
-                            </h2>
-                            <div className="absolute -left-8 top-0 w-1 h-full bg-gradient-to-b from-blue-600 to-purple-600 rounded-full"></div>
-                        </div>
-
-                        {/* Description */}
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+                <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8 lg:gap-20 items-center">
+                    {/* Left Content - 7 columns on desktop, 1 column on mobile */}
+                    <div className="lg:col-span-7 space-y-3 md:space-y-6 lg:space-y-10">
+                        {/* Magnetic badge - Smaller on mobile */}
                         <div
-                            className="text-lg text-gray-600 leading-relaxed space-y-4"
-                            dangerouslySetInnerHTML={{ __html: about.description }}
-                        />
+                            className="inline-block"
+                            style={{
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.9)',
+                                transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                            }}
+                        >
+                            <div className="relative group">
+                                <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                                <div className="relative flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-5 md:py-2.5 bg-white border border-gray-200 rounded-full">
+                                    <div className="relative">
+                                        <div className="hidden md:block absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75"></div>
+                                        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-blue-600 relative z-10" />
+                                    </div>
+                                    <span className="text-[10px] md:text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                        DISCOVER OUR STORY
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
 
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-3 gap-6 pt-8">
-                            {stats.map((stat, index) => {
-                                const Icon = stat.icon;
-                                return (
-                                    <div
-                                        key={index}
-                                        className="group relative"
+                        {/* Title with stagger animation - Responsive text sizes */}
+                        <div
+                            className="space-y-2 md:space-y-4 lg:space-y-6"
+                            style={{
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s'
+                            }}
+                        >
+                            <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
+                                {about.title.split(' ').map((word, i) => (
+                                    <span
+                                        key={i}
+                                        className="inline-block"
                                         style={{
                                             opacity: isVisible ? 1 : 0,
                                             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                                            transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + index * 0.1}s`
+                                            transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.1 + i * 0.05}s`
                                         }}
                                     >
-                                        {/* Background grid on hover */}
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300" style={{
-                                            backgroundImage: `
-                                                linear-gradient(to right, #000 1px, transparent 1px),
-                                                linear-gradient(to bottom, #000 1px, transparent 1px)
-                                            `,
-                                            backgroundSize: '10px 10px'
-                                        }}></div>
+                                        {word}&nbsp;
+                                    </span>
+                                ))}
+                            </h2>
 
-                                        <div className="flex flex-col gap-2 relative">
-                                            <Icon className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors duration-300" />
-                                            <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                                            <div className="text-sm text-gray-500 leading-tight">{stat.label}</div>
+                            {/* Accent line - Smaller on mobile */}
+                            <div className="flex items-center gap-2 md:gap-4">
+                                <div className="h-0.5 md:h-1 w-8 md:w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+                                <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+                            </div>
+                        </div>
+
+                        {/* Description - Line clamp on mobile */}
+                        <div
+                            className="text-[10px] sm:text-sm md:text-base lg:text-xl text-gray-600 leading-relaxed max-w-2xl line-clamp-3 md:line-clamp-none"
+                            style={{
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: about.description }}
+                        />
+
+                        {/* Stats cards - Responsive grid */}
+                        <div
+                            className="grid grid-cols-3 gap-2 md:gap-4"
+                            style={{
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s'
+                            }}
+                        >
+                            {features.map((feature, index) => {
+                                const Icon = feature.icon;
+                                return (
+                                    <div
+                                        key={index}
+                                        onMouseEnter={() => setActiveCard(index)}
+                                        onMouseLeave={() => setActiveCard(null)}
+                                        className="group relative bg-white rounded-lg md:rounded-2xl p-2 md:p-4 lg:p-6 border border-gray-200 hover:border-transparent transition-all duration-500 cursor-pointer"
+                                        style={{
+                                            transform: activeCard === index ? 'translateY(-8px)' : 'translateY(0)',
+                                            boxShadow: activeCard === index ? '0 20px 60px -10px rgba(0,0,0,0.15)' : '0 0 0 0 rgba(0,0,0,0)'
+                                        }}
+                                    >
+                                        {/* Gradient overlay on hover */}
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 rounded-lg md:rounded-2xl transition-opacity duration-500`}></div>
+
+                                        <div className="relative z-10 space-y-1 md:space-y-2 lg:space-y-3">
+                                            <div className={`inline-flex p-1.5 md:p-2 lg:p-3 rounded-lg md:rounded-xl bg-gradient-to-br ${feature.color} bg-opacity-10`}>
+                                                <Icon className="w-3 h-3 md:w-4 md:h-4 lg:w-6 lg:h-6 text-gray-700" />
+                                            </div>
+                                            <div className="text-base md:text-xl lg:text-3xl font-bold text-gray-900">{feature.value}</div>
+                                            <div className="text-[8px] md:text-xs lg:text-sm font-semibold text-gray-900 leading-tight">{feature.label}</div>
+                                            <div className="hidden md:block text-[10px] lg:text-xs text-gray-500">{feature.description}</div>
                                         </div>
-                                        <div className="mt-3 h-px w-0 group-hover:w-full bg-gray-900 transition-all duration-500"></div>
+
+                                        {/* Bottom accent line */}
+                                        <div className={`absolute bottom-0 left-0 h-0.5 md:h-1 bg-gradient-to-r ${feature.color} w-0 group-hover:w-full transition-all duration-500 rounded-b-lg md:rounded-b-2xl`}></div>
                                     </div>
                                 );
                             })}
                         </div>
 
-                        {/* CTA */}
-                        <div className="pt-4">
-                            <button className="group inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all duration-300 hover:gap-4 relative overflow-hidden">
-                                {/* Button pattern overlay */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300" style={{
-                                    backgroundImage: `
-                                        linear-gradient(45deg, transparent 45%, #fff 45%, #fff 55%, transparent 55%)
-                                    `,
-                                    backgroundSize: '20px 20px'
-                                }}></div>
-                                <span className="font-medium relative z-10">Learn More</span>
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300 relative z-10" />
+                        {/* CTA Button - Smaller on mobile */}
+                        <div
+                            style={{
+                                opacity: isVisible ? 1 : 0,
+                                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s'
+                            }}
+                        >
+                            <button className="group relative inline-flex items-center gap-1.5 md:gap-3 px-4 py-2 md:px-8 md:py-4 bg-gray-900 text-white rounded-full overflow-hidden transition-all duration-300 hover:pr-6 md:hover:pr-10 text-[10px] md:text-base">
+                                {/* Animated gradient background */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                {/* Shine effect - Hide on mobile */}
+                                <div className="hidden md:block absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+                                <span className="relative z-10 font-semibold">Explore More</span>
+                                <ArrowRight className="relative z-10 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform duration-300" />
                             </button>
                         </div>
                     </div>
 
-                    {/* Right Image */}
-                    <div
-                        className="relative"
-                        style={{
-                            opacity: isVisible ? 1 : 0,
-                            transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
-                            transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s'
-                        }}
-                    >
-                        <div className="relative group">
-                            {/* Decorative grid border */}
-                            <div className="absolute -inset-4 opacity-20">
-                                <div className="absolute inset-0 rounded-3xl" style={{
-                                    backgroundImage: `
-                                        linear-gradient(to right, #3b82f6 2px, transparent 2px),
-                                        linear-gradient(to bottom, #3b82f6 2px, transparent 2px)
-                                    `,
-                                    backgroundSize: '30px 30px',
-                                    maskImage: 'linear-gradient(to bottom right, transparent, black 20%, black 80%, transparent)',
-                                    WebkitMaskImage: 'linear-gradient(to bottom right, transparent, black 20%, black 80%, transparent)'
-                                }}></div>
-                            </div>
-
-                            {/* Image container with subtle parallax */}
-                            {about.illustration && (
-                                <div
-                                    className="relative overflow-hidden rounded-2xl"
-                                    style={{
-                                        transform: `translateY(${scrollProgress * -20}px)`
-                                    }}
-                                >
-                                    {/* Corner decorations */}
-                                    <div className="absolute top-0 left-0 w-20 h-20 border-l-2 border-t-2 border-gray-900 z-20 opacity-20"></div>
-                                    <div className="absolute bottom-0 right-0 w-20 h-20 border-r-2 border-b-2 border-gray-900 z-20 opacity-20"></div>
-
-                                    {/* Border gradient overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 rounded-2xl z-10 pointer-events-none"></div>
-
-                                    <img
-                                        src={`/storage/${about.illustration}`}
-                                        alt="About Us"
-                                        className="w-full h-auto object-cover rounded-2xl shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-700 ease-out relative"
-                                    />
-
-                                    {/* Subtle shadow overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent rounded-2xl pointer-events-none"></div>
-                                </div>
-                            )}
-
-                            {/* Decorative element with grid */}
-                            <div
-                                className="absolute -right-8 -bottom-8 w-64 h-64 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl -z-10 opacity-10 blur-2xl"
-                                style={{
-                                    transform: `scale(${1 + scrollProgress * 0.2})`
-                                }}
-                            ></div>
-
-                            {/* Small grid accent */}
-                            <div className="absolute -right-4 top-1/4 w-24 h-24 opacity-10" style={{
-                                backgroundImage: `
-                                    linear-gradient(to right, #000 1px, transparent 1px),
-                                    linear-gradient(to bottom, #000 1px, transparent 1px)
-                                `,
-                                backgroundSize: '12px 12px'
-                            }}></div>
-                        </div>
-
-                        {/* Floating badge with grid background */}
+                    {/* Right Image - 5 columns on desktop, 1 column on mobile */}
+                    <div className="lg:col-span-5 w-[140%] -mr-6 sm:w-full sm:mr-0">
                         <div
-                            className="absolute -top-6 -left-6 bg-white rounded-2xl shadow-xl p-6 border border-gray-100 relative overflow-hidden"
+                            className="relative"
                             style={{
                                 opacity: isVisible ? 1 : 0,
-                                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                                transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s'
+                                transform: isVisible ? 'translateX(0) scale(1)' : 'translateX(60px) scale(0.95)',
+                                transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s'
                             }}
                         >
-                            {/* Subtle grid in badge */}
-                            <div className="absolute inset-0 opacity-[0.03]" style={{
-                                backgroundImage: `
-                                    linear-gradient(to right, #000 1px, transparent 1px),
-                                    linear-gradient(to bottom, #000 1px, transparent 1px)
-                                `,
-                                backgroundSize: '10px 10px'
-                            }}></div>
+                            {/* Main image container */}
+                            {about.illustration && (
+                                <div className="relative group">
+                                    {/* Floating badge - Top Left - Smaller on mobile */}
+                                    <div
+                                        className="absolute -top-3 -left-3 md:-top-6 md:-left-6 z-20 bg-white rounded-xl md:rounded-2xl shadow-2xl p-2 md:p-3 lg:p-5 border border-gray-100"
+                                        style={{
+                                            opacity: isVisible ? 1 : 0,
+                                            transform: isVisible ? 'translate(0, 0) rotate(0deg)' : 'translate(-20px, -20px) rotate(-5deg)',
+                                            transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s'
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
+                                            <div className="p-1.5 md:p-2 lg:p-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg md:rounded-xl">
+                                                <TrendingUp className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-sm md:text-xl lg:text-2xl font-bold text-gray-900">98%</div>
+                                                <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-500 font-medium">Success Rate</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <div className="flex items-center gap-3 relative z-10">
-                                <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
-                                    <Award className="w-6 h-6 text-white" />
+                                    {/* Image with magnetic effect */}
+                                    <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
+                                        {/* Gradient border effect - Hide on mobile */}
+                                        <div className="hidden md:block absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-700"></div>
+
+                                            <div className="relative">
+                                        <img
+                                            src={`/storage/${about.illustration}`}
+                                            alt="About Us"
+                                            className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                                        />
+                                    </div>
+                                    </div>
+
+                                    {/* Bottom floating element - Smaller on mobile */}
+                                    <div
+                                        className="absolute -bottom-3 -right-3 md:-bottom-6 md:-right-6 z-20 bg-white rounded-xl md:rounded-2xl shadow-2xl p-2 md:p-3 lg:p-5 border border-gray-100"
+                                        style={{
+                                            opacity: isVisible ? 1 : 0,
+                                            transform: isVisible ? 'translate(0, 0) rotate(0deg)' : 'translate(20px, 20px) rotate(5deg)',
+                                            transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s'
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
+                                            <div className="p-1.5 md:p-2 lg:p-3 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg md:rounded-xl">
+                                                <Users className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-sm md:text-xl lg:text-2xl font-bold text-gray-900">50K+</div>
+                                                <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-500 font-medium">Happy Clients</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-gray-900">A+</div>
-                                    <div className="text-xs text-gray-500">Rated Service</div>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+
+            <style>{`
+                @keyframes blob {
+                    0%, 100% { transform: translate(0, 0) scale(1); }
+                    25% { transform: translate(20px, -50px) scale(1.1); }
+                    50% { transform: translate(-20px, 20px) scale(0.9); }
+                    75% { transform: translate(50px, 50px) scale(1.05); }
+                }
+                .animate-blob {
+                    animation: blob 20s infinite;
+                }
+                .animation-delay-2000 {
+                    animation-delay: 2s;
+                }
+                .animation-delay-4000 {
+                    animation-delay: 4s;
+                }
+            `}</style>
         </section>
     );
 };

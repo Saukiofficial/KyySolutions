@@ -31,7 +31,7 @@ class AboutSectionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'illustration' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'illustration' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10024',
         ]);
 
         // 2. Ambil semua data KECUALI file gambar (karena akan diproses manual)

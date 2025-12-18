@@ -18,8 +18,8 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PartnerController;
-use App\Http\Controllers\Admin\ArticleController; // Controller Berita
-use App\Http\Controllers\Admin\TutorialController; // TAMBAHAN: Controller Tutorial
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\TutorialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,15 +37,16 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Halaman Detail Layanan
 Route::get('/service/{service}', [HomeController::class, 'showService'])->name('service.show');
 
-// Halaman Portal Berita (Daftar Artikel)
+// Halaman Portal Berita (Daftar Artikel & Detail)
 Route::get('/news', [HomeController::class, 'indexNews'])->name('news.index');
-
-// Halaman Baca Berita (Detail Artikel) - Menggunakan Slug SEO Friendly
 Route::get('/news/{article:slug}', [HomeController::class, 'showArticle'])->name('article.show');
 
-// TAMBAHAN: Halaman Portal Tutorial
+// Halaman Portal Tutorial (Daftar Tutorial & Detail)
 Route::get('/tutorials', [HomeController::class, 'indexTutorials'])->name('tutorials.index');
 Route::get('/tutorials/{tutorial:slug}', [HomeController::class, 'showTutorial'])->name('tutorials.show');
+
+// TAMBAHAN: Halaman Detail Portfolio
+Route::get('/portfolio/{portfolio:slug}', [HomeController::class, 'showPortfolio'])->name('portfolio.show');
 
 // Kirim Pesan Kontak
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
@@ -54,7 +55,6 @@ Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.
 // =========================================================================
 // == USER PROFILE ROUTES (AUTHENTICATED USER)
 // =========================================================================
-// Route ini dibutuhkan oleh layout default Breeze/Inertia
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -76,7 +76,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // == DUPLIKASI ROUTE PROFILE (KHUSUS LAYOUT ADMIN) ==
-    // Diperlukan agar Topbar Admin tidak error saat memanggil route('admin.profile.edit')
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -96,14 +95,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Route Manajemen Artikel Berita
     Route::resource('articles', ArticleController::class);
 
-    // TAMBAHAN: Route Manajemen Tutorial
+    // Route Manajemen Tutorial
     Route::resource('tutorials', TutorialController::class);
 
     // Contact Messages (Hanya Index, Show, Destroy)
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::patch('contacts/{contact}/toggle-read', [ContactController::class, 'toggleRead'])->name('contacts.toggle-read');
 
-    // General Settings (Logo, Tawk.to, dll)
+    // General Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings/{setting}', [SettingController::class, 'update'])->name('settings.update');
 });

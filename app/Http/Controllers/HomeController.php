@@ -13,7 +13,7 @@ use App\Models\Setting;
 use App\Models\Contact;
 use App\Models\Partner;
 use App\Models\Article;
-use App\Models\Tutorial; // Import Model Tutorial (PENTING)
+use App\Models\Tutorial;
 
 class HomeController extends Controller
 {
@@ -22,10 +22,12 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // 1. Ambil data single (First)
         $heroSection = HeroSection::first();
         $aboutSection = AboutSection::first();
         $settings = Setting::first();
 
+        // 2. Ambil data list (All / Latest)
         $services = Service::all();
         $teams = Team::all();
         $partners = Partner::all();
@@ -104,7 +106,6 @@ class HomeController extends Controller
     /**
      * Menampilkan Halaman Portal Tutorial (Semua Tutorial).
      * Route: /tutorials
-     * (Fungsi ini yang sebelumnya hilang)
      */
     public function indexTutorials()
     {
@@ -140,6 +141,27 @@ class HomeController extends Controller
         return Inertia::render('TutorialDetail', [
             'tutorial' => $tutorial,
             'relatedTutorials' => $relatedTutorials,
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * Menampilkan Detail Portfolio (Fitur Baru).
+     * Route: /portfolio/{slug}
+     */
+    public function showPortfolio(Portfolio $portfolio)
+    {
+        $settings = Setting::first();
+
+        // Ambil portfolio lain sebagai rekomendasi
+        $relatedPortfolios = Portfolio::where('id', '!=', $portfolio->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return Inertia::render('PortfolioDetail', [
+            'portfolio' => $portfolio,
+            'relatedPortfolios' => $relatedPortfolios,
             'settings' => $settings,
         ]);
     }
