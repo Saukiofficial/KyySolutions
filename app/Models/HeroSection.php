@@ -21,7 +21,7 @@ class HeroSection extends Model
     'subheadline',
     'cta_text',
     'background_image',
-    'hero_image', // <--- Tambahkan baris ini
+    'hero_image',
 ];
 }
 

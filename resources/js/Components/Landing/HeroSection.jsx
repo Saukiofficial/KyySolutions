@@ -1,13 +1,134 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 
+/* ─────────────────────────────────────────────
+   Custom hook: Typewriter
+   Mengetik satu string, lalu berhenti + blink cursor
+───────────────────────────────────────────── */
+function useTypewriter(text = '', speed = 55, startDelay = 0) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayed('');
+    setDone(false);
+    let i = 0;
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i >= text.length) {
+          clearInterval(interval);
+          setDone(true);
+        }
+      }, speed);
+      return () => clearInterval(interval);
+    }, startDelay);
+    return () => clearTimeout(timeout);
+  }, [text, speed, startDelay]);
+
+  return { displayed, done };
+}
+
+/* ─────────────────────────────────────────────
+   Custom hook: Typewriter multi-line (sekuensial)
+   Setelah line pertama selesai, mulai line kedua
+───────────────────────────────────────────── */
+function useSequentialTypewriter(lines = [], speed = 55, startDelay = 0) {
+  const [lineIndex, setLineIndex] = useState(0);
+  const [displayed, setDisplayed] = useState(Array(lines.length).fill(''));
+  const [allDone, setAllDone] = useState(false);
+
+  useEffect(() => {
+    setLineIndex(0);
+    setDisplayed(Array(lines.length).fill(''));
+    setAllDone(false);
+  }, [lines.join('|')]);
+
+  useEffect(() => {
+    if (lineIndex >= lines.length) {
+      setAllDone(true);
+      return;
+    }
+    const text = lines[lineIndex];
+    let i = 0;
+    const delay = lineIndex === 0 ? startDelay : 0;
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setDisplayed(prev => {
+          const next = [...prev];
+          next[lineIndex] = text.slice(0, i);
+          return next;
+        });
+        if (i >= text.length) {
+          clearInterval(interval);
+          // Jeda sebentar sebelum mulai baris berikutnya
+          setTimeout(() => setLineIndex(li => li + 1), 200);
+        }
+      }, speed);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [lineIndex]);
+
+  return { displayed, allDone, currentLine: lineIndex };
+}
+
+/* ─────────────────────────────────────────────
+   AnimatedCounter — angka naik dari 0
+───────────────────────────────────────────── */
+function AnimatedCounter({ target, duration = 1500, suffix = '' }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const start = performance.now();
+    const tick = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(tick);
+      else setCount(target);
+    };
+    const id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
+  }, [target, duration]);
+
+  return <span>{count}{suffix}</span>;
+}
+
+/* ─────────────────────────────────────────────
+   GridBackground — dot grid animasi
+───────────────────────────────────────────── */
+const GridBackground = () => (
+  <svg
+    className="absolute inset-0 w-full h-full pointer-events-none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ opacity: 0.18 }}
+  >
+    <defs>
+      <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="1" fill="#38bdf8" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#dotGrid)" />
+  </svg>
+);
+
+/* ─────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────── */
 const ProfessionalHero = ({ hero }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    setIsVisible(true);
+    // Tunggu sebentar agar font load
+    const t = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(t);
   }, []);
 
   const handleMouseMove = (e) => {
@@ -16,50 +137,124 @@ const ProfessionalHero = ({ hero }) => {
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
     setMousePosition({ x, y });
   };
-
   const handleMouseLeave = () => {
     setMousePosition({ x: 0, y: 0 });
     setIsHovering(false);
   };
 
+  /* ── Parsing headline ── */
+  const rawHeadline = hero?.headline || 'Get Our Business It Solution';
+  const headlineLines = rawHeadline.includes('It Solution')
+    ? [rawHeadline.split('It Solution')[0].trim(), 'for Innovative IT Solutions']
+    : [rawHeadline, 'for Innovative IT Solutions'];
+
+  const subtext = hero?.subheadline ||
+    'Completely integrated digital platform process architecture at scale across streamlines business empowerment.';
+
+  /* ── Typing animations ── */
+  const badge = useTypewriter('// Build For Business', 45, 300);
+  const headline = useSequentialTypewriter(headlineLines, 48, 900);
+  const sub = useTypewriter(subtext, 18, headline.allDone ? 300 : 99999);
+
   if (!hero) return null;
 
   return (
     <>
-      {/* IMPORT FONT ROBOT YANG TEGAS */}
-      <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700;900&family=Orbitron:wght@900&family=Exo+2:wght@800;900&family=Titillium+Web:wght@900&display=swap" rel="stylesheet" />
+      {/* FONTS */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
 
-      {/* ANIMASI CSS */}
       <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+        /* ── Cursor blink ── */
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        .cursor { display:inline-block; width:2px; height:1em; background:currentColor; vertical-align:text-bottom; animation: blink 0.9s step-end infinite; margin-left:2px; }
+        .cursor-wide { display:inline-block; width:0.55em; height:1.05em; background:#38bdf8; vertical-align:text-bottom; animation: blink 0.9s step-end infinite; margin-left:3px; border-radius:2px; opacity:0.9; }
+
+        /* ── Floating image ── */
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        @keyframes haloSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes glowPulse { 0%,100%{opacity:.25} 50%{opacity:.55} }
+        @keyframes scanline {
+          0%{transform:translateY(-100%)} 100%{transform:translateY(100vh)}
         }
-        @keyframes gentle-rotate {
-          0%, 100% { transform: rotate(-2deg); }
-          50% { transform: rotate(2deg); }
+
+        .float-img  { animation: float 4s ease-in-out infinite; }
+        .halo-ring  { animation: haloSpin 18s linear infinite; }
+        .glow-blob  { animation: glowPulse 3s ease-in-out infinite; }
+
+        /* ── Fade up utility ── */
+        .fade-up { animation: fadeUp 0.7s ease both; }
+
+        /* ── Scanline overlay ── */
+        .scanline-wrap { pointer-events:none; overflow:hidden; }
+        .scanline-wrap::after {
+          content:'';
+          position:absolute; inset:0;
+          background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0,0,0,0.03) 2px,
+            rgba(0,0,0,0.03) 4px
+          );
+          z-index:1;
         }
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.4; }
+
+        /* ── Stat card ── */
+        .stat-card {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(56,189,248,0.2);
+          backdrop-filter: blur(8px);
+          transition: border-color 0.3s, background 0.3s;
         }
-        @keyframes subtle-scale {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+        .stat-card:hover {
+          border-color: rgba(56,189,248,0.5);
+          background: rgba(56,189,248,0.06);
         }
-        .robot-container {
-          animation: float 3s ease-in-out infinite;
+
+        /* ── CTA button ── */
+        .btn-primary {
+          position:relative; overflow:hidden;
+          background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+          transition: transform 0.2s, box-shadow 0.2s;
         }
-        .robot-image {
-          animation: gentle-rotate 4s ease-in-out infinite;
+        .btn-primary::before {
+          content:''; position:absolute; inset:0;
+          background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+          opacity:0; transition:opacity 0.2s;
         }
-        .glow-effect {
-          animation: pulse-glow 2s ease-in-out infinite;
+        .btn-primary:hover { transform:translateY(-2px); box-shadow: 0 12px 36px rgba(56,189,248,0.45); }
+        .btn-primary:hover::before { opacity:1; }
+
+        .btn-ghost {
+          border: 1px solid rgba(56,189,248,0.35);
+          background: rgba(56,189,248,0.05);
+          backdrop-filter:blur(8px);
+          transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .btn-ghost:hover {
+          background: rgba(56,189,248,0.12);
+          border-color: rgba(56,189,248,0.6);
+          transform:translateY(-2px);
+        }
+
+        /* ── Terminal badge ── */
+        .terminal-badge {
+          background: rgba(0,0,0,0.35);
+          border: 1px solid rgba(56,189,248,0.3);
+          backdrop-filter: blur(12px);
         }
       `}</style>
 
-      <section id="home" className="relative h-auto lg:min-h-screen flex items-center overflow-hidden pt-24 pb-12 lg:pt-20 lg:pb-0">
-        {/* 1. BACKGROUND UTAMA (Full Screen) */}
+      <section
+        id="home"
+        className="scanline-wrap relative h-auto lg:min-h-screen flex items-center overflow-hidden pt-24 pb-12 lg:pt-20 lg:pb-0"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
+        {/* ── 1. BACKGROUND ── */}
         <div className="absolute inset-0 z-0">
           {hero.background_image ? (
             <>
@@ -67,133 +262,256 @@ const ProfessionalHero = ({ hero }) => {
                 src={`/storage/${hero.background_image}`}
                 alt="Hero Background"
                 className="w-full h-full object-cover"
+                style={{ filter: 'brightness(0.25) saturate(1.3)' }}
               />
-              {/* Overlay Biru Transparan agar teks terbaca */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/85 to-blue-900/90"></div>
             </>
           ) : (
-            // Fallback jika tidak ada gambar background
-            <div className="w-full h-full bg-gradient-to-br from-blue-700 via-blue-600 to-blue-800"></div>
+            <div
+              className="w-full h-full"
+              style={{
+                background: 'linear-gradient(135deg, #020c1b 0%, #031628 40%, #020f23 70%, #010a17 100%)',
+              }}
+            />
           )}
 
-          {/* Hiasan Lengkungan di Bawah */}
-          <div className="absolute -bottom-1 left-0 right-0 h-16 lg:h-32">
+          {/* Dot grid */}
+          <GridBackground />
+
+          {/* Radial glow kiri */}
+          <div
+            className="absolute glow-blob"
+            style={{
+              width: '55vw', height: '55vw',
+              top: '-15%', left: '-10%',
+              background: 'radial-gradient(circle, rgba(56,189,248,0.13) 0%, transparent 70%)',
+              filter: 'blur(30px)',
+            }}
+          />
+          {/* Radial glow kanan */}
+          <div
+            className="absolute glow-blob"
+            style={{
+              width: '40vw', height: '40vw',
+              bottom: '5%', right: '-5%',
+              background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
+              filter: 'blur(40px)',
+              animationDelay: '1.5s',
+            }}
+          />
+
+          {/* Wave bawah */}
+          <div className="absolute -bottom-1 left-0 right-0 h-16 lg:h-32" style={{ zIndex: 2 }}>
             <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+              <path
+                d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+                fill="white"
+              />
             </svg>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-4 lg:py-20">
+        {/* ── 2. CONTENT ── */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative py-4 lg:py-20" style={{ zIndex: 3 }}>
           <div className="max-w-7xl mx-auto">
-
             <div className="grid grid-cols-2 gap-2 md:gap-8 lg:gap-16 items-center">
 
-              {/* KONTEN KIRI (Teks & Tombol) */}
-              <div
-                className={`space-y-3 md:space-y-6 lg:space-y-8 transition-all duration-1000 ${
-                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
-                }`}
-              >
-                {/* Badge Kecil */}
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 lg:px-4 lg:py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
-                  <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-[10px] md:text-sm font-semibold text-white truncate">Build For Business</span>
+              {/* ── LEFT: TEXT ── */}
+              <div className="space-y-4 md:space-y-6 lg:space-y-8">
+
+                {/* Terminal badge */}
+                <div
+                  className="terminal-badge inline-flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-full fade-up"
+                  style={{ animationDelay: '0.1s', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
+                  <span className="text-green-400 text-[10px] lg:text-xs">●</span>
+                  <span className="text-cyan-300 text-[10px] md:text-sm tracking-wide">
+                    {badge.displayed}
+                    {!badge.done && <span className="cursor" style={{ height: '0.8em' }} />}
+                  </span>
                 </div>
 
-                {/* Headline Utama - Ukuran font sangat responsif dengan font tegas */}
-                <div className="space-y-2 md:space-y-6">
-                  <h1 className="text-xl sm:text-4xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05]" style={{ fontFamily: "'Rajdhani', 'Orbitron', 'Exo 2', 'Titillium Web', sans-serif", letterSpacing: '0.02em', fontWeight: 900 }}>
-                    <span className="text-white block mb-0.5 lg:mb-2">
-                      {hero.headline ? hero.headline.split('It Solution')[0] : 'Get Our Business'}
-                    </span>
-                    <span className="text-white block">
-                      for Innovative IT Solutions
-                    </span>
-                  </h1>
-
-                  {/* Paragraf - Line clamp agar tidak terlalu panjang di HP */}
-                  <p className="text-[10px] sm:text-base lg:text-xl text-blue-50 leading-relaxed max-w-xl line-clamp-3 md:line-clamp-none">
-                    {hero.subheadline || 'Completely integrated digital platform process architecture at scale across streamlines business empowerment.'}
-                  </p>
+                {/* Headline dengan typing sekuensial */}
+                <div className="space-y-1 md:space-y-2 lg:space-y-3 min-h-[3.5rem] md:min-h-[6rem] lg:min-h-[9rem]">
+                  {headlineLines.map((line, idx) => {
+                    const isActive = headline.currentLine === idx;
+                    const isCompleted = idx < headline.currentLine;
+                    const showCursor = isActive && !headline.allDone;
+                    return (
+                      <h1
+                        key={idx}
+                        className="leading-[1.0] tracking-tight"
+                        style={{
+                          fontFamily: "'Bricolage Grotesque', sans-serif",
+                          fontWeight: 900,
+                          fontSize: 'clamp(1.25rem, 4.5vw, 4.5rem)',
+                          color: idx === 0 ? '#ffffff' : '#38bdf8',
+                          textShadow: idx === 1
+                            ? '0 0 40px rgba(56,189,248,0.45), 0 0 80px rgba(56,189,248,0.2)'
+                            : 'none',
+                          minHeight: '1.1em',
+                        }}
+                      >
+                        {headline.displayed[idx] || ''}
+                        {showCursor && (
+                          <span
+                            className="cursor-wide"
+                            style={{ height: '0.85em', verticalAlign: 'middle' }}
+                          />
+                        )}
+                        {/* Cursor tetap setelah baris terakhir selesai */}
+                        {idx === headlineLines.length - 1 && headline.allDone && (
+                          <span
+                            className="cursor-wide"
+                            style={{ height: '0.85em', verticalAlign: 'middle' }}
+                          />
+                        )}
+                      </h1>
+                    );
+                  })}
                 </div>
 
-                {/* Tombol CTA - Lebih kecil & Flex Column di HP sangat kecil */}
-                <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-2 md:gap-4">
+                {/* Subheadline — muncul setelah headline selesai */}
+                <p
+                  className="text-[10px] sm:text-sm lg:text-lg leading-relaxed max-w-xl min-h-[2.5rem] md:min-h-[3.5rem]"
+                  style={{
+                    color: 'rgba(186,230,253,0.8)',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: 'clamp(0.6rem, 1.5vw, 1.05rem)',
+                    fontWeight: 400,
+                  }}
+                >
+                  {sub.displayed}
+                  {headline.allDone && !sub.done && (
+                    <span className="cursor" style={{ background: '#7dd3fc', height: '0.85em' }} />
+                  )}
+                </p>
+
+                {/* CTA Buttons */}
+                <div
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-4 fade-up"
+                  style={{ animationDelay: '0.3s', opacity: headline.allDone ? 1 : 0, transition: 'opacity 0.6s' }}
+                >
                   <a
                     href="#contact"
-                    className="inline-flex items-center justify-center gap-1 px-3 py-2 md:px-8 md:py-4 bg-white text-blue-700 text-[10px] md:text-base font-bold rounded-lg hover:bg-blue-50 transition-all duration-200 shadow-xl w-full sm:w-auto"
+                    className="btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 md:px-8 md:py-4 text-[10px] md:text-sm font-bold rounded-xl text-white w-full sm:w-auto"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.02em' }}
                   >
-                    <span>{hero.cta_text || 'Explore'}</span>
-                    <ArrowRight className="w-3 h-3 md:w-5 md:h-5" />
+                    <span style={{ position: 'relative', zIndex: 1 }}>{hero.cta_text || 'Explore Now'}</span>
+                    <ArrowRight className="w-3 h-3 md:w-4 md:h-4" style={{ position: 'relative', zIndex: 1 }} />
                   </a>
                   <a
                     href="#portfolio"
-                    className="inline-flex items-center justify-center gap-1 px-3 py-2 md:px-8 md:py-4 bg-white/10 backdrop-blur-md text-white text-[10px] md:text-base font-bold rounded-lg border border-white/30 hover:bg-white/20 transition-all duration-200 w-full sm:w-auto"
+                    className="btn-ghost inline-flex items-center justify-center gap-1.5 px-4 py-2 md:px-8 md:py-4 text-[10px] md:text-sm font-bold rounded-xl text-cyan-300 w-full sm:w-auto"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.02em' }}
                   >
                     <span>Contact</span>
-                    <ArrowRight className="w-3 h-3 md:w-5 md:h-5" />
+                    <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
                   </a>
                 </div>
 
-                {/* Statistik - Disembunyikan total di HP agar layout bersih */}
-                <div className="hidden md:flex flex-wrap items-center gap-8 pt-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex -space-x-2">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-blue-700 bg-gradient-to-br from-blue-400 to-blue-600"></div>
-                      ))}
+                {/* Stats */}
+                <div
+                  className="hidden md:flex flex-wrap items-center gap-4 pt-2 fade-up"
+                  style={{ animationDelay: '0.5s', opacity: headline.allDone ? 1 : 0, transition: 'opacity 0.8s 0.4s' }}
+                >
+                  {[
+                    { value: 500, suffix: '+', label: 'Happy Clients' },
+                    { value: 98,  suffix: '%', label: 'Satisfaction Rate' },
+                    { value: 12,  suffix: 'y',  label: 'Experience' },
+                  ].map((s, i) => (
+                    <div key={i} className="stat-card px-4 py-3 rounded-xl flex flex-col items-center min-w-[90px]">
+                      <span
+                        className="text-xl lg:text-2xl font-black text-cyan-300"
+                        style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                      >
+                        {headline.allDone ? <AnimatedCounter target={s.value} suffix={s.suffix} duration={1200} /> : `0${s.suffix}`}
+                      </span>
+                      <span className="text-[10px] lg:text-xs text-blue-300 mt-0.5 whitespace-nowrap">{s.label}</span>
                     </div>
-                    <div>
-                      <div className="text-lg lg:text-2xl font-bold text-white">500+</div>
-                      <div className="text-sm text-blue-100">Happy Clients</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              {/* KONTEN KANAN (Gambar) - DENGAN ANIMASI */}
-              <div
-                className={`relative transition-all duration-1000 delay-300 z-10 ${
-                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
-                }`}
-              >
-                <div className="relative w-full flex justify-end">
+              {/* ── RIGHT: IMAGE ── */}
+              <div className="relative flex justify-end items-center">
+                {/* Halo ring dekoratif */}
+                <div
+                  className="halo-ring absolute"
+                  style={{
+                    width: '90%', height: '90%',
+                    border: '1px dashed rgba(56,189,248,0.18)',
+                    borderRadius: '50%',
+                    top: '5%', left: '5%',
+                  }}
+                />
+                <div
+                  className="halo-ring absolute"
+                  style={{
+                    width: '70%', height: '70%',
+                    border: '1px solid rgba(99,102,241,0.15)',
+                    borderRadius: '50%',
+                    top: '15%', left: '15%',
+                    animationDirection: 'reverse',
+                    animationDuration: '12s',
+                  }}
+                />
 
-                  {/* GAMBAR KARAKTER DENGAN ANIMASI LOOPING */}
-                  <div
-                    className="relative cursor-pointer w-[140%] sm:w-full -mr-6 sm:mr-0 robot-container"
-                    onMouseMove={handleMouseMove}
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    {hero.hero_image ? (
-                      <img
-                        src={`/storage/${hero.hero_image}`}
-                        alt="Hero Preview"
-                        className="w-full h-auto object-contain drop-shadow-2xl robot-image"
-                        style={{
-                          filter: `drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3)) ${isHovering ? 'drop-shadow(0 0 40px rgba(59, 130, 246, 0.5))' : ''}`,
-                          transform: `perspective(1000px) rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg) scale(${isHovering ? 1.05 : 1}) translateY(${isHovering ? -10 : 0}px)`,
-                          transition: 'all 0.5s ease-out'
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full aspect-square flex items-center justify-center bg-white/5 rounded-full backdrop-blur-sm">
-                        <div className="text-center">
-                          <div className="text-4xl lg:text-8xl mb-2 lg:mb-4">🤖</div>
-                          <span className="text-white/70 text-xs lg:text-lg font-medium">Hero Image</span>
-                        </div>
+                {/* Image wrapper */}
+                <div
+                  className="float-img relative cursor-pointer w-[140%] sm:w-full -mr-6 sm:mr-0"
+                  onMouseMove={handleMouseMove}
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={handleMouseLeave}
+                  style={{ zIndex: 2 }}
+                >
+                  {hero.hero_image ? (
+                    <img
+                      src={`/storage/${hero.hero_image}`}
+                      alt="Hero Preview"
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      style={{
+                        filter: `drop-shadow(0 8px 24px rgba(0,0,0,0.5)) ${
+                          isHovering
+                            ? 'drop-shadow(0 0 50px rgba(56,189,248,0.6))'
+                            : 'drop-shadow(0 0 24px rgba(56,189,248,0.25))'
+                        }`,
+                        transform: `perspective(1000px) rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg) scale(${isHovering ? 1.04 : 1}) translateY(${isHovering ? -8 : 0}px)`,
+                        transition: 'all 0.5s ease-out',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="w-full aspect-square flex items-center justify-center rounded-full"
+                      style={{ background: 'rgba(56,189,248,0.05)', border: '1px solid rgba(56,189,248,0.15)' }}
+                    >
+                      <div className="text-center">
+                        <div className="text-4xl lg:text-8xl mb-2 lg:mb-4">🤖</div>
+                        <span className="text-blue-300 text-xs lg:text-lg font-medium" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                          hero_image.png
+                        </span>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Hiasan Lingkaran Bawah dengan Pulse Effect */}
-                  <div className="absolute -bottom-4 -right-4 lg:-bottom-8 lg:-right-8 w-16 h-16 lg:w-40 lg:h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-2xl pointer-events-none glow-effect" />
-
-                  {/* Hiasan Tambahan - Lingkaran Kecil */}
-                  <div className="absolute top-0 -left-4 lg:top-10 lg:-left-10 w-8 h-8 lg:w-20 lg:h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full blur-xl pointer-events-none glow-effect" style={{ animationDelay: '1s' }} />
+                    </div>
+                  )}
                 </div>
+
+                {/* Glow blobs */}
+                <div
+                  className="glow-blob absolute -bottom-4 -right-4 lg:-bottom-8 lg:-right-8 rounded-full pointer-events-none"
+                  style={{
+                    width: 'clamp(4rem,10vw,10rem)', height: 'clamp(4rem,10vw,10rem)',
+                    background: 'radial-gradient(circle, rgba(56,189,248,0.5), rgba(99,102,241,0.3))',
+                    filter: 'blur(24px)',
+                  }}
+                />
+                <div
+                  className="glow-blob absolute top-0 -left-4 lg:-left-10 rounded-full pointer-events-none"
+                  style={{
+                    width: 'clamp(2rem,5vw,5rem)', height: 'clamp(2rem,5vw,5rem)',
+                    background: 'radial-gradient(circle, rgba(34,211,238,0.5), transparent)',
+                    filter: 'blur(16px)',
+                    animationDelay: '1s',
+                  }}
+                />
               </div>
 
             </div>
