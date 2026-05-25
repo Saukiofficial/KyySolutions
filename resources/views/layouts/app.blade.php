@@ -4,16 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <!-- CSRF Token untuk request fetch/ajax dari React -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- === SETTING FAVICON (LOGO DI TAB) === -->
-        <!-- Prioritas 1: Format PNG (Logo Asli Anda) -->
+        <title inertia>{{ config('app.name', 'Laravel') }}</title>
         <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-        <!-- Prioritas 2: Format ICO (Fallback/Cadangan) -->
-        <link rel="icon" href="{{ asset('favicon.ico') }}">
-
-        <!-- Fonts: Outfit (Premium & Elegant) -->
+        <!-- Font Outfit -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -24,7 +21,6 @@
         @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
         @inertiaHead
 
-        <!-- Force Font Application -->
         <style>
             body {
                 font-family: 'Outfit', sans-serif;

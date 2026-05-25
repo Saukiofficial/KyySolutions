@@ -107,7 +107,7 @@
                                         </h4>
                                     </div>
 
-                                    @if(!$contact->status)
+                                    @if(!$contact->is_read)
                                         <span class="inline-flex items-center gap-2 rounded-full bg-gray-950 px-3 py-1 text-xs font-bold text-white">
                                             <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
                                             Unread
@@ -152,6 +152,17 @@
                                     </svg>
                                 </a>
 
+                                <form action="{{ route('admin.contacts.toggle-read', $contact->id) }}"
+                                      method="POST">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button type="submit"
+                                            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-6 py-4 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
+                                        {{ $contact->is_read ? 'Mark as Unread' : 'Mark as Read' }}
+                                    </button>
+                                </form>
+
                                 <form action="{{ route('admin.contacts.destroy', $contact->id) }}"
                                       method="POST"
                                       onsubmit="return confirm('Are you sure you want to delete this message?');">
@@ -182,7 +193,7 @@
                                 <div class="flex items-center justify-between gap-4">
                                     <span>Status</span>
                                     <span class="font-semibold text-white">
-                                        {{ $contact->status ? 'Read' : 'Unread' }}
+                                        {{ $contact->is_read ? 'Read' : 'Unread' }}
                                     </span>
                                 </div>
 

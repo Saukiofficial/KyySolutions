@@ -46,7 +46,7 @@ Route::get('/tutorials/{tutorial:slug}', [HomeController::class, 'showTutorial']
 // Halaman Detail Portfolio
 Route::get('/portfolio/{portfolio:slug}', [HomeController::class, 'showPortfolio'])->name('portfolio.show');
 
-// Kirim Pesan Kontak
+// Kirim Pesan Kontak dari frontend
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
 
 
@@ -100,14 +100,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('partners', PartnerController::class);
 
     // Articles / News
-    // Route ini dipakai CKEditor untuk upload gambar artikel ke storage Laravel.
     Route::post('articles/upload-image', [ArticleController::class, 'uploadEditorImage'])
         ->name('articles.upload-image');
 
     Route::resource('articles', ArticleController::class);
 
     // Tutorials
-    // Route ini dipakai CKEditor untuk upload gambar tutorial ke storage Laravel.
     Route::post('tutorials/upload-image', [TutorialController::class, 'uploadEditorImage'])
         ->name('tutorials.upload-image');
 

@@ -18,27 +18,23 @@ use App\Models\Tutorial;
 class HomeController extends Controller
 {
     /**
-     * Menampilkan landing page (Home) dengan semua data dinamis.
+     * Menampilkan landing page dengan semua data dinamis.
      */
     public function index()
     {
-        // 1. Ambil data single (First)
         $heroSection = HeroSection::first();
         $aboutSection = AboutSection::first();
         $settings = Setting::first();
 
-        // 2. Ambil data list (All / Latest)
         $services = Service::all();
         $teams = Team::all();
         $partners = Partner::all();
         $portfolios = Portfolio::latest()->get();
 
-        // Ambil 3 artikel terbaru untuk section News di Home
-        try {
-            $articles = Article::where('is_published', true)->latest()->take(3)->get();
-        } catch (\Exception $e) {
-            $articles = [];
-        }
+        $articles = Article::where('is_published', true)
+            ->latest()
+            ->take(3)
+            ->get();
 
         return Inertia::render('Home', [
             'hero' => $heroSection,
@@ -52,24 +48,21 @@ class HomeController extends Controller
             'flash' => [
                 'success' => session('success'),
                 'error' => session('error'),
-            ]
+            ],
         ]);
     }
 
     /**
-     * Menampilkan Halaman Portal Berita (Semua Berita).
-     * Route: /news
+     * Menampilkan halaman portal berita.
      */
     public function indexNews()
     {
         $settings = Setting::first();
 
-        // Ambil artikel dengan pagination
         $articles = Article::where('is_published', true)
             ->latest()
             ->paginate(9);
 
-        // Ambil artikel featured (3 terbaru)
         $featuredArticles = Article::where('is_published', true)
             ->latest()
             ->take(3)
@@ -83,11 +76,12 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Detail Berita.
-     * Route: /news/{slug}
+     * Menampilkan detail berita.
      */
     public function showArticle(Article $article)
     {
+        abort_if(!$article->is_published, 404);
+
         $settings = Setting::first();
 
         $relatedArticles = Article::where('id', '!=', $article->id)
@@ -99,19 +93,17 @@ class HomeController extends Controller
         return Inertia::render('ArticleDetail', [
             'article' => $article,
             'relatedArticles' => $relatedArticles,
-            'settings' => $settings
+            'settings' => $settings,
         ]);
     }
 
     /**
-     * Menampilkan Halaman Portal Tutorial (Semua Tutorial).
-     * Route: /tutorials
+     * Menampilkan halaman portal tutorial.
      */
     public function indexTutorials()
     {
         $settings = Setting::first();
 
-        // Ambil tutorial yang published dengan pagination
         $tutorials = Tutorial::where('is_published', true)
             ->latest()
             ->paginate(9);
@@ -123,14 +115,14 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Detail Tutorial.
-     * Route: /tutorials/{slug}
+     * Menampilkan detail tutorial.
      */
     public function showTutorial(Tutorial $tutorial)
     {
+        abort_if(!$tutorial->is_published, 404);
+
         $settings = Setting::first();
 
-        // Ambil tutorial lain dengan kategori sama
         $relatedTutorials = Tutorial::where('id', '!=', $tutorial->id)
             ->where('category', $tutorial->category)
             ->where('is_published', true)
@@ -146,14 +138,12 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Detail Portfolio (Fitur Baru).
-     * Route: /portfolio/{slug}
+     * Menampilkan detail portfolio.
      */
     public function showPortfolio(Portfolio $portfolio)
     {
         $settings = Setting::first();
 
-        // Ambil portfolio lain sebagai rekomendasi
         $relatedPortfolios = Portfolio::where('id', '!=', $portfolio->id)
             ->latest()
             ->take(3)
@@ -167,8 +157,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Menampilkan Detail Service.
-     * Route: /service/{id}
+     * Menampilkan detail service.
      */
     public function showService(Service $service)
     {
@@ -181,18 +170,26 @@ class HomeController extends Controller
     }
 
     /**
-     * Kirim Pesan Kontak.
+     * Menyimpan pesan kontak dari frontend ke admin inbox.
      */
-    public function storeContact(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string',
-        ]);
+public function storeContact(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'message' => 'required|string|max:5000',
+    ]);
 
-        Contact::create($validated);
+    Contact::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'message' => $validated['message'],
+        'is_read' => false,
+    ]);
 
-        return redirect()->back()->with('success', 'Pesan Anda berhasil dikirim! Tim kami akan segera menghubungi Anda.');
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Pesan Anda berhasil dikirim! Tim kami akan segera menghubungi Anda.',
+    ]);
 }
+    }

@@ -79,7 +79,7 @@
                     </div>
                     <p class="text-sm font-medium text-gray-500">Unread</p>
                     <p class="mt-2 text-3xl font-bold text-gray-950">
-                        {{ $contacts->where('status', false)->count() }}
+                        {{ \App\Models\Contact::where('is_read', false)->count() }}
                     </p>
                 </div>
 
@@ -91,9 +91,43 @@
                     </div>
                     <p class="text-sm font-medium text-gray-500">Read</p>
                     <p class="mt-2 text-3xl font-bold text-gray-950">
-                        {{ $contacts->where('status', true)->count() }}
+                        {{ \App\Models\Contact::where('is_read', true)->count() }}
                     </p>
                 </div>
+            </div>
+
+            <!-- Filter -->
+            <div class="rounded-[2rem] border border-gray-200 bg-white p-6 shadow-sm">
+                <form method="GET" action="{{ route('admin.contacts.index') }}">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                Filter Status
+                            </label>
+
+                            <select name="status"
+                                    class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold text-gray-700 outline-none transition focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5 sm:w-64">
+                                <option value="">All Messages</option>
+                                <option value="unread" @selected(request('status') === 'unread')>Unread</option>
+                                <option value="read" @selected(request('status') === 'read')>Read</option>
+                            </select>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button type="submit"
+                                    class="inline-flex items-center justify-center rounded-2xl bg-gray-950 px-5 py-4 text-sm font-bold text-white shadow-lg shadow-gray-900/10 transition hover:bg-gray-800">
+                                Filter
+                            </button>
+
+                            @if(request('status'))
+                                <a href="{{ route('admin.contacts.index') }}"
+                                   class="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-bold text-gray-700 transition hover:bg-gray-50 hover:text-gray-950">
+                                    Reset
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <!-- Main Card -->
@@ -136,7 +170,7 @@
                                 <th scope="col" class="hidden px-6 py-4 text-left text-xs font-bold uppercase tracking-[0.18em] text-gray-400 md:table-cell">
                                     Received
                                 </th>
-                                <th scope="col" class="w-48 px-6 py-4 text-right text-xs font-bold uppercase tracking-[0.18em] text-gray-400">
+                                <th scope="col" class="w-64 px-6 py-4 text-right text-xs font-bold uppercase tracking-[0.18em] text-gray-400">
                                     Actions
                                 </th>
                             </tr>
@@ -144,9 +178,9 @@
 
                         <tbody class="divide-y divide-gray-100 bg-white">
                             @forelse ($contacts as $contact)
-                                <tr class="transition hover:bg-gray-50 {{ !$contact->status ? 'bg-gray-50/70' : '' }}">
+                                <tr class="transition hover:bg-gray-50 {{ !$contact->is_read ? 'bg-gray-50/70' : '' }}">
                                     <td class="px-6 py-5">
-                                        @if(!$contact->status)
+                                        @if(!$contact->is_read)
                                             <span class="inline-flex items-center gap-2 rounded-full bg-gray-950 px-3 py-1 text-xs font-bold text-white">
                                                 <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
                                                 Unread
@@ -202,6 +236,18 @@
                                                class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-bold text-gray-700 shadow-sm transition hover:bg-gray-950 hover:text-white">
                                                 View
                                             </a>
+
+                                            <form action="{{ route('admin.contacts.toggle-read', $contact->id) }}"
+                                                  method="POST"
+                                                  class="inline-block">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
+                                                    {{ $contact->is_read ? 'Mark Unread' : 'Mark Read' }}
+                                                </button>
+                                            </form>
 
                                             <form action="{{ route('admin.contacts.destroy', $contact->id) }}"
                                                   method="POST"
