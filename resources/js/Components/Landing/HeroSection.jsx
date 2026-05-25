@@ -152,7 +152,7 @@ const ProfessionalHero = ({ hero }) => {
     'Completely integrated digital platform process architecture at scale across streamlines business empowerment.';
 
   /* ── Typing animations ── */
-  const badge = useTypewriter('// Build For Business', 45, 300);
+  const badge = useTypewriter('', 45, 300);
   const headline = useSequentialTypewriter(headlineLines, 48, 900);
   const sub = useTypewriter(subtext, 18, headline.allDone ? 300 : 99999);
 
