@@ -106,6 +106,9 @@ const AboutSection = ({ about }) => {
                                         <div className="hidden md:block absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75"></div>
                                         <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-blue-600 relative z-10" />
                                     </div>
+                                    <span className="text-[10px] md:text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                        DISCOVER OUR STORY
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -237,15 +240,6 @@ const AboutSection = ({ about }) => {
                                             transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s'
                                         }}
                                     >
-                                        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
-                                            <div className="p-1.5 md:p-2 lg:p-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg md:rounded-xl">
-                                                <TrendingUp className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-white" />
-                                            </div>
-                                            <div>
-                                                <div className="text-sm md:text-xl lg:text-2xl font-bold text-gray-900">98%</div>
-                                                <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-500 font-medium">Success Rate</div>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     {/* Image with magnetic effect */}
