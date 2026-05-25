@@ -106,9 +106,6 @@ const AboutSection = ({ about }) => {
                                         <div className="hidden md:block absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75"></div>
                                         <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-blue-600 relative z-10" />
                                     </div>
-                                    <span className="text-[10px] md:text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                        DISCOVER OUR STORY
-                                    </span>
                                 </div>
                             </div>
                         </div>
