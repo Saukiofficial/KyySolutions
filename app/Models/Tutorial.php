@@ -18,4 +18,8 @@ class Tutorial extends Model
         'video_url',
         'is_published',
     ];
+
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 }

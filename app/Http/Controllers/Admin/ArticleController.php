@@ -10,132 +10,141 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil artikel terbaru dengan pagination
-        $articles = Article::latest()->paginate(10);
+        $articles = Article::query()
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $query->where(function ($subQuery) use ($request) {
+                    $subQuery->where('title', 'like', '%' . $request->search . '%')
+                        ->orWhere('category', 'like', '%' . $request->search . '%');
+                });
+            })
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $query->where('category', $request->category);
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                if ($request->status === 'published') {
+                    $query->where('is_published', true);
+                }
+
+                if ($request->status === 'draft') {
+                    $query->where('is_published', false);
+                }
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.articles.index', compact('articles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.articles.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // 1. Validasi Input
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'category' => 'required|string',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', // Max 2MB
-
-            // Validasi Promo (Opsional)
-            'promo_title' => 'nullable|string|max:100',
-            'promo_link' => 'nullable|string|max:255',
-            'promo_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'category' => 'required|string|max:100',
+            'thumbnail' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // 2. Generate Slug Unik
-        $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
+        $validated['slug'] = $this->generateUniqueSlug($validated['title']);
 
-        // 3. Upload Thumbnail Artikel
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
+            $validated['thumbnail'] = $request->file('thumbnail')->store('articles/thumbnails', 'public');
         }
 
-        // 4. Upload Banner Promo (Jika ada)
-        if ($request->hasFile('promo_image')) {
-            $validated['promo_image'] = $request->file('promo_image')->store('promos', 'public');
-        }
+        $validated['is_published'] = $request->input('action') === 'draft' ? false : true;
 
-        // 5. Simpan ke Database
         Article::create($validated);
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article created successfully.');
+        return redirect()
+            ->route('admin.articles.index')
+            ->with('success', $validated['is_published'] ? 'Article berhasil dipublish.' : 'Article berhasil disimpan sebagai draft.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Article $article)
     {
         return view('admin.articles.edit', compact('article'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Article $article)
     {
-        // 1. Validasi Input
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'category' => 'required|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-
-            // Validasi Promo
-            'promo_title' => 'nullable|string|max:100',
-            'promo_link' => 'nullable|string|max:255',
-            'promo_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'category' => 'required|string|max:100',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // 2. Update Slug jika judul berubah
         if ($request->title !== $article->title) {
-            $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
+            $validated['slug'] = $this->generateUniqueSlug($validated['title'], $article->id);
         }
 
-        // 3. Update Thumbnail (Hapus lama, Simpan baru)
         if ($request->hasFile('thumbnail')) {
             if ($article->thumbnail && Storage::disk('public')->exists($article->thumbnail)) {
                 Storage::disk('public')->delete($article->thumbnail);
             }
-            $validated['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
+
+            $validated['thumbnail'] = $request->file('thumbnail')->store('articles/thumbnails', 'public');
         }
 
-        // 4. Update Banner Promo (Hapus lama, Simpan baru)
-        if ($request->hasFile('promo_image')) {
-            if ($article->promo_image && Storage::disk('public')->exists($article->promo_image)) {
-                Storage::disk('public')->delete($article->promo_image);
-            }
-            $validated['promo_image'] = $request->file('promo_image')->store('promos', 'public');
-        }
+        $validated['is_published'] = $request->input('action') === 'draft' ? false : true;
 
-        // 5. Update Database
         $article->update($validated);
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article updated successfully.');
+        return redirect()
+            ->route('admin.articles.index')
+            ->with('success', $validated['is_published'] ? 'Article berhasil diperbarui dan dipublish.' : 'Article berhasil diperbarui sebagai draft.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Article $article)
     {
-        // 1. Hapus Thumbnail
         if ($article->thumbnail && Storage::disk('public')->exists($article->thumbnail)) {
             Storage::disk('public')->delete($article->thumbnail);
         }
 
-        // 2. Hapus Banner Promo
-        if ($article->promo_image && Storage::disk('public')->exists($article->promo_image)) {
-            Storage::disk('public')->delete($article->promo_image);
-        }
-
-        // 3. Hapus Data
         $article->delete();
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article deleted.');
+        return redirect()
+            ->route('admin.articles.index')
+            ->with('success', 'Article berhasil dihapus.');
+    }
+
+    public function uploadEditorImage(Request $request)
+    {
+        $request->validate([
+            'upload' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:4096',
+        ]);
+
+        $path = $request->file('upload')->store('articles/editor', 'public');
+        $url = asset('storage/' . $path);
+
+        return response()->json([
+            'url' => $url,
+            'default' => $url,
+        ]);
+    }
+
+    private function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (
+            Article::where('slug', $slug)
+                ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

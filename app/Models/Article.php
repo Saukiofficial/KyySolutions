@@ -16,8 +16,9 @@ class Article extends Model
         'content',
         'category',
         'is_published',
-        'promo_title',
-        'promo_link',
-        'promo_image',
+    ];
+
+    protected $casts = [
+        'is_published' => 'boolean',
     ];
 }

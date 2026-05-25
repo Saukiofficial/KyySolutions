@@ -1,3 +1,6 @@
-<div>
-    <!-- Happiness is not something readymade. It comes from your own actions. - Dalai Lama -->
-</div>
+@props(['header' => null])
+
+@include('layouts.admin', [
+    'header' => $header,
+    'slot' => $slot,
+])

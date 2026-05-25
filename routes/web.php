@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Import Home Controller (Frontend)
 use App\Http\Controllers\HomeController;
@@ -37,15 +35,15 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Halaman Detail Layanan
 Route::get('/service/{service}', [HomeController::class, 'showService'])->name('service.show');
 
-// Halaman Portal Berita (Daftar Artikel & Detail)
+// Halaman Portal Berita / Artikel
 Route::get('/news', [HomeController::class, 'indexNews'])->name('news.index');
 Route::get('/news/{article:slug}', [HomeController::class, 'showArticle'])->name('article.show');
 
-// Halaman Portal Tutorial (Daftar Tutorial & Detail)
+// Halaman Portal Tutorial
 Route::get('/tutorials', [HomeController::class, 'indexTutorials'])->name('tutorials.index');
 Route::get('/tutorials/{tutorial:slug}', [HomeController::class, 'showTutorial'])->name('tutorials.show');
 
-// TAMBAHAN: Halaman Detail Portfolio
+// Halaman Detail Portfolio
 Route::get('/portfolio/{portfolio:slug}', [HomeController::class, 'showPortfolio'])->name('portfolio.show');
 
 // Kirim Pesan Kontak
@@ -55,6 +53,7 @@ Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.
 // =========================================================================
 // == USER PROFILE ROUTES (AUTHENTICATED USER)
 // =========================================================================
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -75,36 +74,58 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // == DUPLIKASI ROUTE PROFILE (KHUSUS LAYOUT ADMIN) ==
+    // Profile khusus layout admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Admin Resources
+    // Hero Section
     Route::get('/hero-sections', [HeroSectionController::class, 'index'])->name('hero-sections.index');
     Route::put('/hero-sections/{heroSection}', [HeroSectionController::class, 'update'])->name('hero-sections.update');
 
+    // About Section
     Route::get('/about-sections', [AboutSectionController::class, 'index'])->name('about-sections.index');
     Route::put('/about-sections/{aboutSection}', [AboutSectionController::class, 'update'])->name('about-sections.update');
 
+    // Services
     Route::resource('services', ServiceController::class);
+
+    // Portfolios
     Route::resource('portfolios', PortfolioController::class);
+
+    // Teams
     Route::resource('teams', TeamController::class);
+
+    // Partners
     Route::resource('partners', PartnerController::class);
 
-    // Route Manajemen Artikel Berita
+    // Articles / News
+    // Route ini dipakai CKEditor untuk upload gambar artikel ke storage Laravel.
+    Route::post('articles/upload-image', [ArticleController::class, 'uploadEditorImage'])
+        ->name('articles.upload-image');
+
     Route::resource('articles', ArticleController::class);
 
-    // Route Manajemen Tutorial
+    // Tutorials
+    // Route ini dipakai CKEditor untuk upload gambar tutorial ke storage Laravel.
+    Route::post('tutorials/upload-image', [TutorialController::class, 'uploadEditorImage'])
+        ->name('tutorials.upload-image');
+
     Route::resource('tutorials', TutorialController::class);
 
-    // Contact Messages (Hanya Index, Show, Destroy)
-    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
-    Route::patch('contacts/{contact}/toggle-read', [ContactController::class, 'toggleRead'])->name('contacts.toggle-read');
+    // Contact Messages
+    Route::resource('contacts', ContactController::class)->only([
+        'index',
+        'show',
+        'destroy',
+    ]);
+
+    Route::patch('contacts/{contact}/toggle-read', [ContactController::class, 'toggleRead'])
+        ->name('contacts.toggle-read');
 
     // General Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings/{setting}', [SettingController::class, 'update'])->name('settings.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -1,191 +1,152 @@
-<header class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-blue-950 shadow-2xl border-b border-blue-800/30">
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+<header class="topbar">
+    <div class="topbar-inner">
 
-            <!-- Header: Left side -->
-            <div class="flex items-center space-x-4">
-                <!-- Hamburger button with elegant animation -->
-                <button class="lg:hidden relative group" @click.stop="sidebarOpen = !sidebarOpen"
-                    aria-controls="sidebar" :aria-expanded="sidebarOpen">
-                    <span class="sr-only">Open sidebar</span>
-                    <div class="relative w-10 h-10 rounded-lg bg-blue-800/50 hover:bg-blue-700/50 transition-all duration-300 flex items-center justify-center group-hover:scale-110">
-                        <svg class="w-5 h-5 text-blue-200 group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
-                            <rect x="4" y="5" width="16" height="2" rx="1" />
-                            <rect x="4" y="11" width="16" height="2" rx="1" />
-                            <rect x="4" y="17" width="16" height="2" rx="1" />
-                        </svg>
-                    </div>
+        <!-- Left: Hamburger + Search -->
+        <div class="topbar-left">
+            <button class="topbar-hamburger lg:hidden"
+                @click.stop="sidebarOpen = !sidebarOpen"
+                aria-controls="sidebar"
+                :aria-expanded="sidebarOpen">
+                <span class="sr-only">Open sidebar</span>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+                    <line x1="2" y1="4.5" x2="16" y2="4.5"/>
+                    <line x1="2" y1="9" x2="16" y2="9"/>
+                    <line x1="2" y1="13.5" x2="16" y2="13.5"/>
+                </svg>
+            </button>
+
+            <div class="topbar-search hidden md:flex">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" class="search-icon">
+                    <circle cx="6.5" cy="6.5" r="4.5"/>
+                    <line x1="10" y1="10" x2="13.5" y2="13.5"/>
+                </svg>
+                <input type="text" placeholder="Search anything..." class="search-input" />
+                <kbd class="search-kbd">⌘K</kbd>
+            </div>
+        </div>
+
+        <!-- Right: Actions + User -->
+        <div class="topbar-right">
+
+            <!-- Notifications -->
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" class="topbar-icon-btn" title="Notifications">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notif-dot"></span>
                 </button>
 
-                <!-- Search bar for desktop (optional) -->
-                <div class="hidden md:flex items-center">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                <!-- Notification Dropdown -->
+                <div x-show="open"
+                     @click.outside="open = false"
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="opacity-0 translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-100"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="dropdown-panel notif-panel"
+                     x-cloak>
+                    <div class="dropdown-header">
+                        <span class="dropdown-title">Notifications</span>
+                        <span class="notif-badge">3 new</span>
+                    </div>
+                    <div class="notif-list">
+                        <div class="notif-item unread">
+                            <div class="notif-dot-inline"></div>
+                            <div class="notif-content">
+                                <p>New contact message received</p>
+                                <span>2 minutes ago</span>
+                            </div>
                         </div>
-                        <input type="text"
-                               placeholder="Search..."
-                               class="w-64 pl-10 pr-4 py-2 bg-blue-900/30 border border-blue-700/30 rounded-lg text-sm text-blue-100 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300">
+                        <div class="notif-item unread">
+                            <div class="notif-dot-inline"></div>
+                            <div class="notif-content">
+                                <p>Portfolio updated successfully</p>
+                                <span>1 hour ago</span>
+                            </div>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-dot-inline invisible"></div>
+                            <div class="notif-content">
+                                <p>New team member added</p>
+                                <span>3 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="#" class="dropdown-footer-link">View all</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Header: Right side -->
-            <div class="flex items-center space-x-3">
+            <div class="topbar-divider"></div>
 
-                <!-- Notifications (optional) -->
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open"
-                            class="relative w-10 h-10 rounded-lg bg-blue-800/50 hover:bg-blue-700/50 transition-all duration-300 flex items-center justify-center group hover:scale-110">
-                        <svg class="w-5 h-5 text-blue-200 group-hover:text-white transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <!-- Notification badge -->
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/50"></span>
-                    </button>
+            <!-- User Menu -->
+            <div class="relative" x-data="{ open: false }">
+                <button class="user-btn"
+                        @click.prevent="open = !open"
+                        :aria-expanded="open">
+                    <div class="user-avatar">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                    <div class="user-info hidden sm:block">
+                        <span class="user-name">{{ Auth::user()->name }}</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <svg class="user-chevron" :class="{'rotated': open}" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <polyline points="2,5 7,10 12,5"/>
+                    </svg>
+                </button>
 
-                    <!-- Notification dropdown -->
-                    <div x-show="open"
-                         @click.outside="open = false"
-                         x-transition:enter="transition ease-out duration-200 transform"
-                         x-transition:enter-start="opacity-0 -translate-y-2"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="transition ease-out duration-200"
-                         x-transition:leave-start="opacity-100"
-                         x-transition:leave-end="opacity-0"
-                         class="absolute right-0 mt-2 w-80 bg-gradient-to-b from-blue-950 to-blue-900 border border-blue-700/30 rounded-xl shadow-2xl overflow-hidden z-50"
-                         x-cloak>
-                        <div class="p-4 border-b border-blue-700/30">
-                            <h3 class="text-sm font-semibold text-white">Notifications</h3>
-                        </div>
-                        <div class="max-h-96 overflow-y-auto">
-                            <div class="p-4 hover:bg-blue-800/30 transition-colors duration-200 cursor-pointer border-b border-blue-800/20">
-                                <p class="text-sm text-blue-100">New contact message received</p>
-                                <p class="text-xs text-blue-400 mt-1">2 minutes ago</p>
-                            </div>
-                            <div class="p-4 hover:bg-blue-800/30 transition-colors duration-200 cursor-pointer border-b border-blue-800/20">
-                                <p class="text-sm text-blue-100">Portfolio updated successfully</p>
-                                <p class="text-xs text-blue-400 mt-1">1 hour ago</p>
-                            </div>
-                            <div class="p-4 hover:bg-blue-800/30 transition-colors duration-200 cursor-pointer">
-                                <p class="text-sm text-blue-100">New team member added</p>
-                                <p class="text-xs text-blue-400 mt-1">3 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="p-3 border-t border-blue-700/30 text-center">
-                            <a href="#" class="text-sm text-cyan-400 hover:text-cyan-300 transition-colors duration-200">View all notifications</a>
+                <!-- User Dropdown -->
+                <div class="dropdown-panel user-panel"
+                    @click.outside="open = false"
+                    @keydown.escape.window="open = false"
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    x-cloak>
+
+                    <div class="user-panel-header">
+                        <div class="user-avatar-lg">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                        <div>
+                            <div class="upanel-name">{{ Auth::user()->name }}</div>
+                            <div class="upanel-email">{{ Auth::user()->email }}</div>
                         </div>
                     </div>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ route('admin.profile.edit') }}" class="dropdown-item" @click="open = false">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.settings.index') }}" class="dropdown-item" @click="open = false">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                Settings
+                            </a>
+                        </li>
+                        <li class="dropdown-separator"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item danger">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                    Sign Out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-
-                <!-- Divider -->
-                <div class="h-8 w-px bg-blue-700/50"></div>
-
-                <!-- User button with elegant design -->
-                <div class="relative inline-flex" x-data="{ open: false }">
-                    <button class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-blue-800/30 hover:bg-blue-700/40 transition-all duration-300 group"
-                            @click.prevent="open = !open"
-                            :aria-expanded="open">
-                        <!-- User avatar with gradient -->
-                        <div class="relative">
-                            <div class="absolute inset-0 bg-cyan-400/30 blur-md rounded-full group-hover:bg-cyan-400/40 transition-all duration-300"></div>
-                            <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 text-white flex items-center justify-center font-bold text-sm shadow-lg">
-                                {{ substr(Auth::user()->name, 0, 1) }}
-                            </div>
-                            <!-- Online status indicator -->
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-blue-950 rounded-full shadow-lg"></div>
-                        </div>
-
-                        <!-- User info -->
-                        <div class="hidden sm:flex flex-col items-start">
-                            <span class="text-sm font-semibold text-white group-hover:text-cyan-200 transition-colors duration-300">
-                                {{ Auth::user()->name }}
-                            </span>
-                            <span class="text-xs text-blue-300">Administrator</span>
-                        </div>
-
-                        <!-- Dropdown arrow -->
-                        <svg class="w-4 h-4 text-blue-300 group-hover:text-white transition-all duration-300"
-                             :class="{'rotate-180': open}"
-                             viewBox="0 0 12 12"
-                             fill="currentColor">
-                            <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-                        </svg>
-                    </button>
-
-                    <!-- Elegant Dropdown Menu -->
-                    <div class="origin-top-right z-50 absolute top-full right-0 min-w-56 bg-gradient-to-b from-blue-950 to-blue-900 border border-blue-700/30 rounded-xl shadow-2xl overflow-hidden mt-2"
-                        @click.outside="open = false"
-                        @keydown.escape.window="open = false"
-                        x-show="open"
-                        x-transition:enter="transition ease-out duration-200 transform"
-                        x-transition:enter-start="opacity-0 -translate-y-2"
-                        x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-out duration-200"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        x-cloak>
-
-                        <!-- User info header -->
-                        <div class="p-4 border-b border-blue-700/30 bg-blue-900/30">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 text-white flex items-center justify-center font-bold shadow-lg">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                </div>
-                                <div>
-                                    <div class="font-semibold text-white">{{ Auth::user()->name }}</div>
-                                    <div class="text-xs text-blue-300">{{ Auth::user()->email }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Menu items -->
-                        <ul class="py-2">
-                            <li>
-                                <a class="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-800/40 hover:text-white transition-all duration-200 group"
-                                    href="{{ route('admin.profile.edit') }}"
-                                    @click="open = false">
-                                    <svg class="w-5 h-5 mr-3 text-blue-400 group-hover:text-cyan-400 transition-colors duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                    <span class="font-medium">My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="flex items-center px-4 py-3 text-blue-100 hover:bg-blue-800/40 hover:text-white transition-all duration-200 group"
-                                    href="{{ route('admin.settings.index') }}"
-                                    @click="open = false">
-                                    <svg class="w-5 h-5 mr-3 text-blue-400 group-hover:text-cyan-400 transition-colors duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.096 2.572-1.065z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span class="font-medium">Settings</span>
-                                </a>
-                            </li>
-
-                            <!-- Divider -->
-                            <li>
-                                <div class="h-px bg-blue-700/30 my-2"></div>
-                            </li>
-
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full flex items-center px-4 py-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-200 group">
-                                        <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        <span class="font-medium">Sign Out</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
 
         </div>
@@ -193,26 +154,393 @@
 </header>
 
 <style>
-/* Custom scrollbar for notifications */
-.max-h-96::-webkit-scrollbar {
+/* ── Core Variables ───────────────────────────────────── */
+:root {
+    --topbar-bg: #ffffff;
+    --topbar-border: #e4e4e7;
+    --topbar-height: 56px;
+
+    --text-primary: #18181b;
+    --text-secondary: #71717a;
+    --text-muted: #a1a1aa;
+
+    --surface-1: #ffffff;
+    --surface-2: #fafafa;
+    --surface-hover: #f4f4f5;
+    --surface-active: #e4e4e7;
+
+    --border-default: #e4e4e7;
+    --border-strong: #d4d4d8;
+
+    --accent: #18181b;
+    --danger: #dc2626;
+    --danger-hover-bg: #fef2f2;
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+
+    --shadow-dropdown: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* ── Topbar Shell ─────────────────────────────────────── */
+.topbar {
+    position: relative;
+    background: var(--topbar-bg);
+    border-bottom: 1px solid var(--topbar-border);
+    height: var(--topbar-height);
+    z-index: 40;
+}
+
+.topbar-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+/* ── Left Side ────────────────────────────────────────── */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.topbar-hamburger:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.topbar-search {
+    position: relative;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 240px;
+    height: 32px;
+    padding: 0 60px 0 32px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--surface-2);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:hover {
+    background: var(--surface-1);
+    border-color: var(--border-strong);
+}
+.search-input:focus {
+    background: var(--surface-1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(24,24,27,0.06);
+}
+
+.search-kbd {
+    position: absolute;
+    right: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-hover);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: inherit;
+    line-height: 1.6;
+    pointer-events: none;
+}
+
+/* ── Right Side ───────────────────────────────────────── */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.topbar-icon-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.topbar-icon-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
     width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 1.5px solid var(--topbar-bg);
 }
 
-.max-h-96::-webkit-scrollbar-track {
-    background: rgba(30, 58, 138, 0.3);
+.topbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    margin: 0 4px;
 }
 
-.max-h-96::-webkit-scrollbar-thumb {
-    background: rgba(59, 130, 246, 0.5);
-    border-radius: 3px;
+/* ── User Button ──────────────────────────────────────── */
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 8px 4px 4px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.user-btn:hover { background: var(--surface-hover); }
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
 }
 
-.max-h-96::-webkit-scrollbar-thumb:hover {
-    background: rgba(59, 130, 246, 0.7);
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
 }
 
-/* Smooth rotation for dropdown arrow */
-svg {
-    transition: transform 0.3s ease;
+.user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.user-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+.user-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+.user-chevron.rotated { transform: rotate(180deg); }
+
+/* ── Dropdown Base ────────────────────────────────────── */
+.dropdown-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-dropdown);
+    overflow: hidden;
+    z-index: 50;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.dropdown-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.notif-badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: #991b1b;
+    background: #fee2e2;
+    padding: 2px 7px;
+    border-radius: 20px;
+}
+
+.dropdown-footer {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border-default);
+}
+
+.dropdown-footer-link {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.dropdown-footer-link:hover { color: var(--text-primary); }
+
+/* ── Notification Panel ───────────────────────────────── */
+.notif-panel { width: 300px; }
+
+.notif-list {}
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-default);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--surface-2); }
+.notif-item.unread { background: #fafafa; }
+.notif-item.unread:hover { background: var(--surface-hover); }
+
+.notif-dot-inline {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3b82f6;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+.notif-dot-inline.invisible { background: transparent; }
+
+.notif-content p {
+    font-size: 13px;
+    color: var(--text-primary);
+    margin: 0 0 2px;
+    line-height: 1.4;
+}
+.notif-content span {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ── User Panel ───────────────────────────────────────── */
+.user-panel { width: 224px; }
+
+.user-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-2);
+}
+
+.user-avatar-lg {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.upanel-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.upanel-email {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 148px;
+}
+
+/* ── Dropdown Menu Items ──────────────────────────────── */
+.dropdown-menu {
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    text-align: left;
+}
+.dropdown-item:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+.dropdown-item.danger { color: var(--danger); }
+.dropdown-item.danger:hover {
+    background: var(--danger-hover-bg);
+    color: var(--danger);
+}
+
+.dropdown-separator {
+    height: 1px;
+    background: var(--border-default);
+    margin: 4px 0;
 }
 </style>

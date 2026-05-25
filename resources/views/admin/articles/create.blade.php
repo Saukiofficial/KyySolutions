@@ -1,478 +1,389 @@
 <x-admin-layout>
+    <x-slot name="header">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-950 text-white shadow-lg shadow-gray-900/20">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2M7 8h6v4H7V8z"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-500 shadow-sm">
+                        <span class="h-1.5 w-1.5 rounded-full bg-gray-900"></span>
+                        Article CMS
+                    </div>
+
+                    <h2 class="mt-3 text-2xl font-bold tracking-tight text-gray-950">
+                        {{ __('Create New Article') }}
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-500">
+                        Write news, updates, and blog content with a professional CMS editor.
+                    </p>
+                </div>
+            </div>
+
+            <a href="{{ route('admin.articles.index') }}"
+               class="inline-flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </a>
+        </div>
+    </x-slot>
+
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     <style>
-        /* Modern Editor Styling */
-        body {
-            background: #f8fafc;
-        }
-
-        .editor-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 200px;
-            position: relative;
+        .cms-editor-shell .ck.ck-editor {
+            border-radius: 24px !important;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 12px 30px rgba(24, 24, 27, 0.06);
         }
 
-        .editor-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
-            opacity: 0.4;
+        .cms-editor-shell .ck.ck-toolbar {
+            border: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            background: #fafafa !important;
+            padding: 10px !important;
         }
 
-        .header-content {
-            position: relative;
-            z-index: 10;
-            padding: 2rem 0 1.5rem;
-        }
-
-        .editor-wrapper {
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none;
-            margin-top: 0;
-            position: relative;
-            z-index: 20;
-        }
-
-        .dark .editor-wrapper {
-            background: transparent;
-            box-shadow: none;
-        }
-
-        /* CKEditor Custom Styling */
-        .ck-editor__editable {
-            min-height: 500px;
-            background-color: #1e293b !important;
-            color: #e2e8f0 !important;
+        .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable {
+            min-height: 580px;
+            border: none !important;
+            background: #ffffff !important;
+            color: #111827 !important;
+            padding: 32px !important;
             font-size: 16px;
-            line-height: 1.75;
-            padding: 2rem !important;
-            border: none !important;
+            line-height: 1.8;
         }
 
-        .dark .ck-editor__editable {
-            background-color: #1e293b !important;
-            color: #e2e8f0 !important;
+        .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable:focus {
+            box-shadow: none !important;
         }
 
-        .ck-toolbar {
-            background: #1e293b !important;
-            border: none !important;
-            border-bottom: 1px solid #334155 !important;
-            padding: 1rem !important;
-            border-radius: 0 !important;
+        .cms-editor-shell .ck-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
         }
 
-        .dark .ck-toolbar {
-            background: #1e293b !important;
-            border-bottom-color: #334155 !important;
+        .cms-editor-shell .ck-content h2 {
+            font-size: 1.5rem;
+            font-weight: 750;
+            margin-top: 1.5rem;
+            margin-bottom: .75rem;
+        }
+
+        .cms-editor-shell .ck-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 1.25rem;
+            margin-bottom: .5rem;
+        }
+
+        .cms-editor-shell .ck-content p {
+            margin-bottom: 1rem;
+        }
+
+        .cms-editor-shell .ck-content blockquote {
+            border-left: 4px solid #18181b;
+            background: #f4f4f5;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-style: normal;
+        }
+
+        .cms-editor-shell .ck-content img {
+            border-radius: 18px;
+            margin: 20px auto;
         }
 
         .ck.ck-powered-by {
-            display: none;
-        }
-
-        /* Input Styling */
-        .modern-input {
-            border: 1px solid #334155;
-            transition: all 0.3s ease;
-            font-size: 15px;
-            background: #1e293b;
-        }
-
-        .modern-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .dark .modern-input {
-            border-color: #334155;
-            background: #1e293b;
-        }
-
-        .dark .modern-input:focus {
-            border-color: #667eea;
-        }
-
-        /* Title Input Special */
-        .title-input {
-            font-size: 2rem;
-            font-weight: 700;
-            border: none;
-            border-bottom: 2px solid #334155;
-            border-radius: 0;
-            padding: 1rem 0;
-            background: #1e293b;
-            color: #f8fafc;
-        }
-
-        .title-input:focus {
-            outline: none;
-            border-bottom-color: #667eea;
-            box-shadow: none;
-        }
-
-        .dark .title-input {
-            border-bottom-color: #334155;
-            color: #f8fafc;
-            background: #1e293b;
-        }
-
-        /* Card Styling */
-        .settings-card {
-            background: #1e293b;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            transition: all 0.3s ease;
-        }
-
-        .settings-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transform: translateY(-1px);
-        }
-
-        .dark .settings-card {
-            background: #1e293b;
-            border-color: #334155;
-        }
-
-        /* Button Styling */
-        .btn-publish {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-publish:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-draft {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .btn-draft:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        /* File Upload */
-        .file-upload-wrapper {
-            position: relative;
-            overflow: hidden;
-            border: 2px dashed #475569;
-            border-radius: 8px;
-            background: #0f172a;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .file-upload-wrapper:hover {
-            border-color: #667eea;
-            background: #1e293b;
-        }
-
-        .dark .file-upload-wrapper {
-            border-color: #475569;
-            background: #0f172a;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Promo Card */
-        .promo-card {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 2px solid #fbbf24;
-        }
-
-        .dark .promo-card {
-            background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
-            border-color: #f59e0b;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            height: 4px;
-            background: #e2e8f0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s ease;
+            display: none !important;
         }
     </style>
 
-    <!-- Progress Bar -->
-    <div class="progress-bar">
-        <div class="progress-fill" id="progressBar"></div>
-    </div>
+    <div class="py-6">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <form method="POST"
+                  action="{{ route('admin.articles.store') }}"
+                  enctype="multipart/form-data"
+                  class="space-y-6"
+                  id="articleForm">
+                @csrf
 
-    <!-- Header with Gradient -->
-    <div class="editor-container">
-        <div class="header-content">
-            <div class="max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-4xl font-bold text-white mb-2">Create New Article</h1>
-                        <p class="text-purple-100 text-sm">Write and publish your story to the world</p>
-                    </div>
-                    <div class="hidden md:flex items-center gap-3">
-                        <span class="badge bg-white/20 text-white border border-white/30">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                            Draft Mode
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div class="grid grid-cols-1 gap-6 xl:grid-cols-12">
 
-    <div class="max-w-full mx-0 px-0 pb-8">
-        <form method="POST" action="{{ route('admin.articles.store') }}" enctype="multipart/form-data" id="articleForm">
-            @csrf
+                    <!-- Main Editor -->
+                    <div class="xl:col-span-8">
+                        <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
 
-            <div class="editor-wrapper animate-fade-in">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
+                            <div class="relative overflow-hidden border-b border-gray-200 bg-gray-950 px-8 py-8 text-white">
+                                <div class="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-white/10"></div>
+                                <div class="absolute -bottom-20 left-20 h-44 w-44 rounded-full bg-white/5"></div>
 
-                    <!-- Main Content Area -->
-                    <div class="lg:col-span-2 space-y-0 bg-[#0f172a] dark:bg-[#0f172a]">
-                        <div class="p-8 space-y-6">
-
-                        <!-- Title Input -->
-                        <div>
-                            <input
-                                type="text"
-                                name="title"
-                                class="title-input w-full dark:bg-transparent"
-                                placeholder="Enter your article title..."
-                                value="{{ old('title') }}"
-                                required
-                            />
-                            @error('title')
-                                <p class="text-red-500 text-sm mt-2 flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                    {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <!-- Content Editor -->
-                        <div>
-                            <textarea id="editor" name="content">{{ old('content') }}</textarea>
-                            @error('content')
-                                <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Writing Stats -->
-                        <div class="flex items-center gap-6 text-sm text-gray-400 dark:text-gray-400 pt-4 border-t border-gray-700 dark:border-gray-700">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span id="readTime">~2 min read</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                <span id="wordCount">0 words</span>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <!-- Sidebar Settings -->
-                    <div class="space-y-4 bg-[#1e293b] dark:bg-[#1e293b] p-6 border-l border-gray-700">
-
-                        <!-- Publish Settings Card -->
-                        <div class="settings-card p-6">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Publishing</h3>
-                            </div>
-
-                            <div class="space-y-5">
-                                <!-- Category -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Category</label>
-                                    <select name="category" class="modern-input w-full rounded-lg p-3 dark:text-gray-300" required>
-                                        <option value="">Select category...</option>
-                                        <option value="Technology">📱 Technology</option>
-                                        <option value="Business">💼 Business</option>
-                                        <option value="Tips & Trick">💡 Tips & Trick</option>
-                                        <option value="Company News">🏢 Company News</option>
-                                    </select>
-                                </div>
-
-                                <!-- Thumbnail Upload -->
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Featured Image</label>
-                                    <div class="file-upload-wrapper p-6 text-center">
-                                        <input
-                                            type="file"
-                                            name="thumbnail"
-                                            class="hidden"
-                                            id="thumbnailInput"
-                                            accept="image/*"
-                                            required
-                                        />
-                                        <label for="thumbnailInput" class="cursor-pointer">
-                                            <svg class="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Click to upload image</p>
-                                            <p class="text-xs text-gray-500 mt-1">PNG, JPG up to 10MB</p>
-                                        </label>
+                                <div class="relative">
+                                    <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1.5 text-xs font-semibold text-gray-200">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                                        Content Editor
                                     </div>
-                                    @error('thumbnail')
-                                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+
+                                    <h3 class="mt-5 text-2xl font-bold tracking-tight">
+                                        Write Article Content
+                                    </h3>
+
+                                    <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-300">
+                                        Use heading, image, table, quote, list, and embedded media inside the editor.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6 p-8">
+                                <div>
+                                    <label for="title" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Article Title
+                                    </label>
+
+                                    <input id="title"
+                                           type="text"
+                                           name="title"
+                                           value="{{ old('title') }}"
+                                           required
+                                           autofocus
+                                           placeholder="Example: Tips Memilih Website untuk UMKM"
+                                           class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-lg font-bold text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
+
+                                    @error('title')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <!-- Action Buttons -->
-                                <div class="space-y-3 pt-4">
-                                    <button type="submit" class="btn-publish w-full py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div class="cms-editor-shell">
+                                    <div class="mb-3 flex items-center justify-between gap-4">
+                                        <label for="editor" class="block text-sm font-semibold text-gray-800">
+                                            Article Content
+                                        </label>
+
+                                        <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
+                                            Rich Text Editor
+                                        </span>
+                                    </div>
+
+                                    <textarea id="editor" name="content">{{ old('content') }}</textarea>
+
+                                    @error('content')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-5 rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-500">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6M7 21h10a2 2 0 002-2V7l-5-5H7a2 2 0 00-2 2v15a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span id="wordCount">0 words</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span id="readTime">~1 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="xl:col-span-4">
+                        <div class="sticky top-6 space-y-6">
+
+                            <!-- Publish Panel -->
+                            <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                        Publish
+                                    </p>
+                                    <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                        Publishing Settings
+                                    </h3>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Publish now or save as draft.
+                                    </p>
+                                </div>
+
+                                <div class="space-y-4 p-6">
+                                    <button type="submit"
+                                            name="action"
+                                            value="publish"
+                                            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-950 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-gray-900/20 transition hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl">
                                         Publish Article
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/>
+                                        </svg>
                                     </button>
-                                    <button type="button" class="btn-draft w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+
+                                    <button type="submit"
+                                            name="action"
+                                            value="draft"
+                                            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-6 py-4 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
                                         Save as Draft
                                     </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Promo Card -->
-                        <div class="promo-card settings-card p-5">
-                            <div class="flex items-center gap-2 mb-3">
-                                <svg class="w-5 h-5 text-yellow-700 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                                <h3 class="text-sm font-bold text-yellow-900 dark:text-yellow-300 uppercase tracking-wider">Sidebar Promo</h3>
+                            <!-- Article Settings -->
+                            <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                        Settings
+                                    </p>
+                                    <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                        Article Detail
+                                    </h3>
+                                </div>
+
+                                <div class="space-y-5 p-6">
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                            Category
+                                        </label>
+
+                                        <select name="category"
+                                                required
+                                                class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold text-gray-700 outline-none transition focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
+                                            <option value="">Select category...</option>
+                                            @foreach(['Technology', 'Business', 'Tips & Trick', 'Company News'] as $cat)
+                                                <option value="{{ $cat }}" @selected(old('category') == $cat)>
+                                                    {{ $cat }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('category')
+                                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                            Featured Image
+                                        </label>
+
+                                        <input type="file"
+                                               name="thumbnail"
+                                               required
+                                               accept="image/*"
+                                               class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
+
+                                        <p class="mt-2 text-xs leading-5 text-gray-500">
+                                            Format: JPG, PNG, WEBP. Maksimal 2MB.
+                                        </p>
+
+                                        @error('thumbnail')
+                                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
-                            <p class="text-xs text-yellow-800 dark:text-yellow-400 mb-4">Optional promotional content for this article</p>
 
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-yellow-900 dark:text-yellow-300 mb-2">Promo Title</label>
-                                    <input
-                                        type="text"
-                                        name="promo_title"
-                                        class="modern-input w-full rounded-lg p-2 text-sm bg-white dark:bg-gray-800"
-                                        placeholder="Special offer title..."
-                                        value="{{ old('promo_title') }}"
-                                    />
+                            <!-- Tip -->
+                            <div class="rounded-[2rem] border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
+                                <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-gray-950">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z"/>
+                                    </svg>
                                 </div>
 
-                                <div>
-                                    <label class="block text-xs font-semibold text-yellow-900 dark:text-yellow-300 mb-2">Target Link</label>
-                                    <input
-                                        type="url"
-                                        name="promo_link"
-                                        class="modern-input w-full rounded-lg p-2 text-sm bg-white dark:bg-gray-800"
-                                        placeholder="https://example.com"
-                                        value="{{ old('promo_link') }}"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-semibold text-yellow-900 dark:text-yellow-300 mb-2">Promo Image</label>
-                                    <input
-                                        type="file"
-                                        name="promo_image"
-                                        class="block w-full text-xs text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-600 file:text-white hover:file:bg-yellow-700 cursor-pointer"
-                                        accept="image/*"
-                                    />
-                                </div>
+                                <h4 class="text-lg font-bold">Writing Tip</h4>
+                                <p class="mt-2 text-sm leading-6 text-gray-400">
+                                    Pakai judul yang jelas, paragraf pendek, dan gambar pendukung agar artikel mudah dibaca.
+                                </p>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
-    <!-- CKEditor Initialization -->
     <script>
-        // Custom Upload Adapter for Base64 Images
-        class MyUploadAdapter {
+        class LaravelUploadAdapter {
             constructor(loader) {
                 this.loader = loader;
+                this.url = "{{ route('admin.articles.upload-image') }}";
+                this.csrfToken = "{{ csrf_token() }}";
             }
 
             upload() {
-                return this.loader.file.then(file => new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve({ default: reader.result });
-                    reader.onerror = error => reject(error);
-                    reader.readAsDataURL(file);
-                }));
+                return this.loader.file.then(file => {
+                    return new Promise((resolve, reject) => {
+                        const formData = new FormData();
+                        formData.append('upload', file);
+
+                        fetch(this.url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': this.csrfToken,
+                                'Accept': 'application/json',
+                            },
+                            body: formData,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.url) {
+                                resolve({
+                                    default: data.url
+                                });
+                            } else {
+                                reject(data.message || 'Upload image gagal.');
+                            }
+                        })
+                        .catch(error => {
+                            reject(error.message || 'Terjadi kesalahan saat upload image.');
+                        });
+                    });
+                });
             }
 
             abort() {}
         }
 
-        function MyCustomUploadAdapterPlugin(editor) {
-            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                return new MyUploadAdapter(loader);
+        function LaravelUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = loader => {
+                return new LaravelUploadAdapter(loader);
             };
         }
 
-        // Initialize CKEditor
         let editorInstance;
+
         ClassicEditor
             .create(document.querySelector('#editor'), {
-                extraPlugins: [MyCustomUploadAdapterPlugin],
+                extraPlugins: [LaravelUploadAdapterPlugin],
                 toolbar: {
                     items: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', '|',
-                        'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'imageUpload', 'insertTable', 'mediaEmbed', '|',
-                        'undo', 'redo'
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        'blockQuote',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'imageUpload',
+                        'insertTable',
+                        'mediaEmbed',
+                        '|',
+                        'undo',
+                        'redo'
                     ]
                 },
                 heading: {
@@ -483,62 +394,50 @@
                         { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
                     ]
                 },
-                image: {
-                    toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side']
-                },
                 table: {
-                    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                },
+                mediaEmbed: {
+                    previewsInData: true
                 }
             })
             .then(editor => {
                 editorInstance = editor;
 
-                // Update word count on change
                 editor.model.document.on('change:data', () => {
                     updateStats();
                 });
+
+                updateStats();
             })
             .catch(error => {
                 console.error(error);
             });
 
-        // Update writing statistics
         function updateStats() {
-            if (!editorInstance) return;
+            if (!editorInstance) {
+                return;
+            }
 
             const data = editorInstance.getData();
             const text = data.replace(/<[^>]*>/g, '').trim();
-            const words = text.split(/\s+/).filter(word => word.length > 0).length;
+            const words = text.length ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
             const readTime = Math.max(1, Math.ceil(words / 200));
 
-            document.getElementById('wordCount').textContent = `${words} words`;
-            document.getElementById('readTime').textContent = `~${readTime} min read`;
+            const wordCount = document.getElementById('wordCount');
+            const readTimeElement = document.getElementById('readTime');
 
-            // Update progress bar
-            const progress = Math.min(100, (words / 500) * 100);
-            document.getElementById('progressBar').style.width = `${progress}%`;
+            if (wordCount) {
+                wordCount.textContent = `${words} words`;
+            }
+
+            if (readTimeElement) {
+                readTimeElement.textContent = `~${readTime} min read`;
+            }
         }
-
-        // Thumbnail preview
-        document.getElementById('thumbnailInput').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                const label = e.target.nextElementSibling;
-                label.innerHTML = `
-                    <svg class="w-12 h-12 mx-auto text-green-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <p class="text-sm font-medium text-green-600">Image uploaded!</p>
-                    <p class="text-xs text-gray-500 mt-1">${e.target.files[0].name}</p>
-                `;
-            }
-        });
-
-        // Form validation
-        document.getElementById('articleForm').addEventListener('submit', function(e) {
-            const title = document.querySelector('input[name="title"]').value.trim();
-            if (title.length < 10) {
-                e.preventDefault();
-                alert('Title must be at least 10 characters long');
-                return false;
-            }
-        });
     </script>
 </x-admin-layout>

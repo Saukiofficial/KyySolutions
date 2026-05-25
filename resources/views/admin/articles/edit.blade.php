@@ -1,103 +1,469 @@
 <x-admin-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Article') }}
-        </h2>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-950 text-white shadow-lg shadow-gray-900/20">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-500 shadow-sm">
+                        <span class="h-1.5 w-1.5 rounded-full bg-gray-900"></span>
+                        Article CMS
+                    </div>
+
+                    <h2 class="mt-3 text-2xl font-bold tracking-tight text-gray-950">
+                        {{ __('Edit Article') }}
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-500">
+                        Update article content, category, thumbnail, and publish status.
+                    </p>
+                </div>
+            </div>
+
+            <a href="{{ route('admin.articles.index') }}"
+               class="inline-flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-                    <form method="POST" action="{{ route('admin.articles.update', $article->id) }}" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
+    <style>
+        .cms-editor-shell .ck.ck-editor {
+            border-radius: 24px !important;
+            overflow: hidden;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 12px 30px rgba(24, 24, 27, 0.06);
+        }
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        .cms-editor-shell .ck.ck-toolbar {
+            border: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            background: #fafafa !important;
+            padding: 10px !important;
+        }
 
-                            <!-- KIRI: Konten Utama -->
-                            <div class="md:col-span-2 space-y-6">
-                                <div>
-                                    <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Article Title</label>
-                                    <input type="text" name="title" value="{{ old('title', $article->title) }}" class="block mt-1 w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500" required />
-                                </div>
+        .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable {
+            min-height: 580px;
+            border: none !important;
+            background: #ffffff !important;
+            color: #111827 !important;
+            padding: 32px !important;
+            font-size: 16px;
+            line-height: 1.8;
+        }
 
-                                <div>
-                                    <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Content</label>
-                                    <textarea name="content" rows="20" class="block mt-1 w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500" required>{{ old('content', $article->content) }}</textarea>
+        .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable:focus {
+            box-shadow: none !important;
+        }
+
+        .cms-editor-shell .ck-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cms-editor-shell .ck-content h2 {
+            font-size: 1.5rem;
+            font-weight: 750;
+            margin-top: 1.5rem;
+            margin-bottom: .75rem;
+        }
+
+        .cms-editor-shell .ck-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 1.25rem;
+            margin-bottom: .5rem;
+        }
+
+        .cms-editor-shell .ck-content p {
+            margin-bottom: 1rem;
+        }
+
+        .cms-editor-shell .ck-content blockquote {
+            border-left: 4px solid #18181b;
+            background: #f4f4f5;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-style: normal;
+        }
+
+        .cms-editor-shell .ck-content img {
+            border-radius: 18px;
+            margin: 20px auto;
+        }
+
+        .ck.ck-powered-by {
+            display: none !important;
+        }
+    </style>
+
+    <div class="py-6">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <form method="POST"
+                  action="{{ route('admin.articles.update', $article->id) }}"
+                  enctype="multipart/form-data"
+                  class="space-y-6"
+                  id="articleForm">
+                @csrf
+                @method('PUT')
+
+                <div class="grid grid-cols-1 gap-6 xl:grid-cols-12">
+
+                    <!-- Main Editor -->
+                    <div class="xl:col-span-8">
+                        <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+
+                            <div class="relative overflow-hidden border-b border-gray-200 bg-gray-950 px-8 py-8 text-white">
+                                <div class="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-white/10"></div>
+                                <div class="absolute -bottom-20 left-20 h-44 w-44 rounded-full bg-white/5"></div>
+
+                                <div class="relative">
+                                    <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1.5 text-xs font-semibold text-gray-200">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                                        Content Editor
+                                    </div>
+
+                                    <h3 class="mt-5 text-2xl font-bold tracking-tight">
+                                        Edit Article Content
+                                    </h3>
+
+                                    <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-300">
+                                        Update article content with professional rich text editing and image upload.
+                                    </p>
                                 </div>
                             </div>
 
-                            <!-- KANAN: Sidebar -->
-                            <div class="space-y-8">
+                            <div class="space-y-6 p-8">
+                                <div>
+                                    <label for="title" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Article Title
+                                    </label>
 
-                                <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
-                                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Publishing</h3>
+                                    <input id="title"
+                                           type="text"
+                                           name="title"
+                                           value="{{ old('title', $article->title) }}"
+                                           required
+                                           autofocus
+                                           class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-lg font-bold text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
 
-                                    <div class="mb-4">
-                                        <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Category</label>
-                                        <select name="category" class="block mt-1 w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                                            @foreach(['Technology', 'Business', 'Tips & Trick', 'Company News'] as $cat)
-                                                <option value="{{ $cat }}" {{ $article->category == $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                                            @endforeach
-                                        </select>
+                                    @error('title')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="cms-editor-shell">
+                                    <div class="mb-3 flex items-center justify-between gap-4">
+                                        <label for="editor" class="block text-sm font-semibold text-gray-800">
+                                            Article Content
+                                        </label>
+
+                                        <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
+                                            Rich Text Editor
+                                        </span>
                                     </div>
 
-                                    <div class="mb-4">
-                                        <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">Thumbnail Image</label>
-                                        @if($article->thumbnail)
-                                            <div class="mb-2">
-                                                <img src="{{ asset('storage/' . $article->thumbnail) }}" alt="Current Thumbnail" class="h-24 w-full object-cover rounded-md">
-                                            </div>
+                                    <textarea id="editor" name="content">{{ old('content', $article->content) }}</textarea>
+
+                                    @error('content')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-5 rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-500">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6M7 21h10a2 2 0 002-2V7l-5-5H7a2 2 0 00-2 2v15a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span id="wordCount">0 words</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span id="readTime">~1 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="xl:col-span-4">
+                        <div class="sticky top-6 space-y-6">
+
+                            <!-- Publish Panel -->
+                            <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                        Publish
+                                    </p>
+                                    <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                        Article Status
+                                    </h3>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Current status:
+                                        @if($article->is_published)
+                                            <span class="font-bold text-gray-950">Published</span>
+                                        @else
+                                            <span class="font-bold text-gray-950">Draft</span>
                                         @endif
-                                        <input type="file" name="thumbnail" class="block mt-1 w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-600 dark:file:text-gray-300" />
-                                    </div>
+                                    </p>
+                                </div>
 
-                                    <button type="submit" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 shadow-lg transition-all">
-                                        Update Article
+                                <div class="space-y-4 p-6">
+                                    <button type="submit"
+                                            name="action"
+                                            value="publish"
+                                            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-950 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-gray-900/20 transition hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl">
+                                        Update & Publish
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </button>
+
+                                    <button type="submit"
+                                            name="action"
+                                            value="draft"
+                                            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-6 py-4 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-950">
+                                        Save as Draft
                                     </button>
                                 </div>
+                            </div>
 
-
-                                <div class="bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded-xl border border-yellow-200 dark:border-yellow-700">
-                                    <h3 class="text-sm font-bold text-yellow-800 dark:text-yellow-500 mb-2 uppercase tracking-wider flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                                        Sidebar Promo
-                                    </h3>
-                                    <p class="text-xs text-yellow-700 dark:text-yellow-400 mb-4">
-                                        Banner ini akan muncul di sidebar halaman berita.
+                            <!-- Settings -->
+                            <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                                <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                        Settings
                                     </p>
-
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label class="block font-medium text-xs text-gray-600 dark:text-gray-400">Promo Title</label>
-                                            <input type="text" name="promo_title" value="{{ old('promo_title', $article->promo_title) }}" class="block mt-1 w-full text-sm rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-300" placeholder="Judul Promo..." />
-                                        </div>
-
-                                        <div>
-                                            <label class="block font-medium text-xs text-gray-600 dark:text-gray-400">Link Tujuan</label>
-                                            <input type="text" name="promo_link" value="{{ old('promo_link', $article->promo_link) }}" class="block mt-1 w-full text-sm rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-300" placeholder="https://..." />
-                                        </div>
-
-                                        <div>
-                                            <label class="block font-medium text-xs text-gray-600 dark:text-gray-400">Promo Image</label>
-                                            @if($article->promo_image)
-                                                <div class="mb-2">
-                                                    <img src="{{ asset('storage/' . $article->promo_image) }}" alt="Current Promo" class="h-24 w-auto object-cover rounded-md border border-gray-300">
-                                                </div>
-                                            @endif
-                                            <input type="file" name="promo_image" class="block mt-1 w-full text-xs text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-yellow-100 file:text-yellow-700 hover:file:bg-yellow-200" />
-                                        </div>
-                                    </div>
+                                    <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                        Article Detail
+                                    </h3>
                                 </div>
 
+                                <div class="space-y-5 p-6">
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                            Category
+                                        </label>
+
+                                        <select name="category"
+                                                required
+                                                class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold text-gray-700 outline-none transition focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
+                                            @foreach(['Technology', 'Business', 'Tips & Trick', 'Company News'] as $cat)
+                                                <option value="{{ $cat }}" @selected(old('category', $article->category) == $cat)>
+                                                    {{ $cat }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('category')
+                                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                            Featured Image
+                                        </label>
+
+                                        @if($article->thumbnail)
+                                            <div class="mb-4 overflow-hidden rounded-3xl border border-gray-200 bg-gray-50 p-2">
+                                                <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                                     alt="{{ $article->title }}"
+                                                     class="h-48 w-full rounded-2xl object-cover">
+                                            </div>
+                                        @endif
+
+                                        <input type="file"
+                                               name="thumbnail"
+                                               accept="image/*"
+                                               class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
+
+                                        <p class="mt-2 text-xs leading-5 text-gray-500">
+                                            Leave empty if you do not want to change the image.
+                                        </p>
+
+                                        @error('thumbnail')
+                                            <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Meta -->
+                            <div class="rounded-[2rem] border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
+                                <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-gray-950">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+
+                                <h4 class="text-lg font-bold">Article Info</h4>
+
+                                <div class="mt-4 space-y-3 text-sm text-gray-400">
+                                    <div class="flex items-center justify-between gap-4">
+                                        <span>Created</span>
+                                        <span class="font-semibold text-white">{{ $article->created_at?->format('d M Y') }}</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-4">
+                                        <span>Updated</span>
+                                        <span class="font-semibold text-white">{{ $article->updated_at?->format('d M Y') }}</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-4">
+                                        <span>Slug</span>
+                                        <span class="max-w-[160px] truncate font-semibold text-white">{{ $article->slug }}</span>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <script>
+        class LaravelUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+                this.url = "{{ route('admin.articles.upload-image') }}";
+                this.csrfToken = "{{ csrf_token() }}";
+            }
+
+            upload() {
+                return this.loader.file.then(file => {
+                    return new Promise((resolve, reject) => {
+                        const formData = new FormData();
+                        formData.append('upload', file);
+
+                        fetch(this.url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': this.csrfToken,
+                                'Accept': 'application/json',
+                            },
+                            body: formData,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.url) {
+                                resolve({
+                                    default: data.url
+                                });
+                            } else {
+                                reject(data.message || 'Upload image gagal.');
+                            }
+                        })
+                        .catch(error => {
+                            reject(error.message || 'Terjadi kesalahan saat upload image.');
+                        });
+                    });
+                });
+            }
+
+            abort() {}
+        }
+
+        function LaravelUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = loader => {
+                return new LaravelUploadAdapter(loader);
+            };
+        }
+
+        let editorInstance;
+
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                extraPlugins: [LaravelUploadAdapterPlugin],
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        'blockQuote',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'imageUpload',
+                        'insertTable',
+                        'mediaEmbed',
+                        '|',
+                        'undo',
+                        'redo'
+                    ]
+                },
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                },
+                mediaEmbed: {
+                    previewsInData: true
+                }
+            })
+            .then(editor => {
+                editorInstance = editor;
+
+                editor.model.document.on('change:data', () => {
+                    updateStats();
+                });
+
+                updateStats();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        function updateStats() {
+            if (!editorInstance) {
+                return;
+            }
+
+            const data = editorInstance.getData();
+            const text = data.replace(/<[^>]*>/g, '').trim();
+            const words = text.length ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
+            const readTime = Math.max(1, Math.ceil(words / 200));
+
+            const wordCount = document.getElementById('wordCount');
+            const readTimeElement = document.getElementById('readTime');
+
+            if (wordCount) {
+                wordCount.textContent = `${words} words`;
+            }
+
+            if (readTimeElement) {
+                readTimeElement.textContent = `~${readTime} min read`;
+            }
+        }
+    </script>
 </x-admin-layout>

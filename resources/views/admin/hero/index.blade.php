@@ -1,117 +1,253 @@
 <x-admin-layout>
     <x-slot name="header">
-        {{-- ... Header Code Tetap Sama ... --}}
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                    {{ __('Hero Section Manager') }}
-                </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Customize your landing page hero section to make a lasting first impression
-                </p>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-950 text-white shadow-lg shadow-gray-900/20">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-500 shadow-sm">
+                        <span class="h-1.5 w-1.5 rounded-full bg-gray-900"></span>
+                        Landing Page Editor
+                    </div>
+
+                    <h2 class="mt-3 text-2xl font-bold tracking-tight text-gray-950">
+                        {{ __('Hero Section Manager') }}
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-500">
+                        Customize your landing page hero section with a clean premium interface.
+                    </p>
+                </div>
             </div>
-            {{-- ... --}}
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-6">
+        <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
 
-            {{-- ... Success Message ... --}}
             @if (session('success'))
-                <div class="mb-6 relative">
-                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-l-4 border-emerald-500 p-4 rounded-r-lg shadow-sm">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-                                    {{ session('success') }}
-                                </p>
-                            </div>
+                <div class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gray-950 text-white">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <p class="font-semibold text-gray-950">
+                                {{ session('success') }}
+                            </p>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Hero section has been updated successfully.
+                            </p>
                         </div>
                     </div>
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
                 <!-- Form Section -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-                            <h3 class="text-lg font-semibold text-white flex items-center">
-                                Content Editor
-                            </h3>
+                    <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+
+                        <!-- Card Header -->
+                        <div class="relative overflow-hidden border-b border-gray-200 bg-gray-950 px-8 py-8 text-white">
+                            <div class="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-white/10"></div>
+                            <div class="absolute -bottom-20 left-20 h-44 w-44 rounded-full bg-white/5"></div>
+
+                            <div class="relative">
+                                <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1.5 text-xs font-semibold text-gray-200">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                                    Content Editor
+                                </div>
+
+                                <h3 class="mt-5 text-2xl font-bold tracking-tight">
+                                    Edit Hero Content
+                                </h3>
+
+                                <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-300">
+                                    Manage headline, subheadline, CTA text, background image, and side hero image.
+                                </p>
+                            </div>
                         </div>
 
-                        <form method="POST" action="{{ route('admin.hero-sections.update', $heroSection->id) }}" enctype="multipart/form-data" class="p-6 space-y-6">
+                        <form method="POST"
+                              action="{{ route('admin.hero-sections.update', $heroSection->id) }}"
+                              enctype="multipart/form-data"
+                              class="space-y-7 p-8">
                             @csrf
                             @method('PUT')
 
-                            {{-- ... Headline, Subheadline, CTA Text Tetap Sama ... --}}
                             <!-- Headline -->
-                            <div class="group">
-                                <label for="headline" class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Headline</label>
-                                <div class="relative">
-                                    <input type="text" name="headline" id="headline" value="{{ old('headline', $heroSection->headline) }}" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:text-white transition-all duration-200 outline-none" placeholder="Enter a compelling headline...">
-                                </div>
+                            <div>
+                                <label for="headline" class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-950">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 8h10M7 12h6M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </span>
+                                    Headline
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="headline"
+                                    id="headline"
+                                    value="{{ old('headline', $heroSection->headline) }}"
+                                    class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5"
+                                    placeholder="Enter a compelling headline..."
+                                >
                             </div>
 
                             <!-- Subheadline -->
-                            <div class="group">
-                                <label for="subheadline" class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Subheadline</label>
-                                <textarea name="subheadline" id="subheadline" rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:text-white transition-all duration-200 outline-none resize-none">{{ old('subheadline', $heroSection->subheadline) }}</textarea>
+                            <div>
+                                <label for="subheadline" class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-950">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h7"/>
+                                        </svg>
+                                    </span>
+                                    Subheadline
+                                </label>
+
+                                <textarea
+                                    name="subheadline"
+                                    id="subheadline"
+                                    rows="5"
+                                    class="block w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-medium leading-7 text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5"
+                                    placeholder="Write a short supporting sentence..."
+                                >{{ old('subheadline', $heroSection->subheadline) }}</textarea>
                             </div>
 
                             <!-- CTA Text -->
-                            <div class="group">
-                                <label for="cta_text" class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">CTA Text</label>
-                                <div class="relative">
-                                    <input type="text" name="cta_text" id="cta_text" value="{{ old('cta_text', $heroSection->cta_text) }}" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 dark:text-white transition-all duration-200 outline-none">
-                                </div>
+                            <div>
+                                <label for="cta_text" class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-950">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                        </svg>
+                                    </span>
+                                    CTA Text
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="cta_text"
+                                    id="cta_text"
+                                    value="{{ old('cta_text', $heroSection->cta_text) }}"
+                                    class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5"
+                                    placeholder="Example: Get Started"
+                                >
                             </div>
 
-                            <!-- 1. Background Image (Full Screen) -->
-                            <div class="group p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
-                                <label for="background_image" class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    <svg class="w-4 h-4 mr-2 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    Global Background Image
-                                </label>
-                                <div class="relative">
-                                    <input type="file" name="background_image" id="background_image" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-800 dark:file:text-gray-300 transition-all" accept="image/*">
-                                </div>
-                                <p class="mt-1 text-xs text-gray-400">Gambar latar belakang utama website.</p>
-                            </div>
+                            <!-- Upload Section -->
+                            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-                            <!-- 2. NEW: Hero Side Image (Kotak Video/Gambar) -->
-                            <div class="group p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
-                                <label for="hero_image" class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                    Side Image / Video Thumbnail
-                                </label>
-                                <div class="relative">
-                                    <input type="file" name="hero_image" id="hero_image" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-gray-800 dark:file:text-gray-300 transition-all" accept="image/*">
-                                </div>
-                                <p class="mt-1 text-xs text-gray-400">Gambar yang akan muncul di dalam kotak gradient sebelah kanan.</p>
+                                <!-- Background Image -->
+                                <div class="rounded-3xl border border-gray-200 bg-gray-50 p-5">
+                                    <div class="mb-4 flex items-start justify-between gap-4">
+                                        <div>
+                                            <label for="background_image" class="flex items-center gap-2 text-sm font-bold text-gray-950">
+                                                <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </span>
+                                                Global Background
+                                            </label>
 
-                                @if ($heroSection->hero_image)
-                                    <div class="mt-2 relative w-32 h-20 rounded-lg overflow-hidden border border-gray-300">
-                                        <img src="{{ asset('storage/' . $heroSection->hero_image) }}" alt="Current Hero Image" class="w-full h-full object-cover">
+                                            <p class="mt-2 text-xs leading-5 text-gray-500">
+                                                Main website background image.
+                                            </p>
+                                        </div>
+
+                                        <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-500 shadow-sm">
+                                            Image
+                                        </span>
                                     </div>
-                                @endif
+
+                                    <input
+                                        type="file"
+                                        name="background_image"
+                                        id="background_image"
+                                        accept="image/*"
+                                        class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-white text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                                    >
+                                </div>
+
+                                <!-- Hero Side Image -->
+                                <div class="rounded-3xl border border-gray-200 bg-gray-50 p-5">
+                                    <div class="mb-4 flex items-start justify-between gap-4">
+                                        <div>
+                                            <label for="hero_image" class="flex items-center gap-2 text-sm font-bold text-gray-950">
+                                                <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-gray-700 shadow-sm">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                </span>
+                                                Side Image / Thumbnail
+                                            </label>
+
+                                            <p class="mt-2 text-xs leading-5 text-gray-500">
+                                                Image shown inside hero visual box.
+                                            </p>
+                                        </div>
+
+                                        <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-500 shadow-sm">
+                                            Preview
+                                        </span>
+                                    </div>
+
+                                    <input
+                                        type="file"
+                                        name="hero_image"
+                                        id="hero_image"
+                                        accept="image/*"
+                                        class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-white text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                                    >
+
+                                    @if ($heroSection->hero_image)
+                                        <div class="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
+                                            <img
+                                                src="{{ asset('storage/' . $heroSection->hero_image) }}"
+                                                alt="Current Hero Image"
+                                                class="h-28 w-full rounded-xl object-cover"
+                                            >
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                    Changes will be reflected immediately
+                            <div class="flex flex-col gap-4 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex items-start gap-3 text-sm text-gray-500">
+                                    <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+
+                                    <div>
+                                        <p class="font-semibold text-gray-700">Instant update</p>
+                                        <p class="mt-0.5">Changes will be reflected immediately on your website.</p>
+                                    </div>
                                 </div>
-                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:scale-105 transition-all duration-200 shadow-lg">
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-gray-950 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-gray-900/20 transition hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl">
                                     Save Changes
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 13l4 4L19 7"></path>
+                                    </svg>
                                 </button>
                             </div>
                         </form>
@@ -120,30 +256,102 @@
 
                 <!-- Preview Section -->
                 <div class="lg:col-span-1">
-                    <!-- ... Preview content tetap sama atau bisa disesuaikan ... -->
-                    <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Current Setup</h3>
-                        <div class="space-y-4">
-                            <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                <p class="text-xs text-gray-500">Headline</p>
-                                <p class="font-medium text-gray-800 dark:text-gray-200 line-clamp-2">{{ $heroSection->headline }}</p>
+                    <div class="sticky top-6 space-y-6">
+
+                        <!-- Current Setup -->
+                        <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                            <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                            Preview
+                                        </p>
+                                        <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                            Current Setup
+                                        </h3>
+                                    </div>
+
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-950 text-white">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Tampilkan status gambar -->
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
-                                    <p class="text-xs text-gray-500">Background</p>
-                                    <p class="text-sm font-bold {{ $heroSection->background_image ? 'text-green-500' : 'text-red-500' }}">
-                                        {{ $heroSection->background_image ? 'Uploaded' : 'Default' }}
+
+                            <div class="space-y-4 p-6">
+                                <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+                                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                        Headline
+                                    </p>
+                                    <p class="mt-2 line-clamp-3 text-sm font-semibold leading-6 text-gray-900">
+                                        {{ $heroSection->headline }}
                                     </p>
                                 </div>
-                                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-center">
-                                    <p class="text-xs text-gray-500">Side Image</p>
-                                    <p class="text-sm font-bold {{ $heroSection->hero_image ? 'text-green-500' : 'text-red-500' }}">
-                                        {{ $heroSection->hero_image ? 'Uploaded' : 'Default' }}
+
+                                <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+                                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                        CTA Text
                                     </p>
+                                    <p class="mt-2 text-sm font-semibold text-gray-900">
+                                        {{ $heroSection->cta_text ?: 'Not set' }}
+                                    </p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center">
+                                        <p class="text-xs font-medium text-gray-500">
+                                            Background
+                                        </p>
+
+                                        @if ($heroSection->background_image)
+                                            <p class="mt-2 rounded-full bg-gray-950 px-3 py-1 text-xs font-bold text-white">
+                                                Uploaded
+                                            </p>
+                                        @else
+                                            <p class="mt-2 rounded-full bg-gray-200 px-3 py-1 text-xs font-bold text-gray-600">
+                                                Default
+                                            </p>
+                                        @endif
+                                    </div>
+
+                                    <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center">
+                                        <p class="text-xs font-medium text-gray-500">
+                                            Side Image
+                                        </p>
+
+                                        @if ($heroSection->hero_image)
+                                            <p class="mt-2 rounded-full bg-gray-950 px-3 py-1 text-xs font-bold text-white">
+                                                Uploaded
+                                            </p>
+                                        @else
+                                            <p class="mt-2 rounded-full bg-gray-200 px-3 py-1 text-xs font-bold text-gray-600">
+                                                Default
+                                            </p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Helper Card -->
+                        <div class="rounded-[2rem] border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
+                            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-gray-950">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z"/>
+                                </svg>
+                            </div>
+
+                            <h4 class="text-lg font-bold">
+                                Design Tip
+                            </h4>
+
+                            <p class="mt-2 text-sm leading-6 text-gray-400">
+                                Use a short headline, clear CTA, and high-quality image for a more premium landing page impression.
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
