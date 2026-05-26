@@ -158,9 +158,10 @@ const ProfessionalHero = ({ hero }) => {
 
       <style>{`
         :root {
-          --ks-blue: #009dff;
-          --ks-blue-2: #005dff;
-          --ks-cyan: #39d9ff;
+          --ks-blue: #008cff;
+          --ks-blue-soft: #15baff;
+          --ks-blue-deep: #003ecf;
+          --ks-cyan: #43e6ff;
           --ks-dark: #020814;
           --ks-black: #00040d;
         }
@@ -217,7 +218,7 @@ const ProfessionalHero = ({ hero }) => {
           position: relative;
           height: 100vh;
           height: 100dvh;
-          min-height: 680px;
+          min-height: 720px;
           max-height: 980px;
           overflow: hidden;
           display: flex;
@@ -230,6 +231,25 @@ const ProfessionalHero = ({ hero }) => {
             radial-gradient(circle at 50% 28%, rgba(0, 113, 255, .2), transparent 30%),
             linear-gradient(180deg, #00040d 0%, #020915 48%, #00040b 100%);
           font-family: 'Inter', 'Rajdhani', sans-serif;
+        }
+
+        .ks-hero::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 180px;
+          z-index: 3;
+          pointer-events: none;
+          background:
+            linear-gradient(
+              180deg,
+              transparent 0%,
+              rgba(0, 4, 13, .2) 34%,
+              rgba(0, 4, 13, .82) 72%,
+              #00040d 100%
+            );
         }
 
         .ks-bg-img,
@@ -397,7 +417,7 @@ const ProfessionalHero = ({ hero }) => {
           width: min(100%, 1560px);
           height: 100%;
           position: relative;
-          z-index: 2;
+          z-index: 4;
         }
 
         .ks-robot-stage {
@@ -630,9 +650,9 @@ const ProfessionalHero = ({ hero }) => {
         .ks-copy {
           position: absolute;
           left: 50%;
-          bottom: 12.8%;
+          bottom: 18.5%;
           transform: translateX(-50%);
-          z-index: 9;
+          z-index: 10;
           text-align: center;
           width: min(100%, 980px);
           max-width: 980px;
@@ -742,25 +762,25 @@ const ProfessionalHero = ({ hero }) => {
         .ks-bottom-stats {
           position: absolute;
           left: 50%;
-          bottom: 2.4%;
+          bottom: 5.4%;
           transform: translateX(-50%);
-          z-index: 9;
-          width: min(68vw, 1040px);
-          min-height: 88px;
+          z-index: 11;
+          width: min(66vw, 1040px);
+          min-height: 92px;
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
           align-items: center;
-          border: 1px solid rgba(0, 162, 255, .62);
-          border-radius: 16px;
+          border: 1px solid rgba(0, 165, 255, .75);
+          border-radius: 15px;
           background:
-            linear-gradient(180deg, rgba(5, 25, 55, .82) 0%, rgba(2, 14, 34, .92) 52%, rgba(1, 8, 22, .96) 100%),
-            radial-gradient(circle at 50% 0%, rgba(0, 193, 255, .22), rgba(0, 102, 255, .08) 42%, transparent 68%);
+            linear-gradient(180deg, rgba(8, 36, 72, .78) 0%, rgba(3, 20, 46, .92) 42%, rgba(1, 10, 28, .98) 100%),
+            radial-gradient(circle at 50% 0%, rgba(51, 218, 255, .22), rgba(0, 105, 255, .09) 42%, transparent 72%);
           box-shadow:
-            0 0 30px rgba(0, 145, 255, .25),
-            0 16px 42px rgba(0, 0, 0, .34),
-            inset 0 1px 0 rgba(124, 233, 255, .24),
-            inset 0 -1px 0 rgba(0, 112, 255, .2);
-          backdrop-filter: blur(20px);
+            0 0 26px rgba(0, 155, 255, .34),
+            0 18px 52px rgba(0, 0, 0, .46),
+            inset 0 1px 0 rgba(147, 240, 255, .26),
+            inset 0 -1px 0 rgba(0, 91, 255, .32);
+          backdrop-filter: blur(22px);
           overflow: hidden;
         }
 
@@ -769,9 +789,9 @@ const ProfessionalHero = ({ hero }) => {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(90deg, transparent, rgba(62, 218, 255, .36), transparent) top / 100% 1px no-repeat,
-            linear-gradient(180deg, rgba(80, 220, 255, .08), transparent 42%),
-            linear-gradient(90deg, transparent 0%, rgba(0, 128, 255, .08) 50%, transparent 100%);
+            linear-gradient(90deg, transparent, rgba(88, 226, 255, .52), transparent) top / 100% 1px no-repeat,
+            linear-gradient(180deg, rgba(105, 230, 255, .12), transparent 42%),
+            radial-gradient(circle at 50% 0%, rgba(0, 188, 255, .16), transparent 58%);
           pointer-events: none;
         }
 
@@ -780,11 +800,11 @@ const ProfessionalHero = ({ hero }) => {
           position: absolute;
           left: 50%;
           top: -1px;
-          width: 76%;
+          width: 78%;
           height: 2px;
           transform: translateX(-50%);
-          background: linear-gradient(90deg, transparent, #26d8ff 18%, #91f2ff 50%, #26d8ff 82%, transparent);
-          box-shadow: 0 0 18px rgba(38, 216, 255, .9);
+          background: linear-gradient(90deg, transparent, #1bc8ff 18%, #a5f7ff 50%, #1bc8ff 82%, transparent);
+          box-shadow: 0 0 18px rgba(38, 216, 255, .95);
           pointer-events: none;
         }
 
@@ -795,7 +815,7 @@ const ProfessionalHero = ({ hero }) => {
           align-items: center;
           justify-content: center;
           gap: .95rem;
-          padding: .82rem 1.18rem;
+          padding: .92rem 1.18rem;
         }
 
         .ks-stat-box + .ks-stat-box::before {
@@ -807,33 +827,33 @@ const ProfessionalHero = ({ hero }) => {
           width: 1px;
           background: linear-gradient(
             transparent,
-            rgba(63, 219, 255, .58),
+            rgba(58, 218, 255, .62),
             transparent
           );
         }
 
         .ks-stat-icon {
-          width: 54px;
-          height: 54px;
+          width: 56px;
+          height: 56px;
           display: flex;
           align-items: center;
           justify-content: center;
           border-radius: 999px;
           flex-shrink: 0;
-          color: #8deaff;
+          color: #9af0ff;
           background:
-            radial-gradient(circle at 38% 30%, rgba(128, 244, 255, .42) 0%, rgba(44, 179, 255, .28) 34%, rgba(0, 72, 196, .42) 72%),
-            linear-gradient(180deg, rgba(0, 162, 255, .28), rgba(0, 37, 110, .42));
-          border: 1px solid rgba(92, 222, 255, .5);
+            radial-gradient(circle at 38% 30%, rgba(153, 250, 255, .42) 0%, rgba(45, 191, 255, .3) 35%, rgba(0, 70, 190, .48) 72%),
+            linear-gradient(180deg, rgba(0, 160, 255, .32), rgba(0, 33, 105, .48));
+          border: 1px solid rgba(101, 226, 255, .56);
           box-shadow:
-            inset 0 0 18px rgba(83, 212, 255, .22),
-            0 0 20px rgba(0, 149, 255, .34),
-            0 8px 24px rgba(0, 0, 0, .28);
+            inset 0 0 18px rgba(94, 220, 255, .24),
+            0 0 22px rgba(0, 150, 255, .4),
+            0 8px 24px rgba(0, 0, 0, .3);
         }
 
         .ks-stat-icon .ks-icon-svg {
-          width: 27px;
-          height: 27px;
+          width: 28px;
+          height: 28px;
         }
 
         .ks-stat-text {
@@ -859,14 +879,14 @@ const ProfessionalHero = ({ hero }) => {
           font-size: .76rem;
           font-family: 'Inter', sans-serif;
           line-height: 1.25;
-          color: rgba(218, 239, 255, .82);
+          color: rgba(218, 239, 255, .84);
           font-weight: 600;
           white-space: nowrap;
         }
 
         @media (min-width: 981px) and (max-height: 820px) {
           .ks-hero {
-            min-height: 620px;
+            min-height: 660px;
             padding-top: 5.6rem;
           }
 
@@ -918,7 +938,7 @@ const ProfessionalHero = ({ hero }) => {
           }
 
           .ks-copy {
-            bottom: 11.8%;
+            bottom: 18%;
           }
 
           .ks-title {
@@ -937,7 +957,7 @@ const ProfessionalHero = ({ hero }) => {
           }
 
           .ks-main-cta {
-            margin-top: .72rem;
+            margin-top: .75rem;
           }
 
           .ks-cta {
@@ -946,15 +966,15 @@ const ProfessionalHero = ({ hero }) => {
           }
 
           .ks-bottom-stats {
-            width: min(70vw, 980px);
-            min-height: 74px;
-            bottom: 2%;
+            width: min(68vw, 980px);
+            min-height: 78px;
+            bottom: 4.5%;
           }
 
           .ks-stat-box {
             grid-template-columns: 48px 1fr;
             gap: .75rem;
-            padding: .6rem .9rem;
+            padding: .66rem .9rem;
           }
 
           .ks-stat-icon {
@@ -1007,6 +1027,10 @@ const ProfessionalHero = ({ hero }) => {
             max-height: none;
             padding: 7rem 1rem 2.25rem;
             align-items: flex-start;
+          }
+
+          .ks-hero::after {
+            height: 140px;
           }
 
           .ks-wrap {
@@ -1095,6 +1119,17 @@ const ProfessionalHero = ({ hero }) => {
             background:
               radial-gradient(circle at 50% 18%, rgba(0, 130, 255, .28), transparent 34%),
               linear-gradient(180deg, #00040d 0%, #020914 58%, #01040b 100%);
+          }
+
+          .ks-hero::after {
+            height: 92px;
+            background:
+              linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(0, 4, 13, .3) 48%,
+                #00040d 100%
+              );
           }
 
           .ks-bg-img {
