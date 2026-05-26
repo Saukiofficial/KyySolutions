@@ -132,7 +132,7 @@ const ProfessionalHero = ({ hero }) => {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -242,6 +242,7 @@ const ProfessionalHero = ({ hero }) => {
         .ks-hero {
           position: relative;
           height: 100vh;
+          height: 100dvh;
           min-height: 680px;
           max-height: 980px;
           overflow: hidden;
@@ -252,9 +253,9 @@ const ProfessionalHero = ({ hero }) => {
           color: #fff;
           isolation: isolate;
           background:
-            radial-gradient(circle at 50% 30%, rgba(0, 126, 255, .32), transparent 31%),
-            linear-gradient(180deg, #020816 0%, #030b17 48%, #020611 100%);
-          font-family: 'Plus Jakarta Sans', sans-serif;
+            radial-gradient(circle at 50% 30%, rgba(0, 100, 255, .18), transparent 30%),
+            linear-gradient(180deg, #00040e 0%, #010810 48%, #010408 100%);
+          font-family: 'Inter', 'Rajdhani', sans-serif;
         }
 
         .ks-bg-img,
@@ -280,17 +281,18 @@ const ProfessionalHero = ({ hero }) => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          filter: brightness(.42) saturate(1.35) contrast(1.12);
+          filter: brightness(.28) saturate(1.2) contrast(1.1);
         }
 
         .ks-bg-layer {
           z-index: -7;
           background:
-            radial-gradient(ellipse 55% 48% at 50% 22%, rgba(0, 140, 255, .62), transparent 100%),
-            radial-gradient(circle at 50% 65%, rgba(0, 174, 255, .28), transparent 38%),
-            radial-gradient(circle at 10% 42%, rgba(0, 120, 255, .18), transparent 26%),
-            radial-gradient(circle at 90% 42%, rgba(0, 120, 255, .18), transparent 26%),
-            linear-gradient(90deg, rgba(0,0,0,.78), transparent 28%, transparent 72%, rgba(0,0,0,.78));
+            radial-gradient(ellipse 48% 42% at 50% 22%, rgba(0, 120, 255, .44), transparent 100%),
+            radial-gradient(circle at 50% 68%, rgba(0, 155, 255, .18), transparent 35%),
+            radial-gradient(circle at 10% 42%, rgba(0, 80, 200, .12), transparent 24%),
+            radial-gradient(circle at 90% 42%, rgba(0, 80, 200, .12), transparent 24%),
+            linear-gradient(90deg, rgba(0,0,0,.92), transparent 22%, transparent 78%, rgba(0,0,0,.92)),
+            linear-gradient(180deg, rgba(0,0,0,.45) 0%, transparent 40%, transparent 60%, rgba(0,0,0,.55) 100%);
         }
 
         .ks-grid {
@@ -516,6 +518,30 @@ const ProfessionalHero = ({ hero }) => {
           animation: ksFloat 5.5s ease-in-out infinite;
         }
 
+        .ks-robot-curtain {
+          position: absolute;
+          left: 50%;
+          top: -8%;
+          width: min(72vw, 900px);
+          height: 115%;
+          transform: translateX(-50%);
+          z-index: 2;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse 75% 80% at 50% 42%,
+              transparent 0%,
+              transparent 38%,
+              rgba(0, 4, 14, .55) 58%,
+              rgba(0, 4, 14, .82) 72%,
+              rgba(0, 4, 14, .95) 88%,
+              rgba(0, 4, 14, 1) 100%),
+            radial-gradient(ellipse 100% 100% at 50% 50%,
+              transparent 30%,
+              rgba(0, 4, 14, .38) 62%,
+              rgba(0, 4, 14, .78) 82%,
+              rgba(0, 4, 14, .96) 100%);
+        }
+
         .ks-robot-ground {
           position: absolute;
           left: 50%;
@@ -547,24 +573,22 @@ const ProfessionalHero = ({ hero }) => {
 
         .ks-feature-card {
           position: absolute;
-          width: min(30vw, 340px);
-          min-height: 118px;
+          width: min(28vw, 318px);
+          min-height: 108px;
           display: grid;
-          grid-template-columns: 66px 1fr;
+          grid-template-columns: 58px 1fr;
           align-items: center;
-          gap: 1rem;
-          padding: 1.05rem 1.45rem;
+          gap: .85rem;
+          padding: 1rem 1.2rem;
           color: #eaf8ff;
-          background:
-            linear-gradient(135deg, rgba(4, 22, 48, .96), rgba(4, 44, 82, .84)),
-            radial-gradient(circle at 14% 50%, rgba(50, 214, 255, .22), transparent 42%);
-          border: 1px solid rgba(0, 174, 255, .82);
+          background: rgba(3, 12, 30, .88);
+          border: 1px solid rgba(0, 140, 220, .36);
+          border-radius: 10px;
           box-shadow:
-            inset 0 0 32px rgba(0, 168, 255, .18),
-            0 0 42px rgba(0, 102, 210, .26),
-            0 4px 24px rgba(0, 0, 0, .36);
-          clip-path: polygon(8% 0, 100% 0, 100% 76%, 91% 100%, 0 100%, 0 18%);
-          backdrop-filter: blur(18px);
+            0 8px 40px rgba(0, 0, 0, .58),
+            0 0 28px rgba(0, 80, 180, .18),
+            inset 0 1px 0 rgba(0, 180, 255, .12);
+          backdrop-filter: blur(20px);
           pointer-events: auto;
         }
 
@@ -572,37 +596,24 @@ const ProfessionalHero = ({ hero }) => {
           content: '';
           position: absolute;
           inset: 0;
-          background:
-            linear-gradient(90deg, rgba(37, 190, 255, .75), transparent 24%, transparent 76%, rgba(37, 190, 255, .75)) top / 100% 1px no-repeat,
-            linear-gradient(90deg, transparent, rgba(61, 213, 255, .16), transparent);
-          background-size: 100% 1px, 180px 100%;
-          animation: ksLineMove 4s linear infinite;
+          border-radius: 10px;
+          background: linear-gradient(135deg, rgba(0, 140, 255, .06) 0%, transparent 50%);
           pointer-events: none;
         }
 
         .ks-feature-card::after {
           content: '';
           position: absolute;
-          inset: 8px 10px;
-          border-top: 1px solid rgba(96, 220, 255, .18);
-          border-bottom: 1px solid rgba(96, 220, 255, .14);
-          clip-path: polygon(
-            0 0,
-            24% 0,
-            24% 1px,
-            0 1px,
-            0 100%,
-            100% 100%,
-            100% calc(100% - 1px),
-            78% calc(100% - 1px),
-            78% 100%,
-            0 100%
-          );
+          top: 0;
+          left: 16px;
+          right: 16px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0, 190, 255, .45), transparent);
           pointer-events: none;
         }
 
         .ks-feature-card-right {
-          clip-path: polygon(0 0, 92% 0, 100% 18%, 100% 100%, 9% 100%, 0 76%);
+          border-radius: 10px;
         }
 
         .ks-feature-content {
@@ -612,42 +623,39 @@ const ProfessionalHero = ({ hero }) => {
         }
 
         .ks-feature-card h3 {
-          margin: 0 0 .4rem;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: clamp(.88rem, 1vw, 1.04rem);
-          line-height: 1.12;
-          font-weight: 800;
+          margin: 0 0 .35rem;
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(.82rem, .95vw, 1rem);
+          line-height: 1.15;
+          font-weight: 700;
           color: #ffffff;
-          letter-spacing: -.025em;
-          text-shadow:
-            0 0 14px rgba(109, 223, 255, .34),
-            0 2px 10px rgba(0, 0, 0, .35);
+          letter-spacing: -.01em;
         }
 
         .ks-feature-card p {
           margin: 0;
-          font-size: clamp(.72rem, .86vw, .86rem);
-          line-height: 1.48;
-          font-weight: 600;
-          color: rgba(224, 244, 255, .84);
-          text-shadow: 0 1px 10px rgba(0, 0, 0, .28);
+          font-size: clamp(.7rem, .8vw, .82rem);
+          line-height: 1.52;
+          font-weight: 400;
+          color: rgba(180, 220, 255, .78);
         }
 
         .ks-feature-icon {
           position: relative;
           z-index: 2;
-          width: 54px;
-          height: 54px;
+          width: 48px;
+          height: 48px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 999px;
-          color: #82eaff;
-          background: radial-gradient(circle at 40% 35%, rgba(88, 218, 255, .42), rgba(0, 89, 220, .48));
-          border: 1px solid rgba(80, 209, 255, .55);
+          border-radius: 10px;
+          color: #5ecfff;
+          background: rgba(0, 80, 180, .38);
+          border: 1px solid rgba(0, 160, 255, .38);
           box-shadow:
-            inset 0 0 22px rgba(74, 201, 255, .28),
-            0 0 32px rgba(0, 117, 255, .42);
+            inset 0 0 16px rgba(0, 160, 255, .18),
+            0 0 18px rgba(0, 100, 220, .28);
+          flex-shrink: 0;
         }
 
         .ks-feature-top-left {
@@ -684,53 +692,54 @@ const ProfessionalHero = ({ hero }) => {
 
         .ks-title {
           margin: 0;
-          font-family: 'Orbitron', 'Rajdhani', 'Plus Jakarta Sans', sans-serif;
-          font-size: clamp(3.2rem, 5.8vw, 6.1rem);
-          line-height: .86;
-          font-weight: 900;
-          letter-spacing: .018em;
+          font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+          font-size: clamp(2.8rem, 5.2vw, 5.6rem);
+          line-height: .92;
+          font-weight: 400;
+          letter-spacing: .04em;
           text-transform: uppercase;
         }
 
         .ks-title span {
           display: block;
-          color: #f5fbff;
+          color: #f0f8ff;
           text-shadow:
-            0 7px 0 rgba(0, 38, 87, .26),
-            0 14px 26px rgba(0, 0, 0, .42),
-            0 0 24px rgba(196, 238, 255, .34);
+            0 4px 0 rgba(0, 20, 60, .3),
+            0 10px 28px rgba(0, 0, 0, .5);
         }
 
         .ks-title strong {
           display: block;
           color: #13b8ff;
-          background: linear-gradient(180deg, #39dbff 0%, #078dff 56%, #035cff 100%);
+          background: linear-gradient(180deg, #5ee0ff 0%, #0a9fff 48%, #025bff 100%);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           text-shadow: none;
           filter:
-            drop-shadow(0 8px 0 rgba(0, 23, 103, .18))
-            drop-shadow(0 0 26px rgba(0, 166, 255, .55));
+            drop-shadow(0 6px 0 rgba(0, 20, 90, .22))
+            drop-shadow(0 0 28px rgba(0, 160, 255, .5));
         }
 
         .ks-kicker {
-          margin: .78rem auto 0;
-          font-size: clamp(1.18rem, 1.7vw, 1.72rem);
+          margin: .65rem auto 0;
+          font-size: clamp(1rem, 1.5vw, 1.5rem);
           line-height: 1.2;
           font-weight: 700;
-          letter-spacing: -.02em;
-          color: #a7e9ff;
-          text-shadow: 0 0 18px rgba(0, 165, 255, .3);
+          font-family: 'Inter', sans-serif;
+          letter-spacing: -.01em;
+          color: #8dd6ff;
+          text-shadow: 0 0 18px rgba(0, 155, 255, .28);
         }
 
         .ks-subtitle {
-          width: min(100%, 690px);
-          margin: .55rem auto 0;
-          color: rgba(239, 249, 255, .88);
-          font-size: clamp(.82rem, .92vw, .98rem);
-          font-weight: 500;
-          line-height: 1.5;
+          width: min(100%, 640px);
+          margin: .45rem auto 0;
+          color: rgba(200, 230, 255, .72);
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(.78rem, .88vw, .92rem);
+          font-weight: 400;
+          line-height: 1.55;
         }
 
         .ks-bottom-row {
@@ -776,19 +785,21 @@ const ProfessionalHero = ({ hero }) => {
         }
 
         .ks-stat-box strong {
-          font-size: clamp(1.18rem, 1.45vw, 1.5rem);
+          font-size: clamp(1.1rem, 1.35vw, 1.42rem);
           line-height: 1;
           color: #1fb9ff;
-          font-weight: 900;
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
           letter-spacing: -.04em;
           text-shadow: 0 0 18px rgba(0, 169, 255, .45);
         }
 
         .ks-stat-box span {
-          margin-top: .32rem;
-          font-size: .72rem;
+          margin-top: .28rem;
+          font-size: .68rem;
+          font-family: 'Inter', sans-serif;
           line-height: 1.2;
-          color: rgba(218, 241, 255, .78);
+          color: rgba(180, 220, 255, .72);
           font-weight: 500;
           white-space: nowrap;
         }
@@ -966,21 +977,33 @@ const ProfessionalHero = ({ hero }) => {
           }
         }
 
+        /* ─── TABLET (641px – 980px): robot kecil + feature grid 2-col di bawah ─── */
         @media (max-width: 980px) {
           .ks-hero {
             height: auto;
             min-height: 100vh;
+            min-height: 100dvh;
             max-height: none;
-            padding: 7.5rem 1rem 2.5rem;
+            padding: 7rem 1rem 2rem;
+            align-items: flex-start;
           }
 
           .ks-wrap {
             height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
           }
 
           .ks-orbit {
-            width: min(88vw, 650px);
-            top: 25rem;
+            width: min(88vw, 600px);
+            top: 22rem;
+          }
+
+          .ks-rings {
+            top: 30%;
+            width: min(72vw, 560px);
           }
 
           .ks-robot-stage {
@@ -988,38 +1011,41 @@ const ProfessionalHero = ({ hero }) => {
             left: auto;
             top: auto;
             width: 100%;
-            height: 520px;
+            height: 360px;
             transform: none;
             align-items: flex-start;
+            flex-shrink: 0;
           }
 
           .ks-robot-stage::before {
             bottom: -8%;
-            width: min(90vw, 640px);
+            width: min(90vw, 580px);
             height: 32%;
           }
 
           .ks-robot-stage::after {
             bottom: -2%;
-            width: min(78vw, 540px);
+            width: min(78vw, 480px);
             height: 20%;
           }
 
           .ks-robot-img {
-            width: min(86vw, 500px);
+            width: min(68vw, 380px);
             margin-top: -5px;
           }
 
           .ks-robot-placeholder {
-            width: min(86vw, 500px);
+            width: min(68vw, 380px);
           }
 
           .ks-feature-grid {
             position: relative;
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: .9rem;
-            margin-top: 1rem;
+            gap: .75rem;
+            margin-top: .5rem;
+            width: 100%;
+            inset: auto;
           }
 
           .ks-feature-card,
@@ -1027,8 +1053,8 @@ const ProfessionalHero = ({ hero }) => {
             position: relative;
             inset: auto;
             width: 100%;
-            min-height: 126px;
-            clip-path: polygon(7% 0, 100% 0, 100% 82%, 93% 100%, 0 100%, 0 18%);
+            min-height: 110px;
+            clip-path: polygon(6% 0, 100% 0, 100% 84%, 94% 100%, 0 100%, 0 16%);
           }
 
           .ks-copy {
@@ -1036,13 +1062,15 @@ const ProfessionalHero = ({ hero }) => {
             left: auto;
             bottom: auto;
             transform: none;
-            margin-top: 1.4rem;
+            margin-top: 1.2rem;
+            width: 100%;
           }
 
           .ks-bottom-row {
             grid-template-columns: 1fr;
-            gap: 1rem;
-            width: min(100%, 520px);
+            gap: .85rem;
+            width: min(100%, 480px);
+            margin-top: .7rem;
           }
 
           .ks-bottom-row .ks-stats:first-child {
@@ -1059,86 +1087,278 @@ const ProfessionalHero = ({ hero }) => {
           }
         }
 
+        /*
+         * ════════════════════════════════════════════════════════════
+         *  MOBILE (≤ 640px)
+         *  Layout IDENTIK dengan desktop — robot tengah, kartu kiri-kanan,
+         *  copy di bawah. Semua diskalakan proporsional pakai vw.
+         * ════════════════════════════════════════════════════════════
+         */
         @media (max-width: 640px) {
+
+          /* Hero: pas tepat satu layar */
           .ks-hero {
-            min-height: auto;
-            padding: 6.5rem 1rem 2.5rem;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 580px;
+            max-height: unset;
+            padding: 0;
+            overflow: hidden;
           }
 
+          /* Wrap: kontainer posisi absolut, sama seperti desktop */
+          .ks-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: block;     /* bukan flex — biarkan absolute positioning bekerja */
+            padding: 0;
+          }
+
+          /* Dekorasi orbit & rings menyusut */
+          .ks-orbit {
+            width: 94vw;
+            top: 36%;
+          }
+
+          .ks-rings {
+            top: 32%;
+            width: 90vw;
+          }
+
+          /* ── Robot: absolut di tengah, proporsional ── */
           .ks-robot-stage {
-            height: 400px;
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 56%;
+            align-items: flex-start;
           }
 
           .ks-robot-stage::before {
-            bottom: -9%;
-            height: 34%;
+            bottom: -10%;
+            width: 80vw;
+            height: 36%;
           }
 
           .ks-robot-stage::after {
             bottom: -4%;
-            height: 22%;
+            width: 64vw;
+            height: 24%;
           }
 
           .ks-robot-img {
-            width: min(105vw, 390px);
+            width: min(52vw, 220px);
+            margin-top: -4px;
           }
 
           .ks-robot-placeholder {
-            width: min(105vw, 390px);
+            width: min(52vw, 220px);
+            font-size: clamp(5rem, 13vw, 9rem);
           }
 
+          /* ── Feature cards: absolut kiri-kanan, versi desktop yang diskalakan ── */
           .ks-feature-grid {
-            grid-template-columns: 1fr;
+            position: absolute;
+            inset: 0;
+            display: block;   /* tampilkan seperti desktop */
+            z-index: 5;
+            pointer-events: none;
           }
 
-          .ks-feature-card {
-            grid-template-columns: 58px 1fr;
-            min-height: 108px;
-            padding: 1rem;
+          .ks-feature-card,
+          .ks-feature-card-right {
+            position: absolute;
+            width: min(41vw, 162px);
+            min-height: unset;
+            padding: .5rem .58rem;
+            grid-template-columns: 30px 1fr;
+            gap: .42rem;
+            pointer-events: auto;
+            clip-path: none;
+            border-radius: 8px;
           }
+
+          /* Posisi kartu — sama seperti desktop dalam persen */
+          .ks-feature-top-left    { left: 1.5%; top: 17%; }
+          .ks-feature-bottom-left { left: 1.5%; top: 39%; }
+          .ks-feature-top-right   { right: 1.5%; top: 17%; }
+          .ks-feature-bottom-right{ right: 1.5%; top: 39%; }
 
           .ks-feature-icon {
-            width: 50px;
-            height: 50px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
           }
 
           .ks-feature-icon svg {
-            width: 25px;
-            height: 25px;
+            width: 14px;
+            height: 14px;
+          }
+
+          .ks-feature-card h3 {
+            font-size: .64rem;
+            margin-bottom: .16rem;
+            line-height: 1.2;
+          }
+
+          .ks-feature-card p {
+            font-size: .57rem;
+            line-height: 1.38;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          /* ── Mobile feature strip: sembunyikan — pakai kartu asli ── */
+          .ks-mobile-features {
+            display: none;
+          }
+
+          /* ── Copy: absolut di bawah, persis seperti desktop ── */
+          .ks-copy {
+            position: absolute;
+            left: 50%;
+            bottom: 1.8%;
+            transform: translateX(-50%);
+            width: min(100%, 390px);
+            text-align: center;
+            padding: 0 .75rem;
+            box-sizing: border-box;
+            margin: 0;
           }
 
           .ks-title {
-            font-size: clamp(2.45rem, 13vw, 4rem);
+            font-size: clamp(2rem, 11.5vw, 3.4rem);
+            line-height: .88;
+            margin: 0;
           }
 
           .ks-kicker {
-            font-size: 1.22rem;
+            font-size: clamp(.76rem, 3.3vw, .96rem);
+            margin-top: .26rem;
+            line-height: 1.2;
           }
 
           .ks-subtitle {
-            font-size: .88rem;
+            font-size: clamp(.67rem, 2.8vw, .8rem);
+            margin-top: .2rem;
+            line-height: 1.42;
+            width: 100%;
+            color: rgba(200, 230, 255, .68);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          /* ── Bottom row: CTA penuh, dua stats kotak sejajar ── */
+          .ks-bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .3rem;
+            width: 100%;
+            margin-top: .38rem;
+          }
+
+          .ks-bottom-row .ks-cta {
+            grid-column: 1 / -1;
+            order: 0;
+            margin: 0;
+            width: 100%;
+            min-width: 0;
+            height: 42px;
+            font-size: .84rem;
+          }
+
+          .ks-bottom-row .ks-stats:first-child {
+            order: 2;
+            grid-column: 1;
+          }
+
+          .ks-bottom-row .ks-stats:last-child {
+            order: 3;
+            grid-column: 2;
           }
 
           .ks-stats {
+            display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
           .ks-stat-box {
-            min-height: 68px;
-            padding: .55rem .7rem;
+            min-height: 40px;
+            padding: .28rem .35rem;
+          }
+
+          .ks-stat-box strong {
+            font-size: clamp(.8rem, 3.4vw, .98rem);
           }
 
           .ks-stat-box span {
-            font-size: .68rem;
+            font-size: .55rem;
             white-space: normal;
             text-align: center;
+            line-height: 1.15;
+          }
+        }
+
+        /* ─── VERY SMALL PHONES (≤ 390px) ─── */
+        @media (max-width: 390px) {
+          .ks-feature-card,
+          .ks-feature-card-right {
+            width: min(42vw, 158px);
+            padding: .42rem .5rem;
+            grid-template-columns: 26px 1fr;
+            gap: .36rem;
           }
 
-          .ks-cta {
-            width: 100%;
-            min-width: 0;
-            height: 60px;
+          .ks-feature-icon { width: 24px; height: 24px; }
+          .ks-feature-icon svg { width: 12px; height: 12px; }
+          .ks-feature-card h3 { font-size: .59rem; }
+          .ks-feature-card p  { font-size: .52rem; }
+
+          .ks-robot-img { width: min(50vw, 196px); }
+          .ks-robot-placeholder { width: min(50vw, 196px); }
+
+          .ks-title { font-size: clamp(1.85rem, 12vw, 3rem); }
+
+          .ks-cta   { height: 38px; font-size: .78rem; }
+
+          .ks-stat-box { min-height: 36px; padding: .22rem .28rem; }
+          .ks-stat-box strong { font-size: .76rem; }
+          .ks-stat-box span   { font-size: .5rem; }
+        }
+
+        /* ─── TALL PHONES (min-height 750px dvh) — lebih lega ─── */
+        @media (max-width: 640px) and (min-height: 750px) {
+          .ks-robot-img { width: min(54vw, 240px); }
+
+          .ks-feature-card,
+          .ks-feature-card-right {
+            width: min(43vw, 172px);
+            padding: .58rem .68rem;
           }
+
+          .ks-feature-card h3 { font-size: .68rem; }
+          .ks-feature-card p  { font-size: .6rem;  }
+
+          .ks-cta       { height: 46px; }
+          .ks-stat-box  { min-height: 44px; }
+        }
+
+        /* ─── LANDSCAPE PHONE — tinggi terbatas, izinkan scroll ─── */
+        @media (max-width: 640px) and (max-height: 500px) {
+          .ks-hero {
+            height: auto;
+            min-height: 520px;
+            overflow-y: auto;
+          }
+
+          .ks-wrap { height: 520px; }
         }
       `}</style>
 
@@ -1164,6 +1384,7 @@ const ProfessionalHero = ({ hero }) => {
             onMouseLeave={() => setMouse({ x: 0, y: 0 })}
           >
             <div className="ks-robot-glow" />
+            <div className="ks-robot-curtain" />
             <div className="ks-robot-ground" />
 
             {robotUrl ? (
