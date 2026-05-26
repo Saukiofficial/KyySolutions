@@ -52,6 +52,18 @@ const FeatureIcon = ({ type }) => {
     support: (
       <path d="M4 13v-1a8 8 0 0 1 16 0v1M6 18a3 3 0 0 1-3-3v-1a2 2 0 0 1 2-2h1v6Zm12 0v-6h1a2 2 0 0 1 2 2v1a3 3 0 0 1-3 3Zm0 0c0 1.7-1.3 3-3 3h-2" />
     ),
+    clients: (
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    ),
+    check: (
+      <path d="M20 6 9 17l-5-5" />
+    ),
+    rocket: (
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09ZM12 15l-3-3a22 22 0 0 1 2-4.5A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-5.5 11a22 22 0 0 1-4.5 2Zm-3 0H4v-5m11 5v5h-5" />
+    ),
+    calendar: (
+      <path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+    ),
   };
 
   return (
@@ -62,7 +74,7 @@ const FeatureIcon = ({ type }) => {
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-8 w-8"
+      className="ks-icon-svg"
     >
       {icons[type]}
     </svg>
@@ -79,15 +91,23 @@ const FeatureCard = ({ icon, title, text, side = 'left', className = '' }) => (
       <h3>{title}</h3>
       <p>{text}</p>
     </div>
+
+    <span className="ks-feature-arrow">→</span>
   </div>
 );
 
-const StatBox = ({ value, suffix, label }) => (
+const StatBox = ({ icon, value, suffix, label }) => (
   <div className="ks-stat-box">
-    <strong>
-      <AnimatedCounter target={value} suffix={suffix} />
-    </strong>
-    <span>{label}</span>
+    <div className="ks-stat-icon">
+      <FeatureIcon type={icon} />
+    </div>
+
+    <div className="ks-stat-text">
+      <strong>
+        <AnimatedCounter target={value} suffix={suffix} />
+      </strong>
+      <span>{label}</span>
+    </div>
   </div>
 );
 
@@ -132,20 +152,22 @@ const ProfessionalHero = ({ hero }) => {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Rajdhani:wght@600;700&display=swap"
         rel="stylesheet"
       />
 
       <style>{`
         :root {
-          --ks-blue: #00a8ff;
-          --ks-cyan: #32d6ff;
+          --ks-blue: #009dff;
+          --ks-blue-2: #005dff;
+          --ks-cyan: #39d9ff;
           --ks-dark: #020814;
+          --ks-black: #00040d;
         }
 
         @keyframes ksPulse {
           0%, 100% {
-            opacity: .45;
+            opacity: .48;
             transform: scale(1);
           }
 
@@ -157,21 +179,21 @@ const ProfessionalHero = ({ hero }) => {
 
         @keyframes ksSpin {
           from {
-            transform: rotate(0deg);
+            transform: translate(-50%, -50%) rotate(0deg);
           }
 
           to {
-            transform: rotate(360deg);
+            transform: translate(-50%, -50%) rotate(360deg);
           }
         }
 
         @keyframes ksFloat {
           0%, 100% {
-            transform: translateY(0);
+            transform: translateY(0) rotateX(var(--mx)) rotateY(var(--my));
           }
 
           50% {
-            transform: translateY(-12px);
+            transform: translateY(-12px) rotateX(var(--mx)) rotateY(var(--my));
           }
         }
 
@@ -182,61 +204,13 @@ const ProfessionalHero = ({ hero }) => {
           }
 
           12%, 88% {
-            opacity: .48;
+            opacity: .42;
           }
 
           100% {
             transform: translateY(120%);
             opacity: 0;
           }
-        }
-
-        @keyframes ksLineMove {
-          0% {
-            background-position: 0 0;
-          }
-
-          100% {
-            background-position: 180px 0;
-          }
-        }
-
-        .ks-rings {
-          position: absolute;
-          left: 50%;
-          top: 36%;
-          width: min(62vw, 800px);
-          aspect-ratio: 1;
-          transform: translate(-50%, -50%);
-          z-index: -1;
-          pointer-events: none;
-          border-radius: 999px;
-          border: 1px solid rgba(0, 168, 255, .52);
-          box-shadow:
-            0 0 52px rgba(0, 155, 255, .28),
-            inset 0 0 52px rgba(0, 155, 255, .12);
-        }
-
-        .ks-rings::before {
-          content: '';
-          position: absolute;
-          inset: 14%;
-          border-radius: 999px;
-          border: 1px solid rgba(0, 198, 255, .4);
-          box-shadow:
-            0 0 36px rgba(0, 165, 255, .22),
-            inset 0 0 36px rgba(0, 165, 255, .1);
-        }
-
-        .ks-rings::after {
-          content: '';
-          position: absolute;
-          inset: 28%;
-          border-radius: 999px;
-          border: 1px solid rgba(50, 215, 255, .32);
-          box-shadow:
-            0 0 24px rgba(0, 175, 255, .18),
-            inset 0 0 24px rgba(0, 175, 255, .08);
         }
 
         .ks-hero {
@@ -249,12 +223,12 @@ const ProfessionalHero = ({ hero }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 6.6rem 1.25rem 1.25rem;
-          color: #fff;
+          padding: 6.4rem 1.25rem 1.25rem;
+          color: #ffffff;
           isolation: isolate;
           background:
-            radial-gradient(circle at 50% 30%, rgba(0, 100, 255, .18), transparent 30%),
-            linear-gradient(180deg, #00040e 0%, #010810 48%, #010408 100%);
+            radial-gradient(circle at 50% 28%, rgba(0, 113, 255, .2), transparent 30%),
+            linear-gradient(180deg, #00040d 0%, #020915 48%, #00040b 100%);
           font-family: 'Inter', 'Rajdhani', sans-serif;
         }
 
@@ -269,52 +243,50 @@ const ProfessionalHero = ({ hero }) => {
           pointer-events: none;
         }
 
-        .ks-beam {
-          z-index: -3;
-          background:
-            radial-gradient(ellipse 18% 85% at 50% 0%, rgba(0, 142, 255, .28) 0%, transparent 70%),
-            radial-gradient(ellipse 8% 60% at 50% 0%, rgba(80, 200, 255, .2) 0%, transparent 65%);
-        }
-
         .ks-bg-img {
-          z-index: -8;
+          z-index: -9;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          filter: brightness(.28) saturate(1.2) contrast(1.1);
+          filter: brightness(.36) saturate(1.2) contrast(1.08);
         }
 
         .ks-bg-layer {
+          z-index: -8;
+          background:
+            radial-gradient(ellipse 46% 42% at 50% 22%, rgba(0, 126, 255, .4), transparent 100%),
+            radial-gradient(circle at 50% 68%, rgba(0, 169, 255, .18), transparent 34%),
+            linear-gradient(90deg, rgba(0,0,0,.9), transparent 24%, transparent 76%, rgba(0,0,0,.9)),
+            linear-gradient(180deg, rgba(0,0,0,.35), transparent 43%, rgba(0,0,0,.55));
+        }
+
+        .ks-beam {
           z-index: -7;
           background:
-            radial-gradient(ellipse 48% 42% at 50% 22%, rgba(0, 120, 255, .44), transparent 100%),
-            radial-gradient(circle at 50% 68%, rgba(0, 155, 255, .18), transparent 35%),
-            radial-gradient(circle at 10% 42%, rgba(0, 80, 200, .12), transparent 24%),
-            radial-gradient(circle at 90% 42%, rgba(0, 80, 200, .12), transparent 24%),
-            linear-gradient(90deg, rgba(0,0,0,.92), transparent 22%, transparent 78%, rgba(0,0,0,.92)),
-            linear-gradient(180deg, rgba(0,0,0,.45) 0%, transparent 40%, transparent 60%, rgba(0,0,0,.55) 100%);
+            radial-gradient(ellipse 18% 90% at 50% 0%, rgba(0, 142, 255, .25), transparent 70%),
+            radial-gradient(ellipse 8% 65% at 50% 0%, rgba(80, 200, 255, .18), transparent 65%);
         }
 
         .ks-grid {
           z-index: -6;
-          opacity: .26;
+          opacity: .22;
           background-image:
-            linear-gradient(rgba(0, 157, 255, .16) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 157, 255, .16) 1px, transparent 1px);
+            linear-gradient(rgba(0, 157, 255, .14) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 157, 255, .14) 1px, transparent 1px);
           background-size: 72px 72px;
-          mask-image: radial-gradient(circle at center, #000 0%, transparent 74%);
+          mask-image: radial-gradient(circle at center, #000 0%, transparent 75%);
         }
 
         .ks-floor {
           z-index: -5;
           top: 43%;
           background:
-            linear-gradient(90deg, transparent 0 47%, rgba(40, 190, 255, .65) 49%, transparent 51% 100%),
-            repeating-linear-gradient(90deg, transparent 0 84px, rgba(0, 157, 255, .28) 86px, transparent 88px),
-            repeating-linear-gradient(0deg, transparent 0 54px, rgba(0, 157, 255, .24) 56px, transparent 58px);
+            linear-gradient(90deg, transparent 0 47%, rgba(40, 190, 255, .5) 49%, transparent 51% 100%),
+            repeating-linear-gradient(90deg, transparent 0 84px, rgba(0, 157, 255, .24) 86px, transparent 88px),
+            repeating-linear-gradient(0deg, transparent 0 54px, rgba(0, 157, 255, .2) 56px, transparent 58px);
           transform: perspective(760px) rotateX(62deg) translateY(125px) scale(1.45);
           transform-origin: center bottom;
-          opacity: .52;
+          opacity: .48;
         }
 
         .ks-floor::before,
@@ -332,8 +304,8 @@ const ProfessionalHero = ({ hero }) => {
           height: 62vw;
           max-width: 980px;
           max-height: 980px;
-          border: 1px solid rgba(0, 179, 255, .6);
-          box-shadow: 0 0 38px rgba(0, 155, 255, .32), inset 0 0 38px rgba(0, 155, 255, .14);
+          border: 1px solid rgba(0, 179, 255, .5);
+          box-shadow: 0 0 38px rgba(0, 155, 255, .24), inset 0 0 38px rgba(0, 155, 255, .1);
         }
 
         .ks-floor::after {
@@ -341,13 +313,13 @@ const ProfessionalHero = ({ hero }) => {
           height: 36vw;
           max-width: 560px;
           max-height: 560px;
-          border: 1px solid rgba(0, 200, 255, .5);
-          box-shadow: 0 0 28px rgba(0, 175, 255, .28), inset 0 0 28px rgba(0, 175, 255, .12);
+          border: 1px solid rgba(0, 200, 255, .45);
+          box-shadow: 0 0 28px rgba(0, 175, 255, .22), inset 0 0 28px rgba(0, 175, 255, .1);
         }
 
         .ks-scanline {
           z-index: -4;
-          background: linear-gradient(180deg, transparent, rgba(68, 190, 255, .18), transparent);
+          background: linear-gradient(180deg, transparent, rgba(68, 190, 255, .16), transparent);
           height: 45%;
           animation: ksScan 5.5s linear infinite;
         }
@@ -359,16 +331,15 @@ const ProfessionalHero = ({ hero }) => {
           width: min(56vw, 720px);
           aspect-ratio: 1;
           border-radius: 999px;
-          transform: translate(-50%, -50%);
           z-index: -2;
-          opacity: .92;
+          opacity: .9;
           background:
             conic-gradient(
               from 0deg,
               transparent 0 8%,
-              rgba(0, 159, 255, .95) 8% 11%,
+              rgba(0, 159, 255, .9) 8% 11%,
               transparent 11% 18%,
-              rgba(25, 205, 255, .82) 18% 21%,
+              rgba(25, 205, 255, .78) 18% 21%,
               transparent 21% 100%
             );
           mask:
@@ -381,29 +352,45 @@ const ProfessionalHero = ({ hero }) => {
               transparent 60%
             );
           animation: ksSpin 24s linear infinite;
-          filter: drop-shadow(0 0 28px rgba(0, 151, 255, .82));
+          filter: drop-shadow(0 0 28px rgba(0, 151, 255, .68));
         }
 
-        .ks-orbit::before {
-          content: '';
+        .ks-rings {
           position: absolute;
-          inset: 0;
+          left: 50%;
+          top: 36%;
+          width: min(62vw, 800px);
+          aspect-ratio: 1;
+          transform: translate(-50%, -50%);
+          z-index: -1;
+          pointer-events: none;
           border-radius: 999px;
-          border: 1px solid rgba(0, 172, 255, .42);
+          border: 1px solid rgba(0, 168, 255, .42);
           box-shadow:
-            0 0 45px rgba(0, 151, 255, .3),
-            inset 0 0 45px rgba(0, 151, 255, .15);
+            0 0 52px rgba(0, 155, 255, .24),
+            inset 0 0 52px rgba(0, 155, 255, .1);
         }
 
-        .ks-orbit::after {
+        .ks-rings::before {
           content: '';
           position: absolute;
-          inset: 13%;
-          border: 1px solid rgba(61, 190, 255, .45);
-          border-radius: inherit;
+          inset: 14%;
+          border-radius: 999px;
+          border: 1px solid rgba(0, 198, 255, .32);
           box-shadow:
-            inset 0 0 65px rgba(0, 141, 255, .28),
-            0 0 52px rgba(0, 141, 255, .24);
+            0 0 36px rgba(0, 165, 255, .18),
+            inset 0 0 36px rgba(0, 165, 255, .08);
+        }
+
+        .ks-rings::after {
+          content: '';
+          position: absolute;
+          inset: 28%;
+          border-radius: 999px;
+          border: 1px solid rgba(50, 215, 255, .26);
+          box-shadow:
+            0 0 24px rgba(0, 175, 255, .14),
+            inset 0 0 24px rgba(0, 175, 255, .06);
         }
 
         .ks-wrap {
@@ -413,10 +400,6 @@ const ProfessionalHero = ({ hero }) => {
           z-index: 2;
         }
 
-        /*
-          ROBOT TIDAK DIPOTONG KAKU.
-          Robot dibuat besar, lalu bagian bawah disamarkan pakai shadow hitam lembut.
-        */
         .ks-robot-stage {
           position: absolute;
           left: 50%;
@@ -439,11 +422,11 @@ const ProfessionalHero = ({ hero }) => {
           left: 50%;
           bottom: -14%;
           width: min(80vw, 1020px);
-          height: 58%;
+          height: 54%;
           transform: translateX(-50%);
           background:
-            radial-gradient(ellipse 70% 60% at 50% 100%, rgba(2, 8, 20, 1) 0%, rgba(2, 8, 20, .96) 38%, rgba(2, 8, 20, .78) 60%, rgba(2, 8, 20, .38) 78%, transparent 92%),
-            linear-gradient(180deg, transparent 0%, rgba(2, 8, 20, .88) 55%, rgba(2, 8, 20, 1) 100%);
+            radial-gradient(ellipse 70% 60% at 50% 100%, rgba(2, 8, 20, 1) 0%, rgba(2, 8, 20, .94) 38%, rgba(2, 8, 20, .68) 60%, rgba(2, 8, 20, .28) 78%, transparent 92%),
+            linear-gradient(180deg, transparent 0%, rgba(2, 8, 20, .78) 58%, rgba(2, 8, 20, 1) 100%);
           filter: blur(6px);
           z-index: 6;
           pointer-events: none;
@@ -455,9 +438,9 @@ const ProfessionalHero = ({ hero }) => {
           left: 50%;
           bottom: -6%;
           width: min(64vw, 820px);
-          height: 38%;
+          height: 34%;
           transform: translateX(-50%);
-          background: radial-gradient(ellipse 65% 80% at 50% 95%, rgba(0, 0, 0, 1) 0%, rgba(2, 8, 20, .98) 30%, rgba(2, 8, 20, .85) 52%, rgba(2, 8, 20, .42) 72%, transparent 86%);
+          background: radial-gradient(ellipse 65% 80% at 50% 95%, rgba(0, 0, 0, .96) 0%, rgba(2, 8, 20, .9) 32%, rgba(2, 8, 20, .68) 54%, rgba(2, 8, 20, .28) 72%, transparent 86%);
           filter: blur(12px);
           z-index: 7;
           pointer-events: none;
@@ -469,7 +452,7 @@ const ProfessionalHero = ({ hero }) => {
           aspect-ratio: 1;
           top: -12%;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(0, 180, 255, .88), rgba(0, 100, 255, .32) 40%, transparent 68%);
+          background: radial-gradient(circle, rgba(0, 180, 255, .78), rgba(0, 100, 255, .26) 40%, transparent 68%);
           filter: blur(22px);
           animation: ksPulse 3.2s ease-in-out infinite;
           z-index: -1;
@@ -485,13 +468,12 @@ const ProfessionalHero = ({ hero }) => {
           object-position: center top;
           margin-top: -8px;
           filter:
-            drop-shadow(0 0 36px rgba(0, 168, 255, .88))
-            drop-shadow(0 0 72px rgba(0, 120, 255, .45))
+            drop-shadow(0 0 36px rgba(0, 168, 255, .82))
+            drop-shadow(0 0 72px rgba(0, 120, 255, .4))
             drop-shadow(0 42px 42px rgba(0,0,0,.62));
-          mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.18) 82%, transparent 94%);
-          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.18) 82%, transparent 94%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
           animation: ksFloat 5.5s ease-in-out infinite;
-          transform: rotateX(var(--mx)) rotateY(var(--my));
           transition: transform .25s ease;
         }
 
@@ -499,7 +481,6 @@ const ProfessionalHero = ({ hero }) => {
           position: relative;
           z-index: 4;
           width: min(38vw, 590px);
-          max-height: none;
           aspect-ratio: .72;
           display: flex;
           align-items: center;
@@ -513,55 +494,9 @@ const ProfessionalHero = ({ hero }) => {
             inset 0 0 80px rgba(25, 168, 255, .28),
             0 0 80px rgba(0, 128, 255, .38);
           font-size: clamp(8rem, 16vw, 14rem);
-          mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.18) 82%, transparent 94%);
-          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.18) 82%, transparent 94%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
           animation: ksFloat 5.5s ease-in-out infinite;
-        }
-
-        .ks-robot-curtain {
-          position: absolute;
-          left: 50%;
-          top: -8%;
-          width: min(72vw, 900px);
-          height: 115%;
-          transform: translateX(-50%);
-          z-index: 2;
-          pointer-events: none;
-          background:
-            radial-gradient(ellipse 75% 80% at 50% 42%,
-              transparent 0%,
-              transparent 38%,
-              rgba(0, 4, 14, .55) 58%,
-              rgba(0, 4, 14, .82) 72%,
-              rgba(0, 4, 14, .95) 88%,
-              rgba(0, 4, 14, 1) 100%),
-            radial-gradient(ellipse 100% 100% at 50% 50%,
-              transparent 30%,
-              rgba(0, 4, 14, .38) 62%,
-              rgba(0, 4, 14, .78) 82%,
-              rgba(0, 4, 14, .96) 100%);
-        }
-
-        .ks-robot-ground {
-          position: absolute;
-          left: 50%;
-          bottom: -5%;
-          width: min(55vw, 700px);
-          height: 28%;
-          transform: translateX(-50%);
-          background:
-            radial-gradient(ellipse 90% 55% at 50% 100%,
-              rgba(0, 130, 255, .22) 0%,
-              rgba(0, 80, 200, .12) 40%,
-              transparent 72%),
-            radial-gradient(ellipse 90% 100% at 50% 100%,
-              rgba(2, 8, 22, 1) 0%,
-              rgba(2, 8, 22, .96) 35%,
-              rgba(2, 8, 22, .82) 56%,
-              rgba(2, 8, 22, .38) 74%,
-              transparent 90%);
-          z-index: 5;
-          pointer-events: none;
         }
 
         .ks-feature-grid {
@@ -573,31 +508,36 @@ const ProfessionalHero = ({ hero }) => {
 
         .ks-feature-card {
           position: absolute;
-          width: min(28vw, 318px);
-          min-height: 108px;
+          width: min(28vw, 350px);
+          min-height: 126px;
           display: grid;
-          grid-template-columns: 58px 1fr;
+          grid-template-columns: 70px 1fr 22px;
           align-items: center;
-          gap: .85rem;
-          padding: 1rem 1.2rem;
+          gap: 1rem;
+          padding: 1.1rem 1.3rem;
           color: #eaf8ff;
-          background: rgba(3, 12, 30, .88);
-          border: 1px solid rgba(0, 140, 220, .36);
-          border-radius: 10px;
+          background:
+            linear-gradient(135deg, rgba(4, 20, 45, .86), rgba(5, 28, 58, .72)),
+            radial-gradient(circle at 15% 50%, rgba(31, 169, 255, .22), transparent 42%);
+          border: 1px solid rgba(0, 155, 255, .48);
+          border-radius: 18px;
           box-shadow:
-            0 8px 40px rgba(0, 0, 0, .58),
-            0 0 28px rgba(0, 80, 180, .18),
-            inset 0 1px 0 rgba(0, 180, 255, .12);
+            0 12px 50px rgba(0, 0, 0, .42),
+            0 0 28px rgba(0, 119, 255, .18),
+            inset 0 1px 0 rgba(105, 218, 255, .18);
           backdrop-filter: blur(20px);
           pointer-events: auto;
+          overflow: hidden;
         }
 
         .ks-feature-card::before {
           content: '';
           position: absolute;
           inset: 0;
-          border-radius: 10px;
-          background: linear-gradient(135deg, rgba(0, 140, 255, .06) 0%, transparent 50%);
+          border-radius: inherit;
+          background:
+            linear-gradient(90deg, transparent, rgba(55, 207, 255, .22), transparent) top / 100% 1px no-repeat,
+            linear-gradient(135deg, rgba(0, 170, 255, .08), transparent 52%);
           pointer-events: none;
         }
 
@@ -605,15 +545,10 @@ const ProfessionalHero = ({ hero }) => {
           content: '';
           position: absolute;
           top: 0;
-          left: 16px;
-          right: 16px;
+          left: 22px;
+          right: 22px;
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(0, 190, 255, .45), transparent);
-          pointer-events: none;
-        }
-
-        .ks-feature-card-right {
-          border-radius: 10px;
+          background: linear-gradient(90deg, transparent, rgba(0, 222, 255, .7), transparent);
         }
 
         .ks-feature-content {
@@ -623,65 +558,79 @@ const ProfessionalHero = ({ hero }) => {
         }
 
         .ks-feature-card h3 {
-          margin: 0 0 .35rem;
+          margin: 0 0 .45rem;
           font-family: 'Inter', sans-serif;
-          font-size: clamp(.82rem, .95vw, 1rem);
-          line-height: 1.15;
-          font-weight: 700;
+          font-size: clamp(.88rem, 1vw, 1.05rem);
+          line-height: 1.16;
+          font-weight: 800;
           color: #ffffff;
-          letter-spacing: -.01em;
+          letter-spacing: -.025em;
         }
 
         .ks-feature-card p {
           margin: 0;
-          font-size: clamp(.7rem, .8vw, .82rem);
+          font-size: clamp(.72rem, .82vw, .86rem);
           line-height: 1.52;
           font-weight: 400;
-          color: rgba(180, 220, 255, .78);
+          color: rgba(204, 232, 255, .76);
         }
 
         .ks-feature-icon {
           position: relative;
           z-index: 2;
-          width: 48px;
-          height: 48px;
+          width: 58px;
+          height: 58px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 10px;
-          color: #5ecfff;
-          background: rgba(0, 80, 180, .38);
-          border: 1px solid rgba(0, 160, 255, .38);
+          border-radius: 999px;
+          color: #78ddff;
+          background: radial-gradient(circle at 38% 32%, rgba(94, 224, 255, .34), rgba(0, 92, 220, .36));
+          border: 1px solid rgba(80, 209, 255, .42);
           box-shadow:
-            inset 0 0 16px rgba(0, 160, 255, .18),
-            0 0 18px rgba(0, 100, 220, .28);
+            inset 0 0 18px rgba(74, 201, 255, .2),
+            0 0 24px rgba(0, 117, 255, .3);
           flex-shrink: 0;
         }
 
+        .ks-feature-arrow {
+          position: relative;
+          z-index: 2;
+          color: #78ddff;
+          font-size: 1.6rem;
+          line-height: 1;
+          opacity: .9;
+        }
+
+        .ks-icon-svg {
+          width: 30px;
+          height: 30px;
+        }
+
         .ks-feature-top-left {
-          left: 5.2%;
-          top: 21%;
+          left: 4.2%;
+          top: 21.5%;
         }
 
         .ks-feature-bottom-left {
-          left: 5.2%;
-          top: 41%;
+          left: 4.2%;
+          top: 43%;
         }
 
         .ks-feature-top-right {
-          right: 5.2%;
-          top: 21%;
+          right: 4.2%;
+          top: 21.5%;
         }
 
         .ks-feature-bottom-right {
-          right: 5.2%;
-          top: 41%;
+          right: 4.2%;
+          top: 43%;
         }
 
         .ks-copy {
           position: absolute;
           left: 50%;
-          bottom: 3.1%;
+          bottom: 12.8%;
           transform: translateX(-50%);
           z-index: 9;
           text-align: center;
@@ -693,18 +642,18 @@ const ProfessionalHero = ({ hero }) => {
         .ks-title {
           margin: 0;
           font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
-          font-size: clamp(2.8rem, 5.2vw, 5.6rem);
-          line-height: .92;
+          font-size: clamp(3.2rem, 5.3vw, 5.8rem);
+          line-height: .9;
           font-weight: 400;
-          letter-spacing: .04em;
+          letter-spacing: .045em;
           text-transform: uppercase;
         }
 
         .ks-title span {
           display: block;
-          color: #f0f8ff;
+          color: #f4fbff;
           text-shadow:
-            0 4px 0 rgba(0, 20, 60, .3),
+            0 4px 0 rgba(0, 20, 60, .32),
             0 10px 28px rgba(0, 0, 0, .5);
         }
 
@@ -715,114 +664,53 @@ const ProfessionalHero = ({ hero }) => {
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
-          text-shadow: none;
           filter:
-            drop-shadow(0 6px 0 rgba(0, 20, 90, .22))
+            drop-shadow(0 6px 0 rgba(0, 20, 90, .2))
             drop-shadow(0 0 28px rgba(0, 160, 255, .5));
         }
 
         .ks-kicker {
           margin: .65rem auto 0;
-          font-size: clamp(1rem, 1.5vw, 1.5rem);
+          font-size: clamp(1rem, 1.5vw, 1.55rem);
           line-height: 1.2;
-          font-weight: 700;
+          font-weight: 800;
           font-family: 'Inter', sans-serif;
-          letter-spacing: -.01em;
-          color: #8dd6ff;
+          letter-spacing: -.02em;
+          color: #96dcff;
           text-shadow: 0 0 18px rgba(0, 155, 255, .28);
         }
 
         .ks-subtitle {
           width: min(100%, 640px);
           margin: .45rem auto 0;
-          color: rgba(200, 230, 255, .72);
+          color: rgba(220, 238, 255, .76);
           font-family: 'Inter', sans-serif;
-          font-size: clamp(.78rem, .88vw, .92rem);
+          font-size: clamp(.8rem, .9vw, .94rem);
           font-weight: 400;
           line-height: 1.55;
         }
 
-        .ks-bottom-row {
-          width: min(100%, 900px);
-          margin: .85rem auto 0;
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
-          align-items: center;
-          gap: 1.8rem;
-        }
-
-        .ks-stats {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(120px, 1fr));
-          border: 1px solid rgba(0, 165, 255, .52);
-          border-radius: 13px;
-          background: rgba(2, 14, 31, .7);
-          box-shadow:
-            inset 0 0 24px rgba(0, 132, 255, .08),
-            0 0 28px rgba(0, 112, 255, .14);
-          overflow: hidden;
-          backdrop-filter: blur(16px);
-        }
-
-        .ks-stat-box {
-          min-height: 58px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: .5rem .9rem;
-          position: relative;
-        }
-
-        .ks-stat-box + .ks-stat-box::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 25%;
-          bottom: 25%;
-          width: 1px;
-          background: linear-gradient(transparent, rgba(52, 213, 255, .72), transparent);
-        }
-
-        .ks-stat-box strong {
-          font-size: clamp(1.1rem, 1.35vw, 1.42rem);
-          line-height: 1;
-          color: #1fb9ff;
-          font-family: 'Inter', sans-serif;
-          font-weight: 800;
-          letter-spacing: -.04em;
-          text-shadow: 0 0 18px rgba(0, 169, 255, .45);
-        }
-
-        .ks-stat-box span {
-          margin-top: .28rem;
-          font-size: .68rem;
-          font-family: 'Inter', sans-serif;
-          line-height: 1.2;
-          color: rgba(180, 220, 255, .72);
-          font-weight: 500;
-          white-space: nowrap;
-        }
-
         .ks-cta {
-          min-width: 230px;
+          min-width: 245px;
           height: 58px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: .8rem;
-          padding: 0 1.8rem;
+          padding: 0 1.85rem;
           border-radius: 999px;
-          border: 1px solid rgba(83, 219, 255, .86);
-          color: #fff;
+          border: 1px solid rgba(104, 227, 255, .9);
+          color: #ffffff;
           text-decoration: none;
           font-weight: 800;
-          font-size: .95rem;
-          background: linear-gradient(180deg, rgba(35, 197, 255, .92), rgba(0, 76, 220, .94));
+          font-size: .96rem;
+          background:
+            linear-gradient(180deg, #42dcff 0%, #119bff 48%, #064ee2 100%);
           box-shadow:
-            inset 0 1px 16px rgba(255,255,255,.2),
-            0 0 24px rgba(0, 154, 255, .62),
-            0 16px 30px rgba(0, 0, 0, .28);
+            inset 0 1px 16px rgba(255,255,255,.25),
+            inset 0 -8px 18px rgba(0, 34, 138, .28),
+            0 0 24px rgba(0, 167, 255, .68),
+            0 16px 30px rgba(0, 0, 0, .32);
           transition:
             transform .25s ease,
             box-shadow .25s ease;
@@ -831,9 +719,10 @@ const ProfessionalHero = ({ hero }) => {
         .ks-cta:hover {
           transform: translateY(-3px);
           box-shadow:
-            inset 0 1px 16px rgba(255,255,255,.25),
-            0 0 34px rgba(0, 191, 255, .82),
-            0 20px 34px rgba(0, 0, 0, .32);
+            inset 0 1px 16px rgba(255,255,255,.28),
+            inset 0 -8px 18px rgba(0, 34, 138, .25),
+            0 0 36px rgba(0, 191, 255, .9),
+            0 20px 34px rgba(0, 0, 0, .34);
         }
 
         .ks-cta svg {
@@ -846,42 +735,156 @@ const ProfessionalHero = ({ hero }) => {
           transform: translateX(4px);
         }
 
+        .ks-main-cta {
+          margin-top: 1rem;
+        }
+
+        .ks-bottom-stats {
+          position: absolute;
+          left: 50%;
+          bottom: 2.4%;
+          transform: translateX(-50%);
+          z-index: 9;
+          width: min(68vw, 1040px);
+          min-height: 88px;
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          align-items: center;
+          border: 1px solid rgba(0, 162, 255, .62);
+          border-radius: 16px;
+          background:
+            linear-gradient(180deg, rgba(5, 25, 55, .82) 0%, rgba(2, 14, 34, .92) 52%, rgba(1, 8, 22, .96) 100%),
+            radial-gradient(circle at 50% 0%, rgba(0, 193, 255, .22), rgba(0, 102, 255, .08) 42%, transparent 68%);
+          box-shadow:
+            0 0 30px rgba(0, 145, 255, .25),
+            0 16px 42px rgba(0, 0, 0, .34),
+            inset 0 1px 0 rgba(124, 233, 255, .24),
+            inset 0 -1px 0 rgba(0, 112, 255, .2);
+          backdrop-filter: blur(20px);
+          overflow: hidden;
+        }
+
+        .ks-bottom-stats::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(90deg, transparent, rgba(62, 218, 255, .36), transparent) top / 100% 1px no-repeat,
+            linear-gradient(180deg, rgba(80, 220, 255, .08), transparent 42%),
+            linear-gradient(90deg, transparent 0%, rgba(0, 128, 255, .08) 50%, transparent 100%);
+          pointer-events: none;
+        }
+
+        .ks-bottom-stats::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: -1px;
+          width: 76%;
+          height: 2px;
+          transform: translateX(-50%);
+          background: linear-gradient(90deg, transparent, #26d8ff 18%, #91f2ff 50%, #26d8ff 82%, transparent);
+          box-shadow: 0 0 18px rgba(38, 216, 255, .9);
+          pointer-events: none;
+        }
+
+        .ks-stat-box {
+          position: relative;
+          display: grid;
+          grid-template-columns: 58px 1fr;
+          align-items: center;
+          justify-content: center;
+          gap: .95rem;
+          padding: .82rem 1.18rem;
+        }
+
+        .ks-stat-box + .ks-stat-box::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 24%;
+          bottom: 24%;
+          width: 1px;
+          background: linear-gradient(
+            transparent,
+            rgba(63, 219, 255, .58),
+            transparent
+          );
+        }
+
+        .ks-stat-icon {
+          width: 54px;
+          height: 54px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          flex-shrink: 0;
+          color: #8deaff;
+          background:
+            radial-gradient(circle at 38% 30%, rgba(128, 244, 255, .42) 0%, rgba(44, 179, 255, .28) 34%, rgba(0, 72, 196, .42) 72%),
+            linear-gradient(180deg, rgba(0, 162, 255, .28), rgba(0, 37, 110, .42));
+          border: 1px solid rgba(92, 222, 255, .5);
+          box-shadow:
+            inset 0 0 18px rgba(83, 212, 255, .22),
+            0 0 20px rgba(0, 149, 255, .34),
+            0 8px 24px rgba(0, 0, 0, .28);
+        }
+
+        .ks-stat-icon .ks-icon-svg {
+          width: 27px;
+          height: 27px;
+        }
+
+        .ks-stat-text {
+          min-width: 0;
+        }
+
+        .ks-stat-box strong {
+          display: block;
+          font-size: clamp(1.35rem, 1.78vw, 1.78rem);
+          line-height: 1;
+          color: #29c4ff;
+          font-family: 'Inter', sans-serif;
+          font-weight: 900;
+          letter-spacing: -.045em;
+          text-shadow:
+            0 0 16px rgba(0, 180, 255, .55),
+            0 2px 12px rgba(0, 0, 0, .35);
+        }
+
+        .ks-stat-box span {
+          display: block;
+          margin-top: .26rem;
+          font-size: .76rem;
+          font-family: 'Inter', sans-serif;
+          line-height: 1.25;
+          color: rgba(218, 239, 255, .82);
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
         @media (min-width: 981px) and (max-height: 820px) {
           .ks-hero {
             min-height: 620px;
-            padding-top: 5.8rem;
-            padding-bottom: 1rem;
+            padding-top: 5.6rem;
           }
 
           .ks-robot-stage {
-            top: 4.8%;
-            height: 55%;
-          }
-
-          .ks-robot-stage::before {
-            bottom: -12%;
-            height: 38%;
-          }
-
-          .ks-robot-stage::after {
-            bottom: -7%;
-            height: 25%;
+            top: 4%;
+            height: 56%;
           }
 
           .ks-robot-img {
-            width: min(35vw, 540px);
-            margin-top: -10px;
-          }
-
-          .ks-robot-placeholder {
-            width: min(35vw, 540px);
+            width: min(36vw, 540px);
           }
 
           .ks-feature-card {
             width: min(29vw, 320px);
             min-height: 106px;
-            grid-template-columns: 58px 1fr;
-            padding: .85rem 1.15rem;
+            grid-template-columns: 58px 1fr 18px;
+            padding: .85rem 1.05rem;
+            border-radius: 14px;
           }
 
           .ks-feature-icon {
@@ -889,7 +892,7 @@ const ProfessionalHero = ({ hero }) => {
             height: 50px;
           }
 
-          .ks-feature-icon svg {
+          .ks-icon-svg {
             width: 25px;
             height: 25px;
           }
@@ -900,46 +903,76 @@ const ProfessionalHero = ({ hero }) => {
           }
 
           .ks-feature-card p {
-            font-size: .75rem;
+            font-size: .74rem;
             line-height: 1.42;
           }
 
           .ks-feature-top-left,
           .ks-feature-top-right {
-            top: 20%;
+            top: 20.5%;
           }
 
           .ks-feature-bottom-left,
           .ks-feature-bottom-right {
-            top: 38%;
+            top: 39%;
+          }
+
+          .ks-copy {
+            bottom: 11.8%;
           }
 
           .ks-title {
-            font-size: clamp(3rem, 5.2vw, 5.45rem);
+            font-size: clamp(3rem, 5.05vw, 5.35rem);
           }
 
           .ks-kicker {
-            margin-top: .58rem;
-            font-size: clamp(1.05rem, 1.45vw, 1.45rem);
+            margin-top: .5rem;
+            font-size: clamp(1rem, 1.35vw, 1.35rem);
           }
 
           .ks-subtitle {
-            margin-top: .42rem;
-            font-size: .84rem;
+            margin-top: .35rem;
+            font-size: .82rem;
             line-height: 1.45;
           }
 
-          .ks-bottom-row {
-            margin-top: .7rem;
-          }
-
-          .ks-stat-box {
-            min-height: 52px;
+          .ks-main-cta {
+            margin-top: .72rem;
           }
 
           .ks-cta {
-            height: 54px;
-            min-width: 215px;
+            height: 52px;
+            min-width: 218px;
+          }
+
+          .ks-bottom-stats {
+            width: min(70vw, 980px);
+            min-height: 74px;
+            bottom: 2%;
+          }
+
+          .ks-stat-box {
+            grid-template-columns: 48px 1fr;
+            gap: .75rem;
+            padding: .6rem .9rem;
+          }
+
+          .ks-stat-icon {
+            width: 46px;
+            height: 46px;
+          }
+
+          .ks-stat-icon .ks-icon-svg {
+            width: 23px;
+            height: 23px;
+          }
+
+          .ks-stat-box strong {
+            font-size: 1.35rem;
+          }
+
+          .ks-stat-box span {
+            font-size: .68rem;
           }
         }
 
@@ -947,8 +980,8 @@ const ProfessionalHero = ({ hero }) => {
           .ks-feature-card {
             width: min(35vw, 315px);
             min-height: 108px;
-            grid-template-columns: 58px 1fr;
-            padding: .95rem 1.15rem;
+            grid-template-columns: 58px 1fr 18px;
+            padding: .95rem 1.1rem;
           }
 
           .ks-feature-icon {
@@ -965,26 +998,14 @@ const ProfessionalHero = ({ hero }) => {
           .ks-feature-bottom-right {
             right: 2%;
           }
-
-          .ks-feature-top-left,
-          .ks-feature-top-right {
-            top: 19%;
-          }
-
-          .ks-feature-bottom-left,
-          .ks-feature-bottom-right {
-            top: 37%;
-          }
         }
 
-        /* ─── TABLET (641px – 980px): robot kecil + feature grid 2-col di bawah ─── */
         @media (max-width: 980px) {
           .ks-hero {
             height: auto;
             min-height: 100vh;
-            min-height: 100dvh;
             max-height: none;
-            padding: 7rem 1rem 2rem;
+            padding: 7rem 1rem 2.25rem;
             align-items: flex-start;
           }
 
@@ -993,7 +1014,6 @@ const ProfessionalHero = ({ hero }) => {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0;
           }
 
           .ks-orbit {
@@ -1017,25 +1037,9 @@ const ProfessionalHero = ({ hero }) => {
             flex-shrink: 0;
           }
 
-          .ks-robot-stage::before {
-            bottom: -8%;
-            width: min(90vw, 580px);
-            height: 32%;
-          }
-
-          .ks-robot-stage::after {
-            bottom: -2%;
-            width: min(78vw, 480px);
-            height: 20%;
-          }
-
           .ks-robot-img {
             width: min(68vw, 380px);
             margin-top: -5px;
-          }
-
-          .ks-robot-placeholder {
-            width: min(68vw, 380px);
           }
 
           .ks-feature-grid {
@@ -1054,7 +1058,6 @@ const ProfessionalHero = ({ hero }) => {
             inset: auto;
             width: 100%;
             min-height: 110px;
-            clip-path: polygon(6% 0, 100% 0, 100% 84%, 94% 100%, 0 100%, 0 16%);
           }
 
           .ks-copy {
@@ -1066,299 +1069,256 @@ const ProfessionalHero = ({ hero }) => {
             width: 100%;
           }
 
-          .ks-bottom-row {
-            grid-template-columns: 1fr;
-            gap: .85rem;
-            width: min(100%, 480px);
-            margin-top: .7rem;
+          .ks-bottom-stats {
+            position: relative;
+            left: auto;
+            bottom: auto;
+            transform: none;
+            width: min(100%, 620px);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 1rem;
           }
 
-          .ks-bottom-row .ks-stats:first-child {
-            order: 2;
-          }
-
-          .ks-bottom-row .ks-cta {
-            order: 1;
-            margin: 0 auto;
-          }
-
-          .ks-bottom-row .ks-stats:last-child {
-            order: 3;
+          .ks-stat-box:nth-child(3)::before {
+            display: none;
           }
         }
 
-        /*
-         * ════════════════════════════════════════════════════════════
-         *  MOBILE (≤ 640px)
-         *  Layout IDENTIK dengan desktop — robot tengah, kartu kiri-kanan,
-         *  copy di bawah. Semua diskalakan proporsional pakai vw.
-         * ════════════════════════════════════════════════════════════
-         */
         @media (max-width: 640px) {
-
-          /* Hero: pas tepat satu layar */
           .ks-hero {
-            height: 100vh;
-            height: 100dvh;
-            min-height: 580px;
-            max-height: unset;
-            padding: 0;
+            height: auto;
+            min-height: 58svh;
+            max-height: none;
+            padding: 5.1rem .9rem 1.45rem;
             overflow: hidden;
+            align-items: flex-start;
+            background:
+              radial-gradient(circle at 50% 18%, rgba(0, 130, 255, .28), transparent 34%),
+              linear-gradient(180deg, #00040d 0%, #020914 58%, #01040b 100%);
           }
 
-          /* Wrap: kontainer posisi absolut, sama seperti desktop */
-          .ks-wrap {
-            width: 100%;
+          .ks-bg-img {
             height: 100%;
-            position: relative;
-            display: block;     /* bukan flex — biarkan absolute positioning bekerja */
-            padding: 0;
+            object-fit: cover;
+            object-position: center top;
+            filter: brightness(.46) saturate(1.18) contrast(1.05);
           }
 
-          /* Dekorasi orbit & rings menyusut */
+          .ks-bg-layer {
+            background:
+              radial-gradient(ellipse 70% 42% at 50% 18%, rgba(0, 126, 255, .38), transparent 100%),
+              linear-gradient(90deg, rgba(0,0,0,.68), transparent 26%, transparent 74%, rgba(0,0,0,.68)),
+              linear-gradient(180deg, rgba(0,0,0,.2), transparent 42%, rgba(0,0,0,.72));
+          }
+
+          .ks-grid {
+            opacity: .16;
+            background-size: 46px 46px;
+          }
+
+          .ks-floor {
+            top: 48%;
+            opacity: .26;
+            transform: perspective(560px) rotateX(62deg) translateY(80px) scale(1.28);
+          }
+
           .ks-orbit {
-            width: 94vw;
-            top: 36%;
+            width: 92vw;
+            top: 27%;
+            opacity: .78;
           }
 
           .ks-rings {
-            top: 32%;
             width: 90vw;
+            top: 27%;
+            opacity: .74;
           }
 
-          /* ── Robot: absolut di tengah, proporsional ── */
-          .ks-robot-stage {
-            position: absolute;
-            left: 50%;
-            top: 5%;
-            transform: translateX(-50%);
+          .ks-wrap {
             width: 100%;
-            height: 56%;
+            height: auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+          }
+
+          .ks-robot-stage {
+            position: relative;
+            left: auto;
+            top: auto;
+            transform: none;
+            width: 100%;
+            height: clamp(185px, 32svh, 290px);
+            display: flex;
             align-items: flex-start;
+            justify-content: center;
+            overflow: visible;
+            flex-shrink: 0;
           }
 
           .ks-robot-stage::before {
-            bottom: -10%;
-            width: 80vw;
-            height: 36%;
+            bottom: -17%;
+            width: 86vw;
+            height: 48%;
+            opacity: .72;
+            filter: blur(8px);
           }
 
           .ks-robot-stage::after {
-            bottom: -4%;
-            width: 64vw;
-            height: 24%;
+            bottom: -9%;
+            width: 70vw;
+            height: 34%;
+            opacity: .68;
+            filter: blur(12px);
+          }
+
+          .ks-robot-glow {
+            width: min(90vw, 390px);
+            top: -22%;
+            filter: blur(18px);
           }
 
           .ks-robot-img {
-            width: min(52vw, 220px);
+            width: min(68vw, 285px);
             margin-top: -4px;
+            mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.58) 75%, rgba(0,0,0,.18) 88%, transparent 98%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.58) 75%, rgba(0,0,0,.18) 88%, transparent 98%);
           }
 
           .ks-robot-placeholder {
-            width: min(52vw, 220px);
-            font-size: clamp(5rem, 13vw, 9rem);
+            width: min(68vw, 285px);
+            font-size: clamp(5rem, 18vw, 8rem);
           }
 
-          /* ── Feature cards: absolut kiri-kanan, versi desktop yang diskalakan ── */
           .ks-feature-grid {
-            position: absolute;
-            inset: 0;
-            display: block;   /* tampilkan seperti desktop */
-            z-index: 5;
-            pointer-events: none;
+            display: none;
           }
 
-          .ks-feature-card,
-          .ks-feature-card-right {
-            position: absolute;
-            width: min(41vw, 162px);
-            min-height: unset;
-            padding: .5rem .58rem;
-            grid-template-columns: 30px 1fr;
-            gap: .42rem;
-            pointer-events: auto;
-            clip-path: none;
-            border-radius: 8px;
+          .ks-copy {
+            position: relative;
+            left: auto;
+            bottom: auto;
+            transform: none;
+            width: min(100%, 390px);
+            text-align: center;
+            padding: 0 .2rem;
+            margin-top: -.35rem;
+            z-index: 10;
           }
 
-          /* Posisi kartu — sama seperti desktop dalam persen */
-          .ks-feature-top-left    { left: 1.5%; top: 17%; }
-          .ks-feature-bottom-left { left: 1.5%; top: 39%; }
-          .ks-feature-top-right   { right: 1.5%; top: 17%; }
-          .ks-feature-bottom-right{ right: 1.5%; top: 39%; }
-
-          .ks-feature-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+          .ks-title {
+            font-size: clamp(2.6rem, 13.2vw, 4.15rem);
+            line-height: .88;
+            letter-spacing: .025em;
           }
 
-          .ks-feature-icon svg {
-            width: 14px;
-            height: 14px;
-          }
-
-          .ks-feature-card h3 {
-            font-size: .64rem;
-            margin-bottom: .16rem;
+          .ks-kicker {
+            font-size: clamp(.95rem, 4vw, 1.12rem);
+            margin-top: .38rem;
             line-height: 1.2;
           }
 
-          .ks-feature-card p {
-            font-size: .57rem;
-            line-height: 1.38;
+          .ks-subtitle {
+            width: min(100%, 340px);
+            font-size: clamp(.72rem, 3vw, .84rem);
+            margin-top: .38rem;
+            line-height: 1.48;
+            color: rgba(220, 238, 255, .78);
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
           }
 
-          /* ── Mobile feature strip: sembunyikan — pakai kartu asli ── */
-          .ks-mobile-features {
-            display: none;
+          .ks-main-cta {
+            margin-top: .85rem;
           }
 
-          /* ── Copy: absolut di bawah, persis seperti desktop ── */
-          .ks-copy {
-            position: absolute;
-            left: 50%;
-            bottom: 1.8%;
-            transform: translateX(-50%);
-            width: min(100%, 390px);
-            text-align: center;
-            padding: 0 .75rem;
-            box-sizing: border-box;
-            margin: 0;
+          .ks-cta {
+            width: min(100%, 250px);
+            min-width: 0;
+            height: 48px;
+            font-size: .9rem;
+            padding: 0 1.25rem;
+          }
+
+          .ks-bottom-stats {
+            display: none;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .ks-hero {
+            min-height: 60svh;
+            padding-top: 4.85rem;
+          }
+
+          .ks-robot-stage {
+            height: clamp(170px, 31svh, 255px);
+          }
+
+          .ks-robot-img {
+            width: min(66vw, 245px);
           }
 
           .ks-title {
-            font-size: clamp(2rem, 11.5vw, 3.4rem);
-            line-height: .88;
-            margin: 0;
-          }
-
-          .ks-kicker {
-            font-size: clamp(.76rem, 3.3vw, .96rem);
-            margin-top: .26rem;
-            line-height: 1.2;
+            font-size: clamp(2.28rem, 12.6vw, 3.6rem);
           }
 
           .ks-subtitle {
-            font-size: clamp(.67rem, 2.8vw, .8rem);
-            margin-top: .2rem;
-            line-height: 1.42;
-            width: 100%;
-            color: rgba(200, 230, 255, .68);
-            display: -webkit-box;
             -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
           }
 
-          /* ── Bottom row: CTA penuh, dua stats kotak sejajar ── */
-          .ks-bottom-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: .3rem;
-            width: 100%;
-            margin-top: .38rem;
-          }
-
-          .ks-bottom-row .ks-cta {
-            grid-column: 1 / -1;
-            order: 0;
-            margin: 0;
-            width: 100%;
-            min-width: 0;
-            height: 42px;
+          .ks-cta {
+            height: 44px;
             font-size: .84rem;
           }
-
-          .ks-bottom-row .ks-stats:first-child {
-            order: 2;
-            grid-column: 1;
-          }
-
-          .ks-bottom-row .ks-stats:last-child {
-            order: 3;
-            grid-column: 2;
-          }
-
-          .ks-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .ks-stat-box {
-            min-height: 40px;
-            padding: .28rem .35rem;
-          }
-
-          .ks-stat-box strong {
-            font-size: clamp(.8rem, 3.4vw, .98rem);
-          }
-
-          .ks-stat-box span {
-            font-size: .55rem;
-            white-space: normal;
-            text-align: center;
-            line-height: 1.15;
-          }
         }
 
-        /* ─── VERY SMALL PHONES (≤ 390px) ─── */
-        @media (max-width: 390px) {
-          .ks-feature-card,
-          .ks-feature-card-right {
-            width: min(42vw, 158px);
-            padding: .42rem .5rem;
-            grid-template-columns: 26px 1fr;
-            gap: .36rem;
-          }
-
-          .ks-feature-icon { width: 24px; height: 24px; }
-          .ks-feature-icon svg { width: 12px; height: 12px; }
-          .ks-feature-card h3 { font-size: .59rem; }
-          .ks-feature-card p  { font-size: .52rem; }
-
-          .ks-robot-img { width: min(50vw, 196px); }
-          .ks-robot-placeholder { width: min(50vw, 196px); }
-
-          .ks-title { font-size: clamp(1.85rem, 12vw, 3rem); }
-
-          .ks-cta   { height: 38px; font-size: .78rem; }
-
-          .ks-stat-box { min-height: 36px; padding: .22rem .28rem; }
-          .ks-stat-box strong { font-size: .76rem; }
-          .ks-stat-box span   { font-size: .5rem; }
-        }
-
-        /* ─── TALL PHONES (min-height 750px dvh) — lebih lega ─── */
-        @media (max-width: 640px) and (min-height: 750px) {
-          .ks-robot-img { width: min(54vw, 240px); }
-
-          .ks-feature-card,
-          .ks-feature-card-right {
-            width: min(43vw, 172px);
-            padding: .58rem .68rem;
-          }
-
-          .ks-feature-card h3 { font-size: .68rem; }
-          .ks-feature-card p  { font-size: .6rem;  }
-
-          .ks-cta       { height: 46px; }
-          .ks-stat-box  { min-height: 44px; }
-        }
-
-        /* ─── LANDSCAPE PHONE — tinggi terbatas, izinkan scroll ─── */
-        @media (max-width: 640px) and (max-height: 500px) {
+        @media (max-width: 640px) and (min-height: 780px) {
           .ks-hero {
-            height: auto;
-            min-height: 520px;
-            overflow-y: auto;
+            min-height: 56svh;
           }
 
-          .ks-wrap { height: 520px; }
+          .ks-robot-stage {
+            height: clamp(210px, 31svh, 300px);
+          }
+
+          .ks-robot-img {
+            width: min(70vw, 305px);
+          }
+        }
+
+        @media (max-width: 640px) and (max-height: 620px) {
+          .ks-hero {
+            min-height: 66svh;
+          }
+
+          .ks-robot-stage {
+            height: 170px;
+          }
+
+          .ks-robot-img {
+            width: min(58vw, 225px);
+          }
+
+          .ks-title {
+            font-size: clamp(2rem, 10.5vw, 3rem);
+          }
+
+          .ks-kicker {
+            font-size: .82rem;
+          }
+
+          .ks-subtitle {
+            display: none;
+          }
+
+          .ks-main-cta {
+            margin-top: .6rem;
+          }
         }
       `}</style>
 
@@ -1384,8 +1344,6 @@ const ProfessionalHero = ({ hero }) => {
             onMouseLeave={() => setMouse({ x: 0, y: 0 })}
           >
             <div className="ks-robot-glow" />
-            <div className="ks-robot-curtain" />
-            <div className="ks-robot-ground" />
 
             {robotUrl ? (
               <img src={robotUrl} alt="KyySolutions Robot" className="ks-robot-img" />
@@ -1437,32 +1395,27 @@ const ProfessionalHero = ({ hero }) => {
             <p className="ks-kicker">Solusi IT modern untuk bisnis inovatif</p>
             <p className="ks-subtitle">{data.subheadline || DEFAULT_HERO.subheadline}</p>
 
-            <div className="ks-bottom-row">
-              <div className="ks-stats">
-                <StatBox value={500} suffix="+" label="Klien Tercapai" />
-                <StatBox value={98} suffix="%" label="Kepuasan Klien" />
-              </div>
+            <a href="#contact" className="ks-cta ks-main-cta">
+              {data.cta_text || DEFAULT_HERO.cta_text}
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </a>
+          </div>
 
-              <a href="#contact" className="ks-cta">
-                {data.cta_text || DEFAULT_HERO.cta_text}
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m13 6 6 6-6 6" />
-                </svg>
-              </a>
-
-              <div className="ks-stats">
-                <StatBox value={120} suffix="+" label="Proyek Sukses" />
-                <StatBox value={10} suffix="+" label="Tahun Pengalaman" />
-              </div>
-            </div>
+          <div className="ks-bottom-stats">
+            <StatBox icon="clients" value={500} suffix="+" label="Klien Terpercaya" />
+            <StatBox icon="check" value={98} suffix="%" label="Kepuasan Klien" />
+            <StatBox icon="rocket" value={120} suffix="+" label="Proyek Sukses" />
+            <StatBox icon="calendar" value={10} suffix="+" label="Tahun Pengalaman" />
           </div>
         </div>
       </section>
