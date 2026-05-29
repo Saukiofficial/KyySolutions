@@ -38,73 +38,210 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     <style>
+        .cms-editor-shell {
+            position: relative;
+            z-index: 20;
+        }
+
         .cms-editor-shell .ck.ck-editor {
             border-radius: 24px !important;
-            overflow: hidden;
+            overflow: visible !important;
             border: 1px solid #e5e7eb !important;
             box-shadow: 0 12px 30px rgba(24, 24, 27, 0.06);
+            background: #ffffff !important;
+        }
+
+        .cms-editor-shell .ck.ck-editor__top {
+            position: sticky !important;
+            top: 72px !important;
+            z-index: 9999 !important;
+            background: #ffffff !important;
+            border-top-left-radius: 24px !important;
+            border-top-right-radius: 24px !important;
+        }
+
+        .cms-editor-shell .ck.ck-sticky-panel,
+        .cms-editor-shell .ck.ck-sticky-panel__content {
+            z-index: 9999 !important;
+        }
+
+        .cms-editor-shell .ck.ck-sticky-panel__content_sticky {
+            top: 72px !important;
+            z-index: 9999 !important;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.14) !important;
+            border-radius: 0 0 20px 20px !important;
         }
 
         .cms-editor-shell .ck.ck-toolbar {
             border: none !important;
             border-bottom: 1px solid #e5e7eb !important;
-            background: #fafafa !important;
-            padding: 10px !important;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+            padding: 10px 12px !important;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .cms-editor-shell .ck.ck-toolbar .ck-toolbar__items {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+        }
+
+        .cms-editor-shell .ck.ck-button,
+        .cms-editor-shell .ck.ck-dropdown__button {
+            border-radius: 10px !important;
+            min-height: 34px !important;
+        }
+
+        .cms-editor-shell .ck.ck-button:hover,
+        .cms-editor-shell .ck.ck-dropdown__button:hover {
+            background: #e5e7eb !important;
+        }
+
+        .cms-editor-shell .ck.ck-button.ck-on,
+        .cms-editor-shell .ck.ck-dropdown__button.ck-on {
+            background: #111827 !important;
+            color: #ffffff !important;
         }
 
         .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable {
-            min-height: 580px;
+            min-height: 760px;
             border: none !important;
             background: #ffffff !important;
             color: #111827 !important;
-            padding: 32px !important;
+            padding: 36px !important;
             font-size: 16px;
-            line-height: 1.8;
+            line-height: 1.85;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable:focus {
             box-shadow: none !important;
         }
 
+        .cms-editor-shell .ck-content {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
         .cms-editor-shell .ck-content h1 {
-            font-size: 2rem;
+            font-size: 2.25rem;
             font-weight: 800;
+            line-height: 1.2;
+            margin-top: 1.5rem;
             margin-bottom: 1rem;
+            color: #030712;
         }
 
         .cms-editor-shell .ck-content h2 {
-            font-size: 1.5rem;
-            font-weight: 750;
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1.3;
             margin-top: 1.5rem;
-            margin-bottom: .75rem;
+            margin-bottom: .8rem;
+            color: #030712;
         }
 
         .cms-editor-shell .ck-content h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.3rem;
+            font-weight: 750;
+            line-height: 1.35;
             margin-top: 1.25rem;
-            margin-bottom: .5rem;
+            margin-bottom: .6rem;
+            color: #111827;
         }
 
         .cms-editor-shell .ck-content p {
             margin-bottom: 1rem;
         }
 
+        .cms-editor-shell .ck-content ul,
+        .cms-editor-shell .ck-content ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
         .cms-editor-shell .ck-content blockquote {
-            border-left: 4px solid #18181b;
+            border-left: 4px solid #111827;
             background: #f4f4f5;
-            padding: 16px 20px;
-            border-radius: 14px;
+            padding: 18px 22px;
+            border-radius: 16px;
             font-style: normal;
+            color: #374151;
+        }
+
+        .cms-editor-shell .ck-content a {
+            color: #111827;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
 
         .cms-editor-shell .ck-content img {
             border-radius: 18px;
-            margin: 20px auto;
+            margin: 22px auto;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .cms-editor-shell .ck-content table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .cms-editor-shell .ck-content table td,
+        .cms-editor-shell .ck-content table th {
+            padding: 12px 14px;
+        }
+
+        .cms-editor-shell .ck-content pre {
+            background: #020617;
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 16px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .cms-editor-help {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: #71717a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cms-editor-help span {
+            border: 1px solid #e5e7eb;
+            background: #fafafa;
+            border-radius: 999px;
+            padding: 6px 10px;
+        }
+
+        .ck.ck-balloon-panel {
+            z-index: 10000 !important;
         }
 
         .ck.ck-powered-by {
             display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .cms-editor-shell .ck.ck-editor__top {
+                top: 64px !important;
+            }
+
+            .cms-editor-shell .ck.ck-sticky-panel__content_sticky {
+                top: 64px !important;
+                border-radius: 0 0 16px 16px !important;
+            }
+
+            .cms-editor-shell .ck.ck-editor__main > .ck-editor__editable {
+                min-height: 520px;
+                padding: 22px !important;
+                font-size: 15px;
+            }
         }
     </style>
 
@@ -122,7 +259,7 @@
 
                     <!-- Main Editor -->
                     <div class="xl:col-span-8">
-                        <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
+                        <div class="overflow-visible rounded-[2rem] border border-gray-200 bg-white shadow-sm">
 
                             <div class="relative overflow-hidden border-b border-gray-200 bg-gray-950 px-8 py-8 text-white">
                                 <div class="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-white/10"></div>
@@ -156,6 +293,7 @@
                                            value="{{ old('title', $article->title) }}"
                                            required
                                            autofocus
+                                           placeholder="Example: Tips Memilih Website untuk UMKM"
                                            class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-lg font-bold text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
 
                                     @error('title')
@@ -170,11 +308,18 @@
                                         </label>
 
                                         <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
-                                            Rich Text Editor
+                                            WordPress Style Editor
                                         </span>
                                     </div>
 
                                     <textarea id="editor" name="content">{{ old('content', $article->content) }}</textarea>
+
+                                    <div class="cms-editor-help">
+                                        <span>Toolbar sticky</span>
+                                        <span>Auto-save draft lokal</span>
+                                        <span>Upload gambar langsung</span>
+                                        <span>Table, quote, list, embed media</span>
+                                    </div>
 
                                     @error('content')
                                         <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -243,7 +388,7 @@
                                 </div>
                             </div>
 
-                            <!-- Settings -->
+                            <!-- Article Settings -->
                             <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
                                 <div class="border-b border-gray-200 bg-gray-50 px-6 py-5">
                                     <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
@@ -263,6 +408,7 @@
                                         <select name="category"
                                                 required
                                                 class="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold text-gray-700 outline-none transition focus:border-gray-950 focus:bg-white focus:ring-4 focus:ring-gray-900/5">
+                                            <option value="">Select category...</option>
                                             @foreach(['Technology', 'Business', 'Tips & Trick', 'Company News'] as $cat)
                                                 <option value="{{ $cat }}" @selected(old('category', $article->category) == $cat)>
                                                     {{ $cat }}
@@ -277,16 +423,26 @@
 
                                     <div>
                                         <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                            Featured Image
+                                            Current Featured Image
                                         </label>
 
                                         @if($article->thumbnail)
-                                            <div class="mb-4 overflow-hidden rounded-3xl border border-gray-200 bg-gray-50 p-2">
+                                            <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50">
                                                 <img src="{{ asset('storage/' . $article->thumbnail) }}"
                                                      alt="{{ $article->title }}"
-                                                     class="h-48 w-full rounded-2xl object-cover">
+                                                     class="h-44 w-full object-cover">
+                                            </div>
+                                        @else
+                                            <div class="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm font-semibold text-gray-500">
+                                                No image uploaded.
                                             </div>
                                         @endif
+                                    </div>
+
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                            Replace Featured Image
+                                        </label>
 
                                         <input type="file"
                                                name="thumbnail"
@@ -294,7 +450,7 @@
                                                class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
 
                                         <p class="mt-2 text-xs leading-5 text-gray-500">
-                                            Leave empty if you do not want to change the image.
+                                            Kosongkan jika tidak ingin mengganti thumbnail. Format: JPG, PNG, WEBP. Maksimal 2MB.
                                         </p>
 
                                         @error('thumbnail')
@@ -304,32 +460,18 @@
                                 </div>
                             </div>
 
-                            <!-- Meta -->
+                            <!-- Tip -->
                             <div class="rounded-[2rem] border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
                                 <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-gray-950">
                                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1010 10A10 10 0 0012 2z"/>
                                     </svg>
                                 </div>
 
-                                <h4 class="text-lg font-bold">Article Info</h4>
-
-                                <div class="mt-4 space-y-3 text-sm text-gray-400">
-                                    <div class="flex items-center justify-between gap-4">
-                                        <span>Created</span>
-                                        <span class="font-semibold text-white">{{ $article->created_at?->format('d M Y') }}</span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between gap-4">
-                                        <span>Updated</span>
-                                        <span class="font-semibold text-white">{{ $article->updated_at?->format('d M Y') }}</span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between gap-4">
-                                        <span>Slug</span>
-                                        <span class="max-w-[160px] truncate font-semibold text-white">{{ $article->slug }}</span>
-                                    </div>
-                                </div>
+                                <h4 class="text-lg font-bold">Editing Tip</h4>
+                                <p class="mt-2 text-sm leading-6 text-gray-400">
+                                    Toolbar editor akan tetap muncul saat scroll, jadi kamu bisa bold, tambah link, gambar, dan tabel tanpa harus kembali ke atas.
+                                </p>
                             </div>
 
                         </div>
@@ -348,51 +490,54 @@
             }
 
             upload() {
-                return this.loader.file.then(file => {
-                    return new Promise((resolve, reject) => {
-                        const formData = new FormData();
-                        formData.append('upload', file);
+                return this.loader.file.then(file => new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append('upload', file);
 
-                        fetch(this.url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': this.csrfToken,
-                                'Accept': 'application/json',
-                            },
-                            body: formData,
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.url) {
-                                resolve({
-                                    default: data.url
-                                });
-                            } else {
-                                reject(data.message || 'Upload image gagal.');
-                            }
-                        })
-                        .catch(error => {
-                            reject(error.message || 'Terjadi kesalahan saat upload image.');
-                        });
-                    });
-                });
+                    fetch(this.url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': this.csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.url) {
+                            resolve({ default: data.url });
+                            return;
+                        }
+
+                        reject(data.message || 'Upload image gagal.');
+                    })
+                    .catch(error => reject(error.message || 'Terjadi kesalahan saat upload image.'));
+                }));
             }
 
             abort() {}
         }
 
         function LaravelUploadAdapterPlugin(editor) {
-            editor.plugins.get('FileRepository').createUploadAdapter = loader => {
-                return new LaravelUploadAdapter(loader);
-            };
+            editor.plugins.get('FileRepository').createUploadAdapter = loader => new LaravelUploadAdapter(loader);
         }
 
         let editorInstance;
+        const editorElement = document.querySelector('#editor');
+        const storageKey = `${window.location.pathname}:cms-editor-draft:article:{{ $article->id }}`;
 
         ClassicEditor
-            .create(document.querySelector('#editor'), {
+            .create(editorElement, {
                 extraPlugins: [LaravelUploadAdapterPlugin],
+
+                ui: {
+                    viewportOffset: {
+                        top: 72
+                    }
+                },
+
                 toolbar: {
+                    shouldNotGroupWhenFull: true,
                     items: [
                         'heading',
                         '|',
@@ -403,6 +548,8 @@
                         '|',
                         'bulletedList',
                         'numberedList',
+                        'outdent',
+                        'indent',
                         '|',
                         'imageUpload',
                         'insertTable',
@@ -412,6 +559,7 @@
                         'redo'
                     ]
                 },
+
                 heading: {
                     options: [
                         { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -420,6 +568,24 @@
                         { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
                     ]
                 },
+
+                link: {
+                    addTargetToExternalLinks: true,
+                    defaultProtocol: 'https://'
+                },
+
+                image: {
+                    resizeUnit: '%',
+                    toolbar: [
+                        'imageTextAlternative',
+                        'toggleImageCaption',
+                        '|',
+                        'imageStyle:inline',
+                        'imageStyle:block',
+                        'imageStyle:side'
+                    ]
+                },
+
                 table: {
                     contentToolbar: [
                         'tableColumn',
@@ -427,6 +593,7 @@
                         'mergeTableCells'
                     ]
                 },
+
                 mediaEmbed: {
                     previewsInData: true
                 }
@@ -434,9 +601,30 @@
             .then(editor => {
                 editorInstance = editor;
 
+                const savedDraft = localStorage.getItem(storageKey);
+
+                if (savedDraft) {
+                    const confirmRestore = confirm('Ada draft lokal yang belum disimpan. Mau pulihkan draft tersebut?');
+
+                    if (confirmRestore) {
+                        editor.setData(savedDraft);
+                    } else {
+                        localStorage.removeItem(storageKey);
+                    }
+                }
+
                 editor.model.document.on('change:data', () => {
                     updateStats();
+                    localStorage.setItem(storageKey, editor.getData());
                 });
+
+                const form = editorElement.closest('form');
+
+                if (form) {
+                    form.addEventListener('submit', () => {
+                        localStorage.removeItem(storageKey);
+                    });
+                }
 
                 updateStats();
             })
@@ -445,12 +633,14 @@
             });
 
         function updateStats() {
-            if (!editorInstance) {
-                return;
-            }
+            if (!editorInstance) return;
 
             const data = editorInstance.getData();
-            const text = data.replace(/<[^>]*>/g, '').trim();
+            const text = data
+                .replace(/<[^>]*>/g, ' ')
+                .replace(/&nbsp;/g, ' ')
+                .trim();
+
             const words = text.length ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
             const readTime = Math.max(1, Math.ceil(words / 200));
 

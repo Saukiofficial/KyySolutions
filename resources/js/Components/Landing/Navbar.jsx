@@ -750,7 +750,7 @@ const ElegantNavbar = ({ settings }) => {
                 {settings?.company_name || 'KyySolutions'}
               </span>
               <span className="ks-brand-subtitle">
-                {settings?.tagline || 'Professional IT Solutions'}
+                {settings?.tagline || 'Professional IT'}
               </span>
             </div>
           </Link>
