@@ -35,6 +35,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Halaman Detail Layanan
 Route::get('/service/{service}', [HomeController::class, 'showService'])->name('service.show');
 
+// Halaman Detail Team / Personal Portfolio Team
+Route::get('/team/{team:slug}', [HomeController::class, 'showTeam'])->name('team.show');
+
+// Halaman Detail Portfolio
+Route::get('/portfolio/{portfolio:slug}', [HomeController::class, 'showPortfolio'])->name('portfolio.show');
+
 // Halaman Portal Berita / Artikel
 Route::get('/news', [HomeController::class, 'indexNews'])->name('news.index');
 Route::get('/news/{article:slug}', [HomeController::class, 'showArticle'])->name('article.show');
@@ -42,9 +48,6 @@ Route::get('/news/{article:slug}', [HomeController::class, 'showArticle'])->name
 // Halaman Portal Tutorial
 Route::get('/tutorials', [HomeController::class, 'indexTutorials'])->name('tutorials.index');
 Route::get('/tutorials/{tutorial:slug}', [HomeController::class, 'showTutorial'])->name('tutorials.show');
-
-// Halaman Detail Portfolio
-Route::get('/portfolio/{portfolio:slug}', [HomeController::class, 'showPortfolio'])->name('portfolio.show');
 
 // Kirim Pesan Kontak dari frontend
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');

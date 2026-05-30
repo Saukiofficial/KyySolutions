@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Linkedin, Twitter, Sparkles } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Linkedin, Twitter, Sparkles, ArrowRight, Facebook, Instagram } from 'lucide-react';
 
 const TeamSection = ({ team }) => {
     const [hoveredId, setHoveredId] = useState(null);
@@ -18,6 +19,29 @@ const TeamSection = ({ team }) => {
         }
 
         return `/storage/${photo}`;
+    };
+
+    const getTeamUrl = (slug) => {
+        try {
+            if (typeof route === 'function' && slug) {
+                return route('team.show', slug);
+            }
+        } catch (e) {
+            console.error('Route Error:', e);
+        }
+
+        return slug ? `/team/${slug}` : '#';
+    };
+
+    const getSocialMedia = (member) => {
+        const social = member.social_media || {};
+
+        return {
+            facebook: social.facebook || member.facebook_url || null,
+            instagram: social.instagram || member.instagram_url || null,
+            linkedin: social.linkedin || member.linkedin_url || null,
+            twitter: social['x-twitter'] || social.twitter || member.twitter_url || null,
+        };
     };
 
     return (
@@ -67,6 +91,8 @@ const TeamSection = ({ team }) => {
                     {team.map((member, index) => {
                         const photoUrl = getImageUrl(member.photo);
                         const isHovered = hoveredId === member.id;
+                        const socialMedia = getSocialMedia(member);
+                        const detailUrl = getTeamUrl(member.slug);
 
                         return (
                             <div
@@ -129,9 +155,33 @@ const TeamSection = ({ team }) => {
                                                     {/* Hover Overlay */}
                                                     <div className="absolute inset-0 z-30 bg-gradient-to-t from-[#020817]/95 via-[#020817]/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                                                         <div className="absolute bottom-4 left-0 right-0 flex translate-y-4 justify-center gap-2 transition-transform duration-500 group-hover:translate-y-0 sm:gap-3">
-                                                            {member.linkedin_url && (
+                                                            {socialMedia.facebook && (
                                                                 <a
-                                                                    href={member.linkedin_url}
+                                                                    href={socialMedia.facebook}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="grid h-8 w-8 place-items-center rounded-xl border border-blue-300/35 bg-blue-500/15 text-cyan-100 shadow-[0_0_22px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:text-white sm:h-10 sm:w-10"
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                >
+                                                                    <Facebook className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                                </a>
+                                                            )}
+
+                                                            {socialMedia.instagram && (
+                                                                <a
+                                                                    href={socialMedia.instagram}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="grid h-8 w-8 place-items-center rounded-xl border border-blue-300/35 bg-blue-500/15 text-cyan-100 shadow-[0_0_22px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:text-white sm:h-10 sm:w-10"
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                >
+                                                                    <Instagram className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                                </a>
+                                                            )}
+
+                                                            {socialMedia.linkedin && (
+                                                                <a
+                                                                    href={socialMedia.linkedin}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="grid h-8 w-8 place-items-center rounded-xl border border-blue-300/35 bg-blue-500/15 text-cyan-100 shadow-[0_0_22px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:text-white sm:h-10 sm:w-10"
@@ -141,9 +191,9 @@ const TeamSection = ({ team }) => {
                                                                 </a>
                                                             )}
 
-                                                            {member.twitter_url && (
+                                                            {socialMedia.twitter && (
                                                                 <a
-                                                                    href={member.twitter_url}
+                                                                    href={socialMedia.twitter}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="grid h-8 w-8 place-items-center rounded-xl border border-blue-300/35 bg-blue-500/15 text-cyan-100 shadow-[0_0_22px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:text-white sm:h-10 sm:w-10"
@@ -171,6 +221,19 @@ const TeamSection = ({ team }) => {
                                             <p className="mb-3 line-clamp-1 text-[10px] font-semibold text-cyan-300 sm:mb-4 sm:text-sm">
                                                 {member.role}
                                             </p>
+
+                                            {/* Detail Button */}
+                                            <Link
+                                                href={detailUrl}
+                                                className={`mb-4 inline-flex items-center justify-center gap-1.5 rounded-full border px-3 py-2 text-[9px] font-bold text-cyan-100 shadow-[0_0_18px_rgba(0,132,255,.18)] backdrop-blur-xl transition-all duration-300 sm:px-4 sm:text-xs ${
+                                                    member.slug
+                                                        ? 'border-blue-400/35 bg-blue-500/10 hover:border-cyan-300/70 hover:bg-blue-500/20 hover:text-white'
+                                                        : 'pointer-events-none border-slate-700/50 bg-slate-800/40 text-slate-500'
+                                                }`}
+                                            >
+                                                Lihat Detail
+                                                <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+                                            </Link>
 
                                             {/* Tech Indicator */}
                                             <div className="mx-auto flex max-w-[170px] gap-2">

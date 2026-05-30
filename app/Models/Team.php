@@ -9,29 +9,27 @@ class Team extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * Atribut yang dapat diisi secara massal.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
+        'slug',
         'role',
+        'bio',
+        'email',
+        'location',
+        'experience_years',
         'photo',
         'social_media',
+        'skills',
+        'programming_languages',
+        'tools',
+        'works',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * Mengubah tipe data atribut.
-     *
-     * @var array
-     */
     protected $casts = [
         'social_media' => 'array',
+        'skills' => 'array',
+        'programming_languages' => 'array',
+        'tools' => 'array',
+        'works' => 'array',
     ];
 }
-

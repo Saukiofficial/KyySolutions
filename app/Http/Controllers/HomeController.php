@@ -170,26 +170,42 @@ class HomeController extends Controller
     }
 
     /**
+     * Menampilkan detail team / personal portfolio team.
+     *
+     * File React:
+     * resources/js/Pages/TeamDetail.jsx
+     */
+    public function showTeam(Team $team)
+    {
+        $settings = Setting::first();
+
+        return Inertia::render('TeamDetail', [
+            'member' => $team,
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
      * Menyimpan pesan kontak dari frontend ke admin inbox.
      */
-public function storeContact(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'message' => 'required|string|max:5000',
-    ]);
+    public function storeContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
 
-    Contact::create([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'message' => $validated['message'],
-        'is_read' => false,
-    ]);
+        Contact::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'message' => $validated['message'],
+            'is_read' => false,
+        ]);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Pesan Anda berhasil dikirim! Tim kami akan segera menghubungi Anda.',
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'message' => 'Pesan Anda berhasil dikirim! Tim kami akan segera menghubungi Anda.',
+        ]);
     }
+}

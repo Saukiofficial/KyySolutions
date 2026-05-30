@@ -20,7 +20,7 @@
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-500">
-                        Update member profile, role, photo, and social media links.
+                        Update member profile, personal portfolio, skills, works, and social media links.
                     </p>
                 </div>
             </div>
@@ -36,7 +36,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="mx-auto max-w-5xl sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl sm:px-6 lg:px-8">
             <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm">
 
                 <div class="relative overflow-hidden border-b border-gray-200 bg-gray-950 px-8 py-8 text-white">
@@ -120,6 +120,73 @@
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
 
                                     @error('role')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="bio" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Bio / About Member
+                                    </label>
+
+                                    <textarea id="bio"
+                                              name="bio"
+                                              rows="5"
+                                              placeholder="Ceritakan profil singkat anggota team..."
+                                              class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('bio', $team->bio) }}</textarea>
+
+                                    @error('bio')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="email" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Email
+                                    </label>
+
+                                    <input id="email"
+                                           type="email"
+                                           name="email"
+                                           value="{{ old('email', $team->email) }}"
+                                           placeholder="email@example.com"
+                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+
+                                    @error('email')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="location" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Location
+                                    </label>
+
+                                    <input id="location"
+                                           type="text"
+                                           name="location"
+                                           value="{{ old('location', $team->location) }}"
+                                           placeholder="Example: Sumenep, Indonesia"
+                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+
+                                    @error('location')
+                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="experience_years" class="mb-2 block text-sm font-semibold text-gray-800">
+                                        Experience
+                                    </label>
+
+                                    <input id="experience_years"
+                                           type="text"
+                                           name="experience_years"
+                                           value="{{ old('experience_years', $team->experience_years) }}"
+                                           placeholder="Example: 3+ Years"
+                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+
+                                    @error('experience_years')
                                         <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -234,8 +301,92 @@
                             <div class="rounded-3xl border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
                                 <h4 class="text-lg font-bold">Editing Tip</h4>
                                 <p class="mt-2 text-sm leading-6 text-gray-400">
-                                    Pastikan role dan foto team tetap konsisten agar tampilan halaman depan terlihat premium.
+                                    Lengkapi portfolio pribadi team agar halaman detail terlihat lebih profesional.
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Portfolio -->
+                    <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6">
+                        <div class="mb-6">
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                                Personal Portfolio
+                            </p>
+
+                            <h3 class="mt-1 text-lg font-bold text-gray-950">
+                                Skills, Programming Languages, Tools & Works
+                            </h3>
+
+                            <p class="mt-1 text-sm text-gray-500">
+                                Isi satu data per baris. Untuk karya gunakan format:
+                                <span class="font-semibold text-gray-800">Judul | Deskripsi | URL</span>
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                    Skills
+                                </label>
+
+                                <textarea name="skills"
+                                          rows="6"
+                                          placeholder="UI Design&#10;Frontend Development&#10;Backend Development"
+                                          class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('skills', is_array($team->skills) ? implode("\n", $team->skills) : '') }}</textarea>
+
+                                @error('skills')
+                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                    Programming Languages
+                                </label>
+
+                                <textarea name="programming_languages"
+                                          rows="6"
+                                          placeholder="JavaScript&#10;PHP&#10;Python&#10;Dart"
+                                          class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('programming_languages', is_array($team->programming_languages) ? implode("\n", $team->programming_languages) : '') }}</textarea>
+
+                                @error('programming_languages')
+                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                    Tools
+                                </label>
+
+                                <textarea name="tools"
+                                          rows="6"
+                                          placeholder="Laravel&#10;React&#10;Figma&#10;Tailwind CSS"
+                                          class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('tools', is_array($team->tools) ? implode("\n", $team->tools) : '') }}</textarea>
+
+                                @error('tools')
+                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">
+                                    Works / Projects
+                                </label>
+
+                                <textarea name="works"
+                                          rows="6"
+                                          placeholder="Website Company Profile | Membuat website modern untuk brand bisnis | https://example.com&#10;Aplikasi Kasir | Sistem POS untuk toko retail | https://example.com"
+                                          class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('works', is_array($team->works) ? collect($team->works)->map(fn($work) => ($work['title'] ?? '') . ' | ' . ($work['description'] ?? '') . ' | ' . ($work['url'] ?? ''))->implode("\n") : '') }}</textarea>
+
+                                <p class="mt-2 text-xs leading-5 text-gray-500">
+                                    Contoh: Website Company Profile | Membuat website modern | https://example.com
+                                </p>
+
+                                @error('works')
+                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
