@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 const DEFAULT_HERO = {
   headline: 'WUJUDKAN IDE DIGITAL ANDA',
@@ -7,32 +7,10 @@ const DEFAULT_HERO = {
   cta_text: 'Mulai Proyek Anda',
 };
 
-function AnimatedCounter({ target, suffix = '', duration = 1300 }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let frame;
-    const start = performance.now();
-
-    const animate = (time) => {
-      const progress = Math.min((time - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setCount(Math.round(target * eased));
-
-      if (progress < 1) {
-        frame = requestAnimationFrame(animate);
-      }
-    };
-
-    frame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(frame);
-  }, [target, duration]);
-
+function AnimatedCounter({ target, suffix = '' }) {
   return (
     <span>
-      {count}
+      {target}
       {suffix}
     </span>
   );
@@ -55,9 +33,7 @@ const FeatureIcon = ({ type }) => {
     clients: (
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
     ),
-    check: (
-      <path d="M20 6 9 17l-5-5" />
-    ),
+    check: <path d="M20 6 9 17l-5-5" />,
     rocket: (
       <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09ZM12 15l-3-3a22 22 0 0 1 2-4.5A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-5.5 11a22 22 0 0 1-4.5 2Zm-3 0H4v-5m11 5v5h-5" />
     ),
@@ -112,8 +88,6 @@ const StatBox = ({ icon, value, suffix, label }) => (
 );
 
 const ProfessionalHero = ({ hero }) => {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
   const data = {
     ...DEFAULT_HERO,
     ...(hero || {}),
@@ -138,15 +112,6 @@ const ProfessionalHero = ({ hero }) => {
   const backgroundUrl = data.background_image ? `/storage/${data.background_image}` : null;
   const robotUrl = data.hero_image ? `/storage/${data.hero_image}` : null;
 
-  const handleMouseMove = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-
-    setMouse({
-      x: ((event.clientX - rect.left) / rect.width - 0.5) * 10,
-      y: ((event.clientY - rect.top) / rect.height - 0.5) * -10,
-    });
-  };
-
   return (
     <>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -164,54 +129,6 @@ const ProfessionalHero = ({ hero }) => {
           --ks-cyan: #43e6ff;
           --ks-dark: #020814;
           --ks-black: #00040d;
-        }
-
-        @keyframes ksPulse {
-          0%, 100% {
-            opacity: .48;
-            transform: scale(1);
-          }
-
-          50% {
-            opacity: .9;
-            transform: scale(1.04);
-          }
-        }
-
-        @keyframes ksSpin {
-          from {
-            transform: translate(-50%, -50%) rotate(0deg);
-          }
-
-          to {
-            transform: translate(-50%, -50%) rotate(360deg);
-          }
-        }
-
-        @keyframes ksFloat {
-          0%, 100% {
-            transform: translateY(0) rotateX(var(--mx)) rotateY(var(--my));
-          }
-
-          50% {
-            transform: translateY(-12px) rotateX(var(--mx)) rotateY(var(--my));
-          }
-        }
-
-        @keyframes ksScan {
-          0% {
-            transform: translateY(-120%);
-            opacity: 0;
-          }
-
-          12%, 88% {
-            opacity: .42;
-          }
-
-          100% {
-            transform: translateY(120%);
-            opacity: 0;
-          }
         }
 
         .ks-hero {
@@ -339,9 +256,9 @@ const ProfessionalHero = ({ hero }) => {
 
         .ks-scanline {
           z-index: -4;
-          background: linear-gradient(180deg, transparent, rgba(68, 190, 255, .16), transparent);
+          background: linear-gradient(180deg, transparent, rgba(68, 190, 255, .1), transparent);
           height: 45%;
-          animation: ksScan 5.5s linear infinite;
+          opacity: .32;
         }
 
         .ks-orbit {
@@ -352,14 +269,14 @@ const ProfessionalHero = ({ hero }) => {
           aspect-ratio: 1;
           border-radius: 999px;
           z-index: -2;
-          opacity: .9;
+          opacity: .78;
           background:
             conic-gradient(
               from 0deg,
               transparent 0 8%,
-              rgba(0, 159, 255, .9) 8% 11%,
+              rgba(0, 159, 255, .72) 8% 11%,
               transparent 11% 18%,
-              rgba(25, 205, 255, .78) 18% 21%,
+              rgba(25, 205, 255, .58) 18% 21%,
               transparent 21% 100%
             );
           mask:
@@ -371,8 +288,8 @@ const ProfessionalHero = ({ hero }) => {
               #000 58% 59%,
               transparent 60%
             );
-          animation: ksSpin 24s linear infinite;
-          filter: drop-shadow(0 0 28px rgba(0, 151, 255, .68));
+          transform: translate(-50%, -50%) rotate(0deg);
+          filter: drop-shadow(0 0 24px rgba(0, 151, 255, .45));
         }
 
         .ks-rings {
@@ -472,9 +389,9 @@ const ProfessionalHero = ({ hero }) => {
           aspect-ratio: 1;
           top: -12%;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(0, 180, 255, .78), rgba(0, 100, 255, .26) 40%, transparent 68%);
+          background: radial-gradient(circle, rgba(0, 180, 255, .68), rgba(0, 100, 255, .22) 40%, transparent 68%);
           filter: blur(22px);
-          animation: ksPulse 3.2s ease-in-out infinite;
+          opacity: .78;
           z-index: -1;
         }
 
@@ -493,8 +410,8 @@ const ProfessionalHero = ({ hero }) => {
             drop-shadow(0 42px 42px rgba(0,0,0,.62));
           mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
-          animation: ksFloat 5.5s ease-in-out infinite;
-          transition: transform .25s ease;
+          transform: translateY(0);
+          transition: transform .2s ease;
         }
 
         .ks-robot-placeholder {
@@ -516,7 +433,6 @@ const ProfessionalHero = ({ hero }) => {
           font-size: clamp(8rem, 16vw, 14rem);
           mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
           -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0,0,0,.58) 70%, rgba(0,0,0,.22) 82%, transparent 94%);
-          animation: ksFloat 5.5s ease-in-out infinite;
         }
 
         .ks-feature-grid {
@@ -548,6 +464,16 @@ const ProfessionalHero = ({ hero }) => {
           backdrop-filter: blur(20px);
           pointer-events: auto;
           overflow: hidden;
+          transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .ks-feature-card:hover {
+          transform: translateY(-3px);
+          border-color: rgba(87, 217, 255, .72);
+          box-shadow:
+            0 14px 46px rgba(0, 0, 0, .42),
+            0 0 24px rgba(0, 150, 255, .26),
+            inset 0 1px 0 rgba(105, 218, 255, .18);
         }
 
         .ks-feature-card::before {
@@ -732,8 +658,8 @@ const ProfessionalHero = ({ hero }) => {
             0 0 24px rgba(0, 167, 255, .68),
             0 16px 30px rgba(0, 0, 0, .32);
           transition:
-            transform .25s ease,
-            box-shadow .25s ease;
+            transform .2s ease,
+            box-shadow .2s ease;
         }
 
         .ks-cta:hover {
@@ -741,14 +667,14 @@ const ProfessionalHero = ({ hero }) => {
           box-shadow:
             inset 0 1px 16px rgba(255,255,255,.28),
             inset 0 -8px 18px rgba(0, 34, 138, .25),
-            0 0 36px rgba(0, 191, 255, .9),
+            0 0 32px rgba(0, 191, 255, .76),
             0 20px 34px rgba(0, 0, 0, .34);
         }
 
         .ks-cta svg {
           width: 18px;
           height: 18px;
-          transition: transform .25s ease;
+          transition: transform .2s ease;
         }
 
         .ks-cta:hover svg {
@@ -1160,7 +1086,7 @@ const ProfessionalHero = ({ hero }) => {
           .ks-orbit {
             width: 92vw;
             top: 27%;
-            opacity: .78;
+            opacity: .58;
           }
 
           .ks-rings {
@@ -1213,6 +1139,7 @@ const ProfessionalHero = ({ hero }) => {
             width: min(90vw, 390px);
             top: -22%;
             filter: blur(18px);
+            opacity: .68;
           }
 
           .ks-robot-img {
@@ -1355,13 +1282,19 @@ const ProfessionalHero = ({ hero }) => {
             margin-top: .6rem;
           }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+          }
+        }
       `}</style>
 
-      <section
-        id="home"
-        className="ks-hero"
-        style={{ '--mx': `${mouse.y}deg`, '--my': `${mouse.x}deg` }}
-      >
+      <section id="home" className="ks-hero">
         {backgroundUrl && <img src={backgroundUrl} alt="Hero Background" className="ks-bg-img" />}
 
         <div className="ks-bg-layer" />
@@ -1373,11 +1306,7 @@ const ProfessionalHero = ({ hero }) => {
         <div className="ks-rings" />
 
         <div className="ks-wrap">
-          <div
-            className="ks-robot-stage"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={() => setMouse({ x: 0, y: 0 })}
-          >
+          <div className="ks-robot-stage">
             <div className="ks-robot-glow" />
 
             {robotUrl ? (
