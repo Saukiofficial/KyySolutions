@@ -31,23 +31,23 @@ class TeamController extends Controller
         return array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));
     }
 
-    private function worksToArray(?string $value): array
+    private function normalizeUrl(?string $url): ?string
     {
-        if (!$value) {
-            return [];
+        if (!$url) {
+            return null;
         }
 
-        $lines = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));
+        $url = trim($url);
 
-        return array_map(function ($line) {
-            $parts = array_map('trim', explode('|', $line));
+        if ($url === '') {
+            return null;
+        }
 
-            return [
-                'title' => $parts[0] ?? '',
-                'description' => $parts[1] ?? '',
-                'url' => $parts[2] ?? '',
-            ];
-        }, $lines);
+        if (!preg_match('/^https?:\/\//i', $url)) {
+            return 'https://' . $url;
+        }
+
+        return $url;
     }
 
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string
@@ -68,6 +68,46 @@ class TeamController extends Controller
         return $slug;
     }
 
+    private function prepareWorks(Request $request): array
+    {
+        $works = [];
+
+        foreach ($request->input('works', []) as $index => $work) {
+            $title = trim($work['title'] ?? '');
+            $description = trim($work['description'] ?? '');
+            $url = $this->normalizeUrl($work['url'] ?? null);
+            $oldImage = $work['old_image'] ?? null;
+
+            if (
+                $title === '' &&
+                $description === '' &&
+                !$url &&
+                !$request->hasFile("works.$index.image")
+            ) {
+                continue;
+            }
+
+            $imagePath = $oldImage;
+
+            if ($request->hasFile("works.$index.image")) {
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+
+                $imagePath = $request->file("works.$index.image")->store('team-projects', 'public');
+            }
+
+            $works[] = [
+                'title' => $title,
+                'description' => $description,
+                'url' => $url,
+                'image' => $imagePath,
+            ];
+        }
+
+        return $works;
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -85,7 +125,12 @@ class TeamController extends Controller
             'skills' => 'nullable|string',
             'programming_languages' => 'nullable|string',
             'tools' => 'nullable|string',
-            'works' => 'nullable|string',
+
+            'works' => 'nullable|array',
+            'works.*.title' => 'nullable|string|max:255',
+            'works.*.description' => 'nullable|string|max:2000',
+            'works.*.url' => 'nullable|string|max:255',
+            'works.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $validated['slug'] = $this->generateUniqueSlug($validated['name']);
@@ -97,7 +142,7 @@ class TeamController extends Controller
         $validated['skills'] = $this->linesToArray($request->skills);
         $validated['programming_languages'] = $this->linesToArray($request->programming_languages);
         $validated['tools'] = $this->linesToArray($request->tools);
-        $validated['works'] = $this->worksToArray($request->works);
+        $validated['works'] = $this->prepareWorks($request);
 
         Team::create($validated);
 
@@ -128,7 +173,13 @@ class TeamController extends Controller
             'skills' => 'nullable|string',
             'programming_languages' => 'nullable|string',
             'tools' => 'nullable|string',
-            'works' => 'nullable|string',
+
+            'works' => 'nullable|array',
+            'works.*.title' => 'nullable|string|max:255',
+            'works.*.description' => 'nullable|string|max:2000',
+            'works.*.url' => 'nullable|string|max:255',
+            'works.*.old_image' => 'nullable|string',
+            'works.*.image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $validated['slug'] = $team->slug ?: $this->generateUniqueSlug($validated['name'], $team->id);
@@ -148,7 +199,7 @@ class TeamController extends Controller
         $validated['skills'] = $this->linesToArray($request->skills);
         $validated['programming_languages'] = $this->linesToArray($request->programming_languages);
         $validated['tools'] = $this->linesToArray($request->tools);
-        $validated['works'] = $this->worksToArray($request->works);
+        $validated['works'] = $this->prepareWorks($request);
 
         $team->update($validated);
 
@@ -161,6 +212,14 @@ class TeamController extends Controller
     {
         if ($team->photo && Storage::disk('public')->exists($team->photo)) {
             Storage::disk('public')->delete($team->photo);
+        }
+
+        if (is_array($team->works)) {
+            foreach ($team->works as $work) {
+                if (!empty($work['image']) && Storage::disk('public')->exists($work['image'])) {
+                    Storage::disk('public')->delete($work['image']);
+                }
+            }
         }
 
         $team->delete();

@@ -20,8 +20,7 @@ import {
     CheckCircle,
     Layers,
     Cpu,
-    Zap,
-    ArrowRight
+    Eye
 } from 'lucide-react';
 import AnimatedNavbar from '@/Components/Landing/Navbar';
 import Footer from '@/Components/Landing/Footer';
@@ -43,6 +42,20 @@ export default function TeamDetail({ member, settings }) {
         return `/storage/${photo}`;
     };
 
+    const normalizeUrl = (url) => {
+        if (!url) return null;
+
+        const cleanUrl = String(url).trim();
+
+        if (!cleanUrl) return null;
+
+        if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+            return cleanUrl;
+        }
+
+        return `https://${cleanUrl}`;
+    };
+
     const photoUrl = getImageUrl(member.photo);
     const socialMedia = member.social_media || {};
 
@@ -52,8 +65,6 @@ export default function TeamDetail({ member, settings }) {
         : [];
     const tools = Array.isArray(member.tools) ? member.tools : [];
     const works = Array.isArray(member.works) ? member.works : [];
-
-    const mainWorks = works.slice(0, 3);
 
     return (
         <div className="min-h-screen bg-[#020817] font-sans text-white">
@@ -73,7 +84,6 @@ export default function TeamDetail({ member, settings }) {
                 {/* HERO / POSTER SECTION */}
                 <section className="relative z-10 px-4 pb-10 pt-28 sm:px-6 lg:px-8 lg:min-h-screen lg:pb-16 lg:pt-32">
                     <div className="container mx-auto max-w-7xl">
-                        {/* Back Button */}
                         <div className="mb-6">
                             <Link
                                 href="/#team"
@@ -84,30 +94,31 @@ export default function TeamDetail({ member, settings }) {
                             </Link>
                         </div>
 
-                        {/* Poster Container */}
                         <div className="relative overflow-hidden rounded-[2rem] border border-blue-400/25 bg-[#020817]/70 shadow-[0_0_90px_rgba(0,132,255,.22)] backdrop-blur-xl lg:min-h-[760px]">
-                            {/* Poster Background */}
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_40%,rgba(0,132,255,.28),transparent_32%),radial-gradient(circle_at_28%_20%,rgba(0,180,255,.16),transparent_35%),linear-gradient(135deg,#020817_0%,#06152c_45%,#020817_100%)]" />
                             <div className="absolute inset-0 opacity-[0.18] bg-[linear-gradient(rgba(0,140,255,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.5)_1px,transparent_1px)] bg-[size:58px_58px]" />
 
-                            {/* Angled Blue Graphic */}
                             <div className="absolute -right-28 top-0 hidden h-full w-[58%] -skew-x-12 bg-gradient-to-br from-blue-600/35 via-cyan-500/18 to-transparent lg:block" />
                             <div className="absolute right-0 top-20 hidden h-[75%] w-[38%] -skew-x-12 border-l border-blue-300/20 bg-blue-500/10 lg:block" />
 
-                            {/* Decorative Lines */}
                             <div className="absolute left-6 top-6 h-px w-32 bg-gradient-to-r from-cyan-300 to-transparent" />
                             <div className="absolute right-6 top-6 h-px w-32 bg-gradient-to-l from-cyan-300 to-transparent" />
                             <div className="absolute left-6 bottom-6 h-px w-32 bg-gradient-to-r from-cyan-300 to-transparent" />
                             <div className="absolute right-6 bottom-6 h-px w-32 bg-gradient-to-l from-cyan-300 to-transparent" />
 
                             <div className="relative z-10 grid gap-8 p-5 sm:p-8 lg:grid-cols-12 lg:gap-10 lg:p-10">
-                                {/* Left Content */}
                                 <div className="order-2 lg:order-1 lg:col-span-7">
-                                    {/* Logo / Tagline */}
                                     <div className="mb-8 flex items-center justify-between">
                                         <div>
                                             <div className="text-3xl font-black italic tracking-[-0.08em] text-white sm:text-4xl">
-                                                SA
+                                                {member.name
+                                                    ? member.name
+                                                          .split(' ')
+                                                          .map((word) => word[0])
+                                                          .join('')
+                                                          .slice(0, 2)
+                                                          .toUpperCase()
+                                                    : 'TM'}
                                             </div>
                                             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400">
                                                 Code. Design. Impact.
@@ -124,7 +135,6 @@ export default function TeamDetail({ member, settings }) {
                                         </div>
                                     </div>
 
-                                    {/* Big Name */}
                                     <div className="relative">
                                         <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-400/40 bg-blue-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-blue-200 shadow-[0_0_22px_rgba(0,132,255,.20)] backdrop-blur-xl sm:text-xs">
                                             <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
@@ -149,7 +159,6 @@ export default function TeamDetail({ member, settings }) {
                                         </div>
                                     </div>
 
-                                    {/* Bio */}
                                     <div className="mt-6 max-w-2xl">
                                         <div className="mb-3 text-5xl font-black leading-none text-cyan-400">
                                             “
@@ -161,7 +170,6 @@ export default function TeamDetail({ member, settings }) {
                                         </p>
                                     </div>
 
-                                    {/* Stats Desktop */}
                                     <div className="mt-8 grid gap-3 sm:grid-cols-3">
                                         <StatCard
                                             icon={<Code2 className="h-6 w-6" />}
@@ -171,7 +179,7 @@ export default function TeamDetail({ member, settings }) {
 
                                         <StatCard
                                             icon={<CheckCircle className="h-6 w-6" />}
-                                            value={`${works.length || 20}+`}
+                                            value={`${works.length || 0}+`}
                                             label="Projects Completed"
                                         />
 
@@ -183,7 +191,6 @@ export default function TeamDetail({ member, settings }) {
                                     </div>
                                 </div>
 
-                                {/* Right Photo */}
                                 <div className="order-1 lg:order-2 lg:col-span-5">
                                     <div className="relative mx-auto max-w-md lg:max-w-none">
                                         <div className="absolute -inset-10 rounded-full bg-blue-500/25 blur-3xl" />
@@ -207,7 +214,6 @@ export default function TeamDetail({ member, settings }) {
                                 </div>
                             </div>
 
-                            {/* What I Do Desktop / Mobile */}
                             <div className="relative z-20 px-5 pb-5 sm:px-8 sm:pb-8 lg:px-10">
                                 <div className="mb-3 flex items-center gap-3">
                                     <h3 className="font-mono text-lg font-black uppercase tracking-widest text-cyan-300">
@@ -237,7 +243,6 @@ export default function TeamDetail({ member, settings }) {
                                 </div>
                             </div>
 
-                            {/* Contact Footer Bar */}
                             <div className="relative z-20 border-t border-blue-400/20 bg-[#020817]/80 px-5 py-5 sm:px-8 lg:px-10">
                                 <div className="grid gap-5 lg:grid-cols-12 lg:items-center">
                                     <div className="lg:col-span-4">
@@ -342,7 +347,7 @@ export default function TeamDetail({ member, settings }) {
                 </section>
 
                 {/* Works Section */}
-                <section className="relative z-20 border-y border-blue-400/15 bg-[#031024]/55 px-4 py-20 backdrop-blur-xl sm:px-6 lg:px-8">
+                <section className="relative z-20 border-y border-blue-400/15 bg-[#031024]/55 px-4 py-16 backdrop-blur-xl sm:px-6 lg:px-8">
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(0,140,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.12)_1px,transparent_1px)] bg-[size:42px_42px] opacity-30" />
 
                     <div className="container relative z-10 mx-auto max-w-7xl">
@@ -362,9 +367,15 @@ export default function TeamDetail({ member, settings }) {
                         </div>
 
                         {works.length > 0 ? (
-                            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 {works.map((work, index) => (
-                                    <WorkCard key={index} work={work} index={index} />
+                                    <WorkCard
+                                        key={index}
+                                        work={work}
+                                        index={index}
+                                        getImageUrl={getImageUrl}
+                                        normalizeUrl={normalizeUrl}
+                                    />
                                 ))}
                             </div>
                         ) : (
@@ -377,6 +388,19 @@ export default function TeamDetail({ member, settings }) {
             </main>
 
             <Footer settings={settings} />
+
+            <style>{`
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(24px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}</style>
         </div>
     );
 }
@@ -464,43 +488,92 @@ const InfoCard = ({ icon, title, items, empty }) => {
     );
 };
 
-const WorkCard = ({ work, index }) => {
-    return (
+const WorkCard = ({ work, index, getImageUrl, normalizeUrl }) => {
+    const workImage = getImageUrl(work.image);
+    const projectUrl = normalizeUrl(work.url);
+
+    const CardContent = (
         <div
-            className="group relative overflow-hidden rounded-3xl border border-blue-400/25 bg-white/[0.045] p-6 shadow-[0_0_45px_rgba(0,132,255,.15)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_70px_rgba(0,132,255,.30)]"
+            className="group relative h-full overflow-hidden rounded-2xl border border-blue-400/25 bg-[#06152c]/70 shadow-[0_0_28px_rgba(0,132,255,.13)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-cyan-300/50 hover:shadow-[0_0_45px_rgba(0,132,255,.25)]"
             style={{
-                animation: `fadeInUp 0.6s ease-out ${index * 0.1}s backwards`
+                animation: `fadeInUp 0.5s ease-out ${index * 0.08}s backwards`
             }}
         >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-400/8" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent" />
 
-            <div className="relative z-10">
-                <div className="mb-4 grid h-12 w-12 place-items-center rounded-xl border border-blue-300/25 bg-blue-500/10 text-cyan-300 shadow-[0_0_22px_rgba(0,132,255,.34)]">
-                    <BriefcaseBusiness className="h-5 w-5" />
+            {workImage ? (
+                <div className="relative z-10 h-36 overflow-hidden border-b border-blue-400/20 bg-[#020817]/70 sm:h-40 lg:h-36">
+                    <img
+                        src={workImage}
+                        alt={work.title || 'Project Image'}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020817]/70 via-transparent to-transparent" />
+
+                    {projectUrl && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-[#020817]/0 opacity-0 transition-all duration-300 group-hover:bg-[#020817]/45 group-hover:opacity-100">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-blue-500/15 px-4 py-2 text-xs font-semibold text-cyan-100 shadow-[0_0_24px_rgba(0,132,255,.28)] backdrop-blur-xl">
+                                <Eye size={14} />
+                                Lihat Project
+                            </span>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="relative z-10 flex h-36 items-center justify-center border-b border-blue-400/20 bg-blue-500/10 text-slate-500 sm:h-40 lg:h-36">
+                    <BriefcaseBusiness className="h-10 w-10 text-cyan-300/50" />
+                </div>
+            )}
+
+            <div className="relative z-10 p-4 sm:p-5">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl border border-blue-300/25 bg-blue-500/10 text-cyan-300 shadow-[0_0_18px_rgba(0,132,255,.25)]">
+                        <BriefcaseBusiness className="h-4 w-4" />
+                    </div>
+
+                    <span className="rounded-full border border-blue-400/25 bg-blue-500/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                        Project
+                    </span>
                 </div>
 
-                <h3 className="mb-3 text-xl font-black text-white">
-                    {work.title}
+                <h3 className="mb-2 line-clamp-2 text-base font-black leading-tight text-white sm:text-lg">
+                    {work.title || 'Untitled Project'}
                 </h3>
 
-                <p className="mb-5 text-sm leading-relaxed text-slate-400">
-                    {work.description}
+                <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-slate-400 sm:text-sm">
+                    {work.description || 'Belum ada deskripsi project.'}
                 </p>
 
-                {work.url && (
-                    <a
-                        href={work.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 transition hover:text-white"
-                    >
+                {projectUrl ? (
+                    <span className="inline-flex items-center gap-2 text-xs font-bold text-cyan-300 transition group-hover:text-white sm:text-sm">
                         Lihat Project
-                        <ExternalLink className="h-4 w-4" />
-                    </a>
+                        <ExternalLink className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+                ) : (
+                    <span className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500">
+                        Link belum ditambahkan
+                    </span>
                 )}
             </div>
         </div>
     );
+
+    if (projectUrl) {
+        return (
+            <a
+                href={projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block h-full"
+            >
+                {CardContent}
+            </a>
+        );
+    }
+
+    return <div className="h-full">{CardContent}</div>;
 };
 
 const SocialIcon = ({ href, icon }) => {

@@ -19,7 +19,7 @@
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-500">
-                        Add a complete team member profile, personal portfolio, skills, and social media links.
+                        Add a complete team member profile, personal portfolio, skills, project images, and social media links.
                     </p>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                         </h3>
 
                         <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-300">
-                            Fill in member details, portfolio profile, skills, programming languages, tools, works, and optional social media links.
+                            Fill in member details, portfolio profile, skills, programming languages, tools, projects, and optional social media links.
                         </p>
                     </div>
                 </div>
@@ -66,7 +66,6 @@
 
                     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
-                        <!-- Basic Info -->
                         <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6">
                             <div class="mb-6 flex items-center justify-between">
                                 <div>
@@ -88,143 +87,63 @@
 
                             <div class="space-y-5">
                                 <div>
-                                    <label for="name" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Name
-                                    </label>
-
-                                    <input id="name"
-                                           type="text"
-                                           name="name"
-                                           value="{{ old('name') }}"
-                                           required
-                                           autofocus
-                                           placeholder="Member name"
+                                    <label for="name" class="mb-2 block text-sm font-semibold text-gray-800">Name</label>
+                                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus placeholder="Member name"
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
-
-                                    @error('name')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('name') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="role" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Role
-                                    </label>
-
-                                    <input id="role"
-                                           type="text"
-                                           name="role"
-                                           value="{{ old('role') }}"
-                                           required
-                                           placeholder="Example: Founder, Designer, Developer"
+                                    <label for="role" class="mb-2 block text-sm font-semibold text-gray-800">Role</label>
+                                    <input id="role" type="text" name="role" value="{{ old('role') }}" required placeholder="Example: Founder, Designer, Developer"
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
-
-                                    @error('role')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('role') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="bio" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Bio / About Member
-                                    </label>
-
-                                    <textarea id="bio"
-                                              name="bio"
-                                              rows="5"
-                                              placeholder="Ceritakan profil singkat anggota team..."
+                                    <label for="bio" class="mb-2 block text-sm font-semibold text-gray-800">Bio / About Member</label>
+                                    <textarea id="bio" name="bio" rows="5" placeholder="Ceritakan profil singkat anggota team..."
                                               class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('bio') }}</textarea>
-
-                                    @error('bio')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('bio') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="email" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Email
-                                    </label>
-
-                                    <input id="email"
-                                           type="email"
-                                           name="email"
-                                           value="{{ old('email') }}"
-                                           placeholder="email@example.com"
+                                    <label for="email" class="mb-2 block text-sm font-semibold text-gray-800">Email</label>
+                                    <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="email@example.com"
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
-
-                                    @error('email')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('email') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="location" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Location
-                                    </label>
-
-                                    <input id="location"
-                                           type="text"
-                                           name="location"
-                                           value="{{ old('location') }}"
-                                           placeholder="Example: Sumenep, Indonesia"
+                                    <label for="location" class="mb-2 block text-sm font-semibold text-gray-800">Location</label>
+                                    <input id="location" type="text" name="location" value="{{ old('location') }}" placeholder="Example: Sumenep, Indonesia"
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
-
-                                    @error('location')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('location') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="experience_years" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Experience
-                                    </label>
-
-                                    <input id="experience_years"
-                                           type="text"
-                                           name="experience_years"
-                                           value="{{ old('experience_years') }}"
-                                           placeholder="Example: 3+ Years"
+                                    <label for="experience_years" class="mb-2 block text-sm font-semibold text-gray-800">Experience</label>
+                                    <input id="experience_years" type="text" name="experience_years" value="{{ old('experience_years') }}" placeholder="Example: 3+ Years"
                                            class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
-
-                                    @error('experience_years')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    @error('experience_years') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
                                 <div>
-                                    <label for="photo" class="mb-2 block text-sm font-semibold text-gray-800">
-                                        Photo
-                                    </label>
-
-                                    <input id="photo"
-                                           type="file"
-                                           name="photo"
-                                           required
-                                           accept="image/*"
+                                    <label for="photo" class="mb-2 block text-sm font-semibold text-gray-800">Photo</label>
+                                    <input id="photo" type="file" name="photo" required accept="image/*"
                                            class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-white text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
-
-                                    <p class="mt-2 text-xs leading-5 text-gray-500">
-                                        Upload a clean profile photo. Recommended square image.
-                                    </p>
-
-                                    @error('photo')
-                                        <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                    @enderror
+                                    <p class="mt-2 text-xs leading-5 text-gray-500">Upload a clean profile photo. Recommended square image.</p>
+                                    @error('photo') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Social Media -->
                         <div class="space-y-6">
                             <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6">
                                 <div class="mb-6 flex items-center justify-between">
                                     <div>
-                                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
-                                            Links
-                                        </p>
-                                        <h3 class="mt-1 text-lg font-bold text-gray-950">
-                                            Social Media
-                                        </h3>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Links</p>
+                                        <h3 class="mt-1 text-lg font-bold text-gray-950">Social Media</h3>
                                     </div>
 
                                     <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-gray-700 shadow-sm">
@@ -237,46 +156,26 @@
 
                                 <div class="grid grid-cols-1 gap-4">
                                     <div>
-                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                            Facebook URL
-                                        </label>
-                                        <input type="url"
-                                               name="social_media[facebook]"
-                                               placeholder="https://facebook.com/username"
-                                               value="{{ old('social_media.facebook') }}"
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Facebook URL</label>
+                                        <input type="url" name="social_media[facebook]" placeholder="https://facebook.com/username" value="{{ old('social_media.facebook') }}"
                                                class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
                                     </div>
 
                                     <div>
-                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                            Instagram URL
-                                        </label>
-                                        <input type="url"
-                                               name="social_media[instagram]"
-                                               placeholder="https://instagram.com/username"
-                                               value="{{ old('social_media.instagram') }}"
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Instagram URL</label>
+                                        <input type="url" name="social_media[instagram]" placeholder="https://instagram.com/username" value="{{ old('social_media.instagram') }}"
                                                class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
                                     </div>
 
                                     <div>
-                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                            LinkedIn URL
-                                        </label>
-                                        <input type="url"
-                                               name="social_media[linkedin]"
-                                               placeholder="https://linkedin.com/in/username"
-                                               value="{{ old('social_media.linkedin') }}"
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">LinkedIn URL</label>
+                                        <input type="url" name="social_media[linkedin]" placeholder="https://linkedin.com/in/username" value="{{ old('social_media.linkedin') }}"
                                                class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
                                     </div>
 
                                     <div>
-                                        <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                            X / Twitter URL
-                                        </label>
-                                        <input type="url"
-                                               name="social_media[x-twitter]"
-                                               placeholder="https://x.com/username"
-                                               value="{{ old('social_media.x-twitter') }}"
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">X / Twitter URL</label>
+                                        <input type="url" name="social_media[x-twitter]" placeholder="https://x.com/username" value="{{ old('social_media.x-twitter') }}"
                                                class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
                                     </div>
                                 </div>
@@ -285,94 +184,96 @@
                             <div class="rounded-3xl border border-gray-200 bg-gray-950 p-6 text-white shadow-xl shadow-gray-900/10">
                                 <h4 class="text-lg font-bold">Team Detail Tip</h4>
                                 <p class="mt-2 text-sm leading-6 text-gray-400">
-                                    Isi data skill, bahasa pemrograman, tools, dan karya agar halaman detail team terlihat seperti portfolio pribadi.
+                                    Isi data skill, bahasa pemrograman, tools, dan project agar halaman detail team terlihat seperti portfolio pribadi.
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Personal Portfolio -->
                     <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6">
                         <div class="mb-6">
-                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
-                                Personal Portfolio
-                            </p>
-
-                            <h3 class="mt-1 text-lg font-bold text-gray-950">
-                                Skills, Programming Languages, Tools & Works
-                            </h3>
-
-                            <p class="mt-1 text-sm text-gray-500">
-                                Isi satu data per baris. Untuk karya gunakan format:
-                                <span class="font-semibold text-gray-800">Judul | Deskripsi | URL</span>
-                            </p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Personal Portfolio</p>
+                            <h3 class="mt-1 text-lg font-bold text-gray-950">Skills, Programming Languages & Tools</h3>
+                            <p class="mt-1 text-sm text-gray-500">Isi satu data per baris.</p>
                         </div>
 
-                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                             <div>
-                                <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                    Skills
-                                </label>
-
-                                <textarea name="skills"
-                                          rows="6"
-                                          placeholder="UI Design&#10;Frontend Development&#10;Backend Development"
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">Skills</label>
+                                <textarea name="skills" rows="6" placeholder="UI Design&#10;Frontend Development&#10;Backend Development"
                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('skills') }}</textarea>
-
-                                @error('skills')
-                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                @enderror
+                                @error('skills') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                    Programming Languages
-                                </label>
-
-                                <textarea name="programming_languages"
-                                          rows="6"
-                                          placeholder="JavaScript&#10;PHP&#10;Python&#10;Dart"
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">Programming Languages</label>
+                                <textarea name="programming_languages" rows="6" placeholder="JavaScript&#10;PHP&#10;Python&#10;Dart"
                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('programming_languages') }}</textarea>
-
-                                @error('programming_languages')
-                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                @enderror
+                                @error('programming_languages') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
-                                <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                    Tools
-                                </label>
-
-                                <textarea name="tools"
-                                          rows="6"
-                                          placeholder="Laravel&#10;React&#10;Figma&#10;Tailwind CSS"
+                                <label class="mb-2 block text-sm font-semibold text-gray-800">Tools</label>
+                                <textarea name="tools" rows="6" placeholder="Laravel&#10;React&#10;Figma&#10;Tailwind CSS"
                                           class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('tools') }}</textarea>
-
-                                @error('tools')
-                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="mb-2 block text-sm font-semibold text-gray-800">
-                                    Works / Projects
-                                </label>
-
-                                <textarea name="works"
-                                          rows="6"
-                                          placeholder="Website Company Profile | Membuat website modern untuk brand bisnis | https://example.com&#10;Aplikasi Kasir | Sistem POS untuk toko retail | https://example.com"
-                                          class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">{{ old('works') }}</textarea>
-
-                                <p class="mt-2 text-xs leading-5 text-gray-500">
-                                    Contoh: Website Company Profile | Membuat website modern | https://example.com
-                                </p>
-
-                                @error('works')
-                                    <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                                @enderror
+                                @error('tools') <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
+                    </div>
+
+                    <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6">
+                        <div class="mb-6">
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Team Projects</p>
+                            <h3 class="mt-1 text-lg font-bold text-gray-950">Works / Projects</h3>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Tambahkan lebih dari satu project, lengkap dengan gambar, deskripsi, dan link hasil project.
+                            </p>
+                        </div>
+
+                        <div id="works-wrapper" class="space-y-5">
+                            <div class="work-item rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+                                <div class="mb-4 flex items-center justify-between">
+                                    <h4 class="text-sm font-bold text-gray-950">Project #1</h4>
+                                    <button type="button"
+                                            onclick="removeWorkItem(this)"
+                                            class="hidden rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-600 hover:text-white">
+                                        Remove
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project Title</label>
+                                        <input type="text" name="works[0][title]" placeholder="Website Company Profile"
+                                               class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+                                    </div>
+
+                                    <div>
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project URL</label>
+                                        <input type="text" name="works[0][url]" placeholder="https://example.com"
+                                               class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+                                    </div>
+
+                                    <div class="lg:col-span-2">
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project Image</label>
+                                        <input type="file" name="works[0][image]" accept="image/*"
+                                               class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-white text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
+                                    </div>
+
+                                    <div class="lg:col-span-2">
+                                        <label class="mb-2 block text-sm font-semibold text-gray-800">Description</label>
+                                        <textarea name="works[0][description]" rows="4" placeholder="Deskripsi singkat project..."
+                                                  class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button"
+                                onclick="addWorkItem()"
+                                class="mt-5 inline-flex items-center justify-center rounded-2xl bg-gray-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-gray-900/20 transition hover:bg-gray-800">
+                            + Add Project
+                        </button>
                     </div>
 
                     <div class="flex flex-col gap-4 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -409,4 +310,59 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let workIndex = 1;
+
+        function addWorkItem() {
+            const wrapper = document.getElementById('works-wrapper');
+
+            const item = document.createElement('div');
+            item.className = 'work-item rounded-3xl border border-gray-200 bg-white p-5 shadow-sm';
+
+            item.innerHTML = `
+                <div class="mb-4 flex items-center justify-between">
+                    <h4 class="text-sm font-bold text-gray-950">Project #${workIndex + 1}</h4>
+                    <button type="button"
+                            onclick="removeWorkItem(this)"
+                            class="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-600 hover:text-white">
+                        Remove
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    <div>
+                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project Title</label>
+                        <input type="text" name="works[${workIndex}][title]" placeholder="Website Company Profile"
+                               class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project URL</label>
+                        <input type="text" name="works[${workIndex}][url]" placeholder="https://example.com"
+                               class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5">
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <label class="mb-2 block text-sm font-semibold text-gray-800">Project Image</label>
+                        <input type="file" name="works[${workIndex}][image]" accept="image/*"
+                               class="block w-full cursor-pointer rounded-2xl border border-gray-200 bg-white text-sm text-gray-500 shadow-sm file:mr-4 file:border-0 file:bg-gray-950 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800">
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <label class="mb-2 block text-sm font-semibold text-gray-800">Description</label>
+                        <textarea name="works[${workIndex}][description]" rows="4" placeholder="Deskripsi singkat project..."
+                                  class="block w-full rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-950 outline-none transition placeholder:text-gray-400 focus:border-gray-950 focus:ring-4 focus:ring-gray-900/5"></textarea>
+                    </div>
+                </div>
+            `;
+
+            wrapper.appendChild(item);
+            workIndex++;
+        }
+
+        function removeWorkItem(button) {
+            button.closest('.work-item').remove();
+        }
+    </script>
 </x-admin-layout>
