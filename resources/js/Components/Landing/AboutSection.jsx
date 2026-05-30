@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Award, Clock, Shield, Sparkles, TrendingUp, Users } from 'lucide-react';
+import { Award, BriefcaseBusiness, Code2, Sparkles, Users } from 'lucide-react';
 
 const AboutSection = ({ about }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
     const [activeCard, setActiveCard] = useState(null);
     const sectionRef = useRef(null);
 
@@ -38,104 +38,115 @@ const AboutSection = ({ about }) => {
 
     const features = [
         {
-            value: '10+',
-            label: 'Years Excellence',
+            value: '12+',
+            label: 'Tahun Pengalaman',
             icon: Award,
-            color: 'from-blue-500 to-cyan-500',
-            description: 'Industry leadership'
+            description: 'Berpengalaman membangun solusi digital'
         },
         {
-            value: '24/7',
-            label: 'Always Available',
-            icon: Clock,
-            color: 'from-purple-500 to-pink-500',
-            description: 'Round-the-clock support'
+            value: '250+',
+            label: 'Proyek Selesai',
+            icon: BriefcaseBusiness,
+            description: 'Website, sistem, dan branding digital'
         },
         {
-            value: '100%',
-            label: 'Secure Platform',
-            icon: Shield,
-            color: 'from-orange-500 to-red-500',
-            description: 'Bank-level security'
+            value: '98%',
+            label: 'Kepuasan Klien',
+            icon: Users,
+            description: 'Fokus pada kualitas dan hasil terbaik'
         }
     ];
+
+    const titleWords = (about.title || '').split(' ');
+    const highlightWords = ['inovasi', 'dedikasi', 'digital', 'solusi'];
 
     return (
         <section
             id="about"
             ref={sectionRef}
-            className="relative py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden"
+            className="relative overflow-hidden bg-[#020817] py-12 text-white md:py-24 lg:py-32"
             onMouseMove={handleMouseMove}
         >
-            {/* Dynamic gradient background that follows mouse */}
+            {/* Deep tech background */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,132,255,0.22),transparent_32%),radial-gradient(circle_at_80%_35%,rgba(0,88,255,0.25),transparent_34%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
+
+            {/* Mouse glow effect */}
             <div
-                className="absolute inset-0 opacity-30 transition-all duration-700 ease-out pointer-events-none"
+                className="absolute inset-0 opacity-60 transition-all duration-700 ease-out pointer-events-none"
                 style={{
-                    background: `radial-gradient(circle 800px at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.1), transparent 70%)`
+                    background: `radial-gradient(circle 650px at ${mousePosition.x}% ${mousePosition.y}%, rgba(0, 149, 255, 0.20), transparent 62%)`
                 }}
             />
 
-            {/* Animated mesh gradient - Hide on mobile */}
-            <div className="hidden md:block absolute top-0 left-0 w-full h-full opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-                <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-gradient-to-br from-orange-300 to-yellow-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-            </div>
+            {/* Circuit / grid accents */}
+            <div className="absolute inset-0 opacity-[0.16] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
-            {/* Minimalist line accents - Hide on mobile */}
-            <div className="hidden lg:block absolute top-20 left-0 w-px h-32 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-            <div className="hidden lg:block absolute bottom-20 right-0 w-px h-32 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+            {/* Top and bottom neon border */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
-                <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8 lg:gap-20 items-center">
-                    {/* Left Content - 7 columns on desktop, 1 column on mobile */}
-                    <div className="lg:col-span-7 space-y-3 md:space-y-6 lg:space-y-10">
-                        {/* Magnetic badge - Smaller on mobile */}
+            {/* Dark overlay for text readability */}
+            <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-[#020817] via-[#020817]/80 to-transparent" />
+
+            {/* Glow blur objects */}
+            <div className="absolute -right-20 top-10 hidden h-96 w-96 rounded-full bg-blue-500/20 blur-3xl md:block" />
+            <div className="absolute bottom-0 left-1/4 hidden h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl md:block" />
+
+            <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 items-center gap-4 md:gap-8 lg:grid-cols-12 lg:gap-14 xl:gap-20">
+                    {/* Left Content */}
+                    <div className="space-y-4 md:space-y-7 lg:col-span-6 lg:space-y-9">
+                        {/* Badge */}
                         <div
-                            className="inline-block"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/50 bg-blue-500/10 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wide text-blue-200 shadow-[0_0_25px_rgba(0,132,255,0.22)] backdrop-blur-md md:gap-2 md:px-4 md:py-2 md:text-xs"
                             style={{
                                 opacity: isVisible ? 1 : 0,
                                 transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.9)',
                                 transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
                             }}
                         >
+                            <Sparkles className="h-3 w-3 text-blue-300 md:h-4 md:w-4" />
+                            About Me
                         </div>
 
-                        {/* Title with stagger animation - Responsive text sizes */}
+                        {/* Title */}
                         <div
-                            className="space-y-2 md:space-y-4 lg:space-y-6"
+                            className="space-y-3 md:space-y-5"
                             style={{
                                 opacity: isVisible ? 1 : 0,
                                 transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                                 transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s'
                             }}
                         >
-                            <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
-                                {about.title.split(' ').map((word, i) => (
-                                    <span
-                                        key={i}
-                                        className="inline-block"
-                                        style={{
-                                            opacity: isVisible ? 1 : 0,
-                                            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                                            transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.1 + i * 0.05}s`
-                                        }}
-                                    >
-                                        {word}&nbsp;
-                                    </span>
-                                ))}
-                            </h2>
+                            <h2 className="max-w-3xl text-[22px] font-black leading-[1.05] tracking-[-0.045em] text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+                                {titleWords.map((word, i) => {
+                                    const cleanWord = word.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+                                    const isHighlight = highlightWords.includes(cleanWord);
 
-                            {/* Accent line - Smaller on mobile */}
-                            <div className="flex items-center gap-2 md:gap-4">
-                                <div className="h-0.5 md:h-1 w-8 md:w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
-                                <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
-                            </div>
+                                    return (
+                                        <span
+                                            key={i}
+                                            className={`inline-block ${
+                                                isHighlight
+                                                    ? 'bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-600 bg-clip-text text-transparent'
+                                                    : ''
+                                            }`}
+                                            style={{
+                                                opacity: isVisible ? 1 : 0,
+                                                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                                                transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${0.1 + i * 0.05}s`
+                                            }}
+                                        >
+                                            {word}&nbsp;
+                                        </span>
+                                    );
+                                })}
+                            </h2>
                         </div>
 
-                        {/* Description - Line clamp on mobile */}
+                        {/* Description */}
                         <div
-                            className="text-[10px] sm:text-sm md:text-base lg:text-xl text-gray-600 leading-relaxed max-w-2xl line-clamp-3 md:line-clamp-none"
+                            className="max-w-xl text-[10px] leading-relaxed text-slate-300 sm:text-sm md:text-base lg:text-lg"
                             style={{
                                 opacity: isVisible ? 1 : 0,
                                 transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -144,7 +155,7 @@ const AboutSection = ({ about }) => {
                             dangerouslySetInnerHTML={{ __html: about.description }}
                         />
 
-                        {/* Stats cards - Responsive grid */}
+                        {/* Stats cards */}
                         <div
                             className="grid grid-cols-3 gap-2 md:gap-4"
                             style={{
@@ -155,59 +166,49 @@ const AboutSection = ({ about }) => {
                         >
                             {features.map((feature, index) => {
                                 const Icon = feature.icon;
+                                const isActive = activeCard === index;
+
                                 return (
                                     <div
                                         key={index}
                                         onMouseEnter={() => setActiveCard(index)}
                                         onMouseLeave={() => setActiveCard(null)}
-                                        className="group relative bg-white rounded-lg md:rounded-2xl p-2 md:p-4 lg:p-6 border border-gray-200 hover:border-transparent transition-all duration-500 cursor-pointer"
+                                        className="group relative overflow-hidden rounded-xl border border-blue-400/25 bg-white/[0.045] p-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.08),0_0_35px_rgba(0,119,255,.08)] backdrop-blur-xl transition-all duration-500 md:rounded-2xl md:p-4 lg:p-5"
                                         style={{
-                                            transform: activeCard === index ? 'translateY(-8px)' : 'translateY(0)',
-                                            boxShadow: activeCard === index ? '0 20px 60px -10px rgba(0,0,0,0.15)' : '0 0 0 0 rgba(0,0,0,0)'
+                                            transform: isActive ? 'translateY(-8px)' : 'translateY(0)',
+                                            boxShadow: isActive
+                                                ? '0 24px 80px -24px rgba(0,132,255,0.7), inset 0 1px 0 rgba(255,255,255,.12)'
+                                                : undefined
                                         }}
                                     >
-                                        {/* Gradient overlay on hover */}
-                                        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 rounded-lg md:rounded-2xl transition-opacity duration-500`}></div>
+                                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-cyan-400/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
 
-                                        <div className="relative z-10 space-y-1 md:space-y-2 lg:space-y-3">
-                                            <div className={`inline-flex p-1.5 md:p-2 lg:p-3 rounded-lg md:rounded-xl bg-gradient-to-br ${feature.color} bg-opacity-10`}>
-                                                <Icon className="w-3 h-3 md:w-4 md:h-4 lg:w-6 lg:h-6 text-gray-700" />
+                                        <div className="relative z-10 flex flex-col items-center gap-1 md:gap-2">
+                                            <div className="grid h-8 w-8 place-items-center rounded-xl border border-blue-300/25 bg-blue-500/10 text-cyan-300 shadow-[0_0_22px_rgba(0,132,255,.34)] md:h-11 md:w-11">
+                                                <Icon className="h-4 w-4 md:h-5 md:w-5" />
                                             </div>
-                                            <div className="text-base md:text-xl lg:text-3xl font-bold text-gray-900">{feature.value}</div>
-                                            <div className="text-[8px] md:text-xs lg:text-sm font-semibold text-gray-900 leading-tight">{feature.label}</div>
-                                            <div className="hidden md:block text-[10px] lg:text-xs text-gray-500">{feature.description}</div>
-                                        </div>
 
-                                        {/* Bottom accent line */}
-                                        <div className={`absolute bottom-0 left-0 h-0.5 md:h-1 bg-gradient-to-r ${feature.color} w-0 group-hover:w-full transition-all duration-500 rounded-b-lg md:rounded-b-2xl`}></div>
+                                            <div className="text-lg font-black tracking-tight text-white md:text-3xl lg:text-4xl">
+                                                {feature.value}
+                                            </div>
+
+                                            <div className="text-[8px] font-medium leading-tight text-slate-300 md:text-xs lg:text-sm">
+                                                {feature.label}
+                                            </div>
+
+                                            <div className="hidden text-xs leading-relaxed text-slate-400 lg:block">
+                                                {feature.description}
+                                            </div>
+                                        </div>
                                     </div>
                                 );
                             })}
                         </div>
-
-                        {/* CTA Button - Smaller on mobile */}
-                        <div
-                            style={{
-                                opacity: isVisible ? 1 : 0,
-                                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                                transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s'
-                            }}
-                        >
-                            <button className="group relative inline-flex items-center gap-1.5 md:gap-3 px-4 py-2 md:px-8 md:py-4 bg-gray-900 text-white rounded-full overflow-hidden transition-all duration-300 hover:pr-6 md:hover:pr-10 text-[10px] md:text-base">
-                                {/* Animated gradient background */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                {/* Shine effect - Hide on mobile */}
-                                <div className="hidden md:block absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-
-                                <span className="relative z-10 font-semibold">Explore More</span>
-                                <ArrowRight className="relative z-10 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform duration-300" />
-                            </button>
-                        </div>
                     </div>
 
-                    {/* Right Image - 5 columns on desktop, 1 column on mobile */}
-                    <div className="lg:col-span-5 w-[140%] -mr-6 sm:w-full sm:mr-0">
+                    {/* Right Image */}
+                    <div className="w-[140%] -mr-6 sm:mr-0 sm:w-full lg:col-span-6">
                         <div
                             className="relative"
                             style={{
@@ -216,52 +217,26 @@ const AboutSection = ({ about }) => {
                                 transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s'
                             }}
                         >
-                            {/* Main image container */}
                             {about.illustration && (
-                                <div className="relative group">
-                                    {/* Floating badge - Top Left - Smaller on mobile */}
-                                    <div
-                                        className="absolute -top-3 -left-3 md:-top-6 md:-left-6 z-20 bg-white rounded-xl md:rounded-2xl shadow-2xl p-2 md:p-3 lg:p-5 border border-gray-100"
-                                        style={{
-                                            opacity: isVisible ? 1 : 0,
-                                            transform: isVisible ? 'translate(0, 0) rotate(0deg)' : 'translate(-20px, -20px) rotate(-5deg)',
-                                            transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s'
-                                        }}
-                                    >
+                                <div className="group relative">
+                                    {/* Image glow */}
+                                    <div className="absolute -inset-4 rounded-[2rem] bg-blue-500/20 blur-3xl transition-opacity duration-700 group-hover:opacity-80 md:-inset-8" />
+
+                                    {/* Floating code icon */}
+                                    <div className="absolute -right-3 top-4 z-20 hidden rounded-2xl border border-blue-300/25 bg-blue-500/10 p-3 text-cyan-200 shadow-[0_0_35px_rgba(0,132,255,.28)] backdrop-blur-xl md:block lg:-right-6 lg:top-8">
+                                        <Code2 className="h-7 w-7 lg:h-10 lg:w-10" />
                                     </div>
 
-                                    {/* Image with magnetic effect */}
-                                    <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
-                                        {/* Gradient border effect - Hide on mobile */}
-                                        <div className="hidden md:block absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-700"></div>
+                                    {/* Image card */}
+                                    <div className="relative overflow-hidden rounded-2xl border border-blue-300/20 bg-[#061427]/60 shadow-[0_0_70px_rgba(0,132,255,.2)] backdrop-blur-md md:rounded-[2rem]">
+                                        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,140,255,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.22)_1px,transparent_1px)] bg-[size:34px_34px] opacity-40" />
+                                        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-blue-500/20 to-transparent" />
 
-                                            <div className="relative">
                                         <img
                                             src={`/storage/${about.illustration}`}
                                             alt="About Us"
-                                            className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                                            className="relative z-10 h-auto w-full object-contain drop-shadow-[0_0_35px_rgba(0,132,255,.35)] transition-transform duration-700 ease-out group-hover:scale-105"
                                         />
-                                    </div>
-                                    </div>
-
-                                    {/* Bottom floating element - Smaller on mobile */}
-                                    <div
-                                        className="absolute -bottom-3 -right-3 md:-bottom-6 md:-right-6 z-20 bg-white rounded-xl md:rounded-2xl shadow-2xl p-2 md:p-3 lg:p-5 border border-gray-100"
-                                        style={{
-                                            opacity: isVisible ? 1 : 0,
-                                            transform: isVisible ? 'translate(0, 0) rotate(0deg)' : 'translate(20px, 20px) rotate(5deg)',
-                                            transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s'
-                                        }}
-                                    >
-                                        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
-                                            <div className="p-1.5 md:p-2 lg:p-3 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg md:rounded-xl">
-                                                <Users className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-white" />
-                                            </div>
-                                            <div>
-                                                <div className="text-sm md:text-xl lg:text-2xl font-bold text-gray-900">50K+</div>
-                                                <div className="text-[8px] md:text-[10px] lg:text-xs text-gray-500 font-medium">Happy Clients</div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -269,24 +244,6 @@ const AboutSection = ({ about }) => {
                     </div>
                 </div>
             </div>
-
-            <style>{`
-                @keyframes blob {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    25% { transform: translate(20px, -50px) scale(1.1); }
-                    50% { transform: translate(-20px, 20px) scale(0.9); }
-                    75% { transform: translate(50px, 50px) scale(1.05); }
-                }
-                .animate-blob {
-                    animation: blob 20s infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-            `}</style>
         </section>
     );
 };

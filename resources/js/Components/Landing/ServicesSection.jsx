@@ -24,68 +24,72 @@ const ServiceCard = ({ id, icon, title, description, index }) => {
 
     return (
         <div
-            className="group relative"
+            className="group relative h-full"
             style={{
                 animation: `fadeInUp 0.6s ease-out ${index * 0.1}s backwards`
             }}
         >
-            {/* Card Container */}
-            <div className="relative cursor-pointer h-full">
-                {/* Background Card */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 rounded-2xl sm:rounded-3xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500" />
+            <div className="relative h-full cursor-pointer">
+                {/* Glow belakang card */}
+                <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-blue-400/70 via-cyan-400/20 to-blue-700/70 opacity-60 blur-[2px] transition-all duration-500 group-hover:opacity-100 group-hover:blur-[4px] sm:rounded-3xl" />
 
                 {/* Main Card */}
-                <div className="relative bg-white backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-300 shadow-xl group-hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-blue-400/40 bg-[#031124]/80 shadow-[0_0_35px_rgba(0,132,255,.22)] backdrop-blur-xl transition-all duration-500 group-hover:-translate-y-2 group-hover:border-cyan-300/70 group-hover:shadow-[0_0_55px_rgba(0,132,255,.45)] sm:rounded-3xl">
+                    {/* Grid background */}
+                    <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:36px_36px]" />
+
+                    {/* Neon overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-transparent to-cyan-400/10 opacity-70" />
+
                     {/* Content */}
-                    <div className="relative p-4 sm:p-6 flex flex-col flex-grow">
+                    <div className="relative z-10 flex flex-grow flex-col p-4 sm:p-6 lg:p-7">
                         {/* Decorative Corner Elements */}
-                        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-3 h-3 sm:w-4 sm:h-4 border-t-2 border-l-2 border-gray-500" />
-                        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-3 h-3 sm:w-4 sm:h-4 border-t-2 border-r-2 border-gray-600" />
+                        <div className="absolute left-3 top-3 h-4 w-4 border-l-2 border-t-2 border-blue-200/80 sm:left-4 sm:top-4 sm:h-5 sm:w-5" />
+                        <div className="absolute right-3 top-3 h-4 w-4 border-r-2 border-t-2 border-blue-200/80 sm:right-4 sm:top-4 sm:h-5 sm:w-5" />
 
                         {/* Icon Container */}
-                        <div className="relative mb-4 sm:mb-6">
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl sm:rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                {/* Corner Cuts on Icon */}
-                                <div className="absolute top-0 right-0 w-2 h-2 sm:w-3 sm:h-3 bg-white" style={{clipPath: 'polygon(100% 0, 100% 100%, 0 0)'}} />
-                                <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-white relative z-10" />
+                        <div className="mb-4 sm:mb-6">
+                            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-400/50 bg-blue-500/10 shadow-[inset_0_1px_0_rgba(255,255,255,.12),0_0_28px_rgba(0,132,255,.45)] transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(0,174,255,.65)] sm:h-20 sm:w-20">
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-400/10" />
+                                <IconComponent className="relative z-10 h-7 w-7 text-cyan-200 drop-shadow-[0_0_12px_rgba(0,174,255,.9)] sm:h-10 sm:w-10" />
                             </div>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-sm sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight group-hover:text-gray-700 transition-colors duration-300">
+                        <h3 className="mb-2 text-sm font-black leading-tight tracking-tight text-white transition-colors duration-300 group-hover:text-cyan-100 sm:mb-4 sm:text-2xl">
                             {title}
                         </h3>
 
                         {/* Description */}
-                        <p className="text-[10px] sm:text-sm text-gray-600 leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-4 flex-grow">
+                        <p className="mb-4 line-clamp-4 flex-grow text-[10px] leading-relaxed text-slate-300 sm:text-base">
                             {description}
                         </p>
 
                         {/* Link Button */}
                         <a
                             href={getServiceUrl(id)}
-                            className="mt-auto inline-flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors"
+                            className="mt-auto inline-flex items-center gap-2 text-[10px] font-bold text-cyan-300 transition-all duration-300 group-hover:text-white sm:text-base"
                         >
                             <span>Learn more</span>
-                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+                            <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-2 sm:h-5 sm:w-5" />
                         </a>
 
                         {/* Tech Indicator Bars */}
-                        <div className="flex gap-1 sm:gap-1.5 mt-3 sm:mt-4">
-                            <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-gray-600 to-gray-700 rounded-full" style={{width: '90%'}} />
+                        <div className="mt-4 flex gap-2 sm:mt-6">
+                            <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-700/70">
+                                <div className="h-full w-[90%] rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 shadow-[0_0_12px_rgba(0,174,255,.9)]" />
                             </div>
-                            <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-gray-700 to-gray-800 rounded-full" style={{width: '85%'}} />
+                            <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-700/70">
+                                <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-blue-400 to-cyan-300" />
                             </div>
-                            <div className="h-1 sm:h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-gray-500 to-gray-600 rounded-full" style={{width: '95%'}} />
+                            <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-700/70">
+                                <div className="h-full w-[80%] rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" />
                             </div>
                         </div>
 
                         {/* Decorative Bottom Corner Elements */}
-                        <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-3 h-3 sm:w-4 sm:h-4 border-b-2 border-l-2 border-gray-600" />
-                        <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-3 h-3 sm:w-4 sm:h-4 border-b-2 border-r-2 border-gray-500" />
+                        <div className="absolute bottom-3 left-3 h-4 w-4 border-b-2 border-l-2 border-blue-200/80 sm:bottom-4 sm:left-4 sm:h-5 sm:w-5" />
+                        <div className="absolute bottom-3 right-3 h-4 w-4 border-b-2 border-r-2 border-blue-200/80 sm:bottom-4 sm:right-4 sm:h-5 sm:w-5" />
                     </div>
                 </div>
             </div>
@@ -97,39 +101,44 @@ const ServicesSection = ({ services }) => {
     if (!services || services.length === 0) return null;
 
     return (
-        <section id="services" className="py-12 sm:py-24 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-30">
-                <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,0,0,0.08) 1px, transparent 0)`,
-                    backgroundSize: '40px 40px'
-                }} />
-            </div>
+        <section
+            id="services"
+            className="relative overflow-hidden bg-[#020817] py-12 text-white sm:py-24"
+        >
+            {/* Main Background */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,132,255,0.25),transparent_35%),radial-gradient(circle_at_20%_60%,rgba(0,174,255,0.12),transparent_28%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
 
-            {/* Geometric Shapes */}
-            <div className="absolute top-40 left-10 w-20 h-20 border-2 border-gray-400/30 rotate-45" />
-            <div className="absolute bottom-40 right-10 w-32 h-32 border-2 border-gray-500/30 rounded-full" />
-            <div className="absolute top-1/3 right-20 w-16 h-16 bg-gray-400/10 rotate-12" />
+            {/* Grid / circuit pattern */}
+            <div className="absolute inset-0 opacity-[0.14] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Neon lines */}
+            <div className="absolute left-0 top-28 h-px w-1/4 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_rgba(0,174,255,.9)]" />
+            <div className="absolute right-0 top-28 h-px w-1/4 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_rgba(0,174,255,.9)]" />
+
+            {/* Glow objects */}
+            <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
+            <div className="absolute -right-24 bottom-1/4 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
+
+            <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
-                <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-20">
-                    <div className="inline-block mb-4 sm:mb-6">
-                        <div className="flex items-center gap-3 px-5 py-2 bg-white/80 backdrop-blur-sm border border-gray-300 rounded-lg shadow-sm">
-                            <div className="w-2 h-2 bg-gray-700 rounded-full" />
-                            <span className="text-xs sm:text-sm font-medium text-gray-700 tracking-wider uppercase">Our Services</span>
-                        </div>
+                <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-20">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-400/50 bg-blue-500/10 px-5 py-2 text-xs font-bold uppercase tracking-widest text-blue-200 shadow-[0_0_25px_rgba(0,132,255,0.25)] backdrop-blur-md sm:mb-6">
+                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(0,174,255,.9)]" />
+                        Layanan Kami
                     </div>
-                    <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                        What We Offer
+
+                    <h2 className="mb-4 text-4xl font-black leading-tight tracking-[-0.05em] text-white drop-shadow-[0_0_22px_rgba(0,132,255,.22)] sm:mb-6 sm:text-6xl lg:text-7xl">
+                        Our Services
                     </h2>
-                    <p className="text-sm sm:text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                        Comprehensive digital solutions tailored to transform your vision
+
+                    <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-lg">
+                        Solusi IT modern dan inovatif untuk membantu bisnis, instansi, dan brand
+                        tumbuh lebih cepat di era digital.
                     </p>
                 </div>
 
-                {/* Services Grid - Forced 2 Columns on Mobile */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+                {/* Services Grid - tetap 2 kolom di mobile, 4 kolom di desktop */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4 lg:gap-8">
                     {services.map((service, index) => (
                         <ServiceCard
                             key={service.id}
