@@ -1,212 +1,402 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle, User, Calendar, Layers, Code2, ArrowRight, X } from 'lucide-react';
+import {
+    ArrowLeft,
+    CheckCircle,
+    User,
+    Calendar,
+    Layers,
+    Code2,
+    ArrowRight,
+    X,
+    Sparkles,
+    ExternalLink,
+    Eye,
+    Zap
+} from 'lucide-react';
 import AnimatedNavbar from '@/Components/Landing/Navbar';
 import Footer from '@/Components/Landing/Footer';
 
 export default function PortfolioDetail({ portfolio, relatedPortfolios, settings }) {
     if (!portfolio) return null;
 
-    // State untuk Lightbox (Pop-up Gambar Fullscreen)
     const [selectedImage, setSelectedImage] = useState(null);
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+        if (!dateString) return '-';
+
+        return new Date(dateString).toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'long'
+        });
     };
 
+    const getImageUrl = (image) => {
+        if (!image) return null;
+
+        if (image.startsWith('http://') || image.startsWith('https://')) {
+            return image;
+        }
+
+        if (image.startsWith('/storage/')) {
+            return image;
+        }
+
+        return `/storage/${image}`;
+    };
+
+    const mainImage = getImageUrl(portfolio.image);
+
     return (
-        <div className="min-h-screen bg-neutral-950 font-sans text-white">
+        <div className="min-h-screen bg-[#020817] font-sans text-white">
             <Head title={portfolio.title} />
+
             <AnimatedNavbar settings={settings} />
 
-            {/* === LIGHTBOX MODAL (ZOOM GAMBAR) === */}
+            {/* Lightbox Modal */}
             {selectedImage && (
                 <div
-                    className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 animate-fadeIn cursor-zoom-out"
+                    className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-[#020817]/95 p-4 backdrop-blur-2xl animate-fadeIn"
                     onClick={() => setSelectedImage(null)}
                 >
-                    <button className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors bg-white/10 rounded-full p-2">
-                        <X size={32} />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,132,255,0.18),transparent_45%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
+                    <div className="absolute inset-0 opacity-[0.14] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+                    <button
+                        onClick={() => setSelectedImage(null)}
+                        className="absolute right-5 top-5 z-20 rounded-full border border-blue-300/35 bg-blue-500/15 p-3 text-cyan-100 shadow-[0_0_30px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-red-400/70 hover:bg-red-500/30 hover:text-white sm:right-8 sm:top-8"
+                    >
+                        <X size={28} />
                     </button>
-                    <img
-                        src={`/storage/${selectedImage}`}
-                        alt="Full Preview"
-                        className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                    />
+
+                    <div className="relative z-10 max-h-[90vh] max-w-6xl overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 p-3 shadow-[0_0_90px_rgba(0,132,255,.35)] backdrop-blur-xl">
+                        <img
+                            src={getImageUrl(selectedImage)}
+                            alt="Full Preview"
+                            className="max-h-[84vh] max-w-full rounded-2xl object-contain"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </div>
                 </div>
             )}
 
-            <main>
-                {/* 1. HERO SECTION (Header Visual) */}
-                <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 z-0">
-                         {/* Background Image Blurry */}
-                        <img src={`/storage/${portfolio.image}`} alt={portfolio.title} className="w-full h-full object-cover opacity-20 blur-sm scale-105"/>
-                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-neutral-900/60"></div>
-                    </div>
+            <main className="relative overflow-hidden">
+                {/* Global Background */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,132,255,0.22),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(0,180,255,0.18),transparent_34%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
+                <div className="absolute inset-0 opacity-[0.16] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent" />
+                <div className="absolute -right-28 top-20 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
+                <div className="absolute -left-28 top-96 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
 
-                    <div className="container mx-auto px-4 relative z-10 text-center mt-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
-                            <Layers size={14} /> {portfolio.category}
+                {/* Hero Section */}
+                <section className="relative z-10 flex min-h-[76vh] items-center justify-center overflow-hidden px-4 pb-28 pt-32 sm:px-6 lg:px-8 lg:pt-36">
+                    {mainImage && (
+                        <div className="absolute inset-0 z-0">
+                            <img
+                                src={mainImage}
+                                alt={portfolio.title}
+                                className="h-full w-full scale-105 object-cover opacity-20 blur-sm"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#020817] via-[#020817]/80 to-[#020817]/65" />
                         </div>
-                        <h1 className="text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight text-white drop-shadow-2xl">
+                    )}
+
+                    <div className="absolute left-10 top-28 hidden h-px w-72 bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent md:block" />
+                    <div className="absolute right-10 top-28 hidden h-px w-72 bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent md:block" />
+
+                    <div className="container relative z-10 mx-auto max-w-7xl text-center">
+                        <div className="mb-8 flex justify-center">
+                            <Link
+                                href="/#portfolio"
+                                className="group inline-flex items-center gap-2 rounded-full border border-blue-400/40 bg-blue-500/10 px-4 py-2 text-xs font-semibold text-blue-100 shadow-[0_0_25px_rgba(0,132,255,0.18)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:bg-blue-400/15 hover:text-white sm:text-sm"
+                            >
+                                <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+                                Kembali ke Portfolio
+                            </Link>
+                        </div>
+
+                        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/50 bg-blue-500/10 px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-blue-200 shadow-[0_0_25px_rgba(0,132,255,0.22)] backdrop-blur-md sm:text-xs">
+                            <Layers size={14} className="text-cyan-300" />
+                            {portfolio.category}
+                        </div>
+
+                        <h1 className="mx-auto mb-6 max-w-5xl text-4xl font-black leading-[1.02] tracking-[-0.055em] text-white drop-shadow-[0_0_24px_rgba(0,132,255,.32)] sm:text-6xl lg:text-7xl xl:text-8xl">
                             {portfolio.title}
                         </h1>
-                        <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+
+                        <p className="mx-auto max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-lg lg:text-xl">
                             {portfolio.description}
                         </p>
 
-                        {/* Meta Data */}
-                        <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-gray-400">
-                             {portfolio.client_name && (
-                                <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-lg border border-white/10">
-                                    <User size={16} className="text-blue-500" />
-                                    <span>Client: <span className="text-white font-medium">{portfolio.client_name}</span></span>
+                        <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm">
+                            {portfolio.client_name && (
+                                <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-slate-300 shadow-[0_0_18px_rgba(0,132,255,.10)] backdrop-blur-xl">
+                                    <User size={16} className="text-cyan-300" />
+                                    <span>
+                                        Client:{' '}
+                                        <span className="font-semibold text-white">
+                                            {portfolio.client_name}
+                                        </span>
+                                    </span>
                                 </div>
-                             )}
-                             <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-lg border border-white/10">
-                                <Calendar size={16} className="text-purple-500" />
-                                <span>Date: <span className="text-white font-medium">{formatDate(portfolio.created_at)}</span></span>
+                            )}
+
+                            <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-slate-300 shadow-[0_0_18px_rgba(0,132,255,.10)] backdrop-blur-xl">
+                                <Calendar size={16} className="text-cyan-300" />
+                                <span>
+                                    Date:{' '}
+                                    <span className="font-semibold text-white">
+                                        {formatDate(portfolio.created_at)}
+                                    </span>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* 2. GALLERY GRID (Showcase Utama) */}
-                <section className="relative z-20 -mt-32 pb-20">
-                    <div className="container mx-auto px-4">
-
-                        {/* Grid Layout untuk Gambar */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-
-                            {/* Gambar Utama (Besar) */}
+                {/* Gallery Section */}
+                <section className="relative z-20 -mt-24 px-4 pb-20 sm:px-6 lg:px-8">
+                    <div className="container mx-auto max-w-7xl">
+                        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                            {/* Main Image */}
                             <div
-                                className="md:col-span-2 lg:col-span-2 row-span-2 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group cursor-zoom-in relative bg-neutral-900"
+                                className="group relative cursor-zoom-in overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 shadow-[0_0_60px_rgba(0,132,255,.22)] backdrop-blur-xl md:col-span-2 lg:col-span-2 lg:row-span-2"
                                 onClick={() => setSelectedImage(portfolio.image)}
                             >
-                                <img
-                                    src={`/storage/${portfolio.image}`}
-                                    alt="Main Preview"
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                    <span className="bg-black/60 text-white px-4 py-2 rounded-full backdrop-blur-md text-sm font-medium border border-white/20">Lihat Fullscreen</span>
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
+                                <div className="absolute inset-0 bg-[linear-gradient(rgba(0,140,255,.16)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.16)_1px,transparent_1px)] bg-[size:42px_42px] opacity-25" />
+
+                                <div className="absolute left-4 top-4 z-20 h-6 w-6 border-l-2 border-t-2 border-blue-200/80" />
+                                <div className="absolute right-4 top-4 z-20 h-6 w-6 border-r-2 border-t-2 border-blue-200/80" />
+                                <div className="absolute bottom-4 left-4 z-20 h-6 w-6 border-b-2 border-l-2 border-blue-200/60" />
+                                <div className="absolute bottom-4 right-4 z-20 h-6 w-6 border-b-2 border-r-2 border-blue-200/60" />
+
+                                {mainImage ? (
+                                    <img
+                                        src={mainImage}
+                                        alt="Main Preview"
+                                        className="relative z-10 h-full min-h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:min-h-[520px]"
+                                    />
+                                ) : (
+                                    <div className="relative z-10 flex min-h-[320px] items-center justify-center text-slate-400 md:min-h-[520px]">
+                                        No Image
+                                    </div>
+                                )}
+
+                                <div className="absolute inset-0 z-30 flex items-center justify-center bg-[#020817]/0 opacity-0 transition-all duration-300 group-hover:bg-[#020817]/45 group-hover:opacity-100">
+                                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-blue-500/15 px-5 py-3 text-sm font-semibold text-cyan-100 shadow-[0_0_28px_rgba(0,132,255,.35)] backdrop-blur-xl">
+                                        <Eye size={18} />
+                                        Lihat Fullscreen
+                                    </span>
                                 </div>
                             </div>
 
-                            {/* Gambar Tambahan (Looping dari Galeri) */}
-                            {portfolio.gallery && portfolio.gallery.map((img, idx) => (
-                                <div
-                                    key={idx}
-                                    className="rounded-2xl overflow-hidden shadow-xl border border-white/10 group cursor-zoom-in relative h-64 md:h-auto bg-neutral-900"
-                                    onClick={() => setSelectedImage(img)}
-                                >
-                                    <img
-                                        src={`/storage/${img}`}
-                                        alt={`Gallery ${idx}`}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                        <span className="bg-black/60 text-white px-3 py-1.5 rounded-full backdrop-blur-md text-xs border border-white/20">View</span>
+                            {/* Gallery Images */}
+                            {portfolio.gallery &&
+                                portfolio.gallery.map((img, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="group relative h-64 cursor-zoom-in overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 shadow-[0_0_35px_rgba(0,132,255,.18)] backdrop-blur-xl md:h-auto"
+                                        onClick={() => setSelectedImage(img)}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
+
+                                        <img
+                                            src={getImageUrl(img)}
+                                            alt={`Gallery ${idx + 1}`}
+                                            className="relative z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+
+                                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#020817]/0 opacity-0 transition-all duration-300 group-hover:bg-[#020817]/45 group-hover:opacity-100">
+                                            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-blue-500/15 px-4 py-2 text-xs font-semibold text-cyan-100 shadow-[0_0_24px_rgba(0,132,255,.28)] backdrop-blur-xl">
+                                                <Eye size={14} />
+                                                View
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
                 </section>
 
-                {/* 3. INFO PROYEK (Fitur & Teknologi) */}
-                <section className="py-20 bg-neutral-900 border-t border-white/5">
-                    <div className="container mx-auto px-4 max-w-5xl">
-                        <div className="grid md:grid-cols-2 gap-16">
+                {/* Info Project */}
+                <section className="relative z-20 border-y border-blue-400/15 bg-[#031024]/55 px-4 py-20 backdrop-blur-xl sm:px-6 lg:px-8">
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,140,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.12)_1px,transparent_1px)] bg-[size:42px_42px] opacity-30" />
 
-                            {/* Fitur Utama */}
-                            <div>
-                                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <CheckCircle className="text-green-500" /> Fitur & Fungsionalitas
-                                </h3>
+                    <div className="container relative z-10 mx-auto max-w-6xl">
+                        <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
+                            {/* Features */}
+                            <div className="rounded-3xl border border-blue-400/25 bg-white/[0.045] p-6 shadow-[0_0_45px_rgba(0,132,255,.15)] backdrop-blur-xl sm:p-8">
+                                <div className="mb-6 flex items-center gap-3">
+                                    <span className="grid h-11 w-11 place-items-center rounded-xl border border-blue-300/25 bg-blue-500/10 text-cyan-300 shadow-[0_0_22px_rgba(0,132,255,.34)]">
+                                        <CheckCircle className="h-5 w-5" />
+                                    </span>
+
+                                    <h3 className="text-2xl font-black tracking-[-0.035em] text-white">
+                                        Fitur & Fungsionalitas
+                                    </h3>
+                                </div>
+
                                 {portfolio.features && portfolio.features.length > 0 ? (
-                                    <ul className="space-y-3">
+                                    <ul className="space-y-4">
                                         {portfolio.features.map((feature, idx) => (
-                                            <li key={idx} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-green-500/30 transition-colors group">
-                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2.5 group-hover:scale-150 transition-transform"></div>
-                                                <span className="text-gray-300 leading-relaxed">{feature}</span>
+                                            <li
+                                                key={idx}
+                                                className="group flex items-start gap-4 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-4 transition-all duration-300 hover:border-cyan-300/45 hover:bg-blue-500/15"
+                                            >
+                                                <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-cyan-300 drop-shadow-[0_0_10px_rgba(0,180,255,1)]" />
+                                                <span className="text-sm leading-relaxed text-slate-300 sm:text-base">
+                                                    {feature}
+                                                </span>
                                             </li>
                                         ))}
                                     </ul>
                                 ) : (
-                                    <div className="p-6 bg-white/5 rounded-xl border border-dashed border-white/10 text-center">
-                                        <p className="text-gray-500 italic">Tidak ada detail fitur spesifik.</p>
+                                    <div className="rounded-2xl border border-dashed border-blue-400/25 bg-blue-500/10 p-6 text-center">
+                                        <p className="text-sm italic text-slate-500">
+                                            Tidak ada detail fitur spesifik.
+                                        </p>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Teknologi Stack */}
-                            <div>
-                                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <Code2 className="text-purple-500" /> Teknologi Digunakan
-                                </h3>
+                            {/* Technologies */}
+                            <div className="rounded-3xl border border-blue-400/25 bg-white/[0.045] p-6 shadow-[0_0_45px_rgba(0,132,255,.15)] backdrop-blur-xl sm:p-8">
+                                <div className="mb-6 flex items-center gap-3">
+                                    <span className="grid h-11 w-11 place-items-center rounded-xl border border-blue-300/25 bg-blue-500/10 text-cyan-300 shadow-[0_0_22px_rgba(0,132,255,.34)]">
+                                        <Code2 className="h-5 w-5" />
+                                    </span>
+
+                                    <h3 className="text-2xl font-black tracking-[-0.035em] text-white">
+                                        Teknologi Digunakan
+                                    </h3>
+                                </div>
+
                                 {portfolio.technologies && portfolio.technologies.length > 0 ? (
                                     <div className="flex flex-wrap gap-3">
                                         {portfolio.technologies.map((tech, i) => (
-                                            <span key={i} className="px-4 py-2 bg-neutral-800 border border-neutral-700 text-gray-300 rounded-lg text-sm font-medium hover:text-white hover:border-purple-500/50 hover:bg-purple-900/20 transition-all cursor-default shadow-sm">
+                                            <span
+                                                key={i}
+                                                className="rounded-xl border border-blue-400/25 bg-blue-500/10 px-4 py-2 text-sm font-medium text-cyan-100 shadow-[0_0_18px_rgba(0,132,255,.10)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/50 hover:text-white"
+                                            >
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-gray-500 italic">Teknologi tidak dispesifikasikan.</p>
+                                    <p className="text-sm italic text-slate-500">
+                                        Teknologi tidak dispesifikasikan.
+                                    </p>
                                 )}
 
                                 {/* CTA Box */}
-                                <div className="mt-10 p-8 bg-gradient-to-br from-blue-900/40 to-indigo-900/40 rounded-2xl border border-blue-500/20 text-center relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
-                                    <h4 className="text-lg font-bold text-white mb-2 relative z-10">Ingin Punya Website/Aplikasi Seperti Ini?</h4>
-                                    <p className="text-blue-200 text-sm mb-6 relative z-10">Kami siap membantu mewujudkan ide digital Anda.</p>
-                                    <a href="/#contact" className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-1 relative z-10">
-                                        Mulai Proyek
-                                    </a>
+                                <div className="relative mt-10 overflow-hidden rounded-3xl border border-blue-400/25 bg-[#020817]/75 p-7 text-center shadow-[0_0_45px_rgba(0,132,255,.16)]">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/18 via-transparent to-cyan-400/10" />
+                                    <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl" />
+
+                                    <div className="relative z-10">
+                                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-400/35 bg-blue-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-blue-200">
+                                            <Zap className="h-3.5 w-3.5 text-cyan-300" />
+                                            Start Project
+                                        </div>
+
+                                        <h4 className="mb-3 text-xl font-black tracking-[-0.035em] text-white">
+                                            Ingin Punya Website/Aplikasi Seperti Ini?
+                                        </h4>
+
+                                        <p className="mb-6 text-sm leading-relaxed text-slate-400">
+                                            Kami siap membantu mewujudkan ide digital Anda.
+                                        </p>
+
+                                        <a
+                                            href="/#contact"
+                                            className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-300/35 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 px-7 py-3 text-sm font-bold text-white shadow-[0_0_30px_rgba(0,132,255,.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_48px_rgba(0,180,255,.55)]"
+                                        >
+                                            Mulai Proyek
+                                            <ExternalLink className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* 4. PROYEK LAINNYA */}
+                {/* Related Projects */}
                 {relatedPortfolios && relatedPortfolios.length > 0 && (
-                    <section className="py-20 bg-neutral-950">
-                        <div className="container mx-auto px-4 max-w-7xl">
-                            <div className="flex justify-between items-end mb-10 border-b border-white/10 pb-6">
+                    <section className="relative z-20 px-4 py-20 sm:px-6 lg:px-8">
+                        <div className="container mx-auto max-w-7xl">
+                            <div className="mb-10 flex flex-col gap-5 border-b border-blue-400/20 pb-6 sm:flex-row sm:items-end sm:justify-between">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-white mb-2">Karya Lainnya</h2>
-                                    <p className="text-gray-400">Jelajahi portofolio kami yang lain</p>
+                                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/35 bg-blue-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-blue-200">
+                                        <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+                                        More Works
+                                    </div>
+
+                                    <h2 className="text-3xl font-black tracking-[-0.04em] text-white sm:text-4xl">
+                                        Karya Lainnya
+                                    </h2>
+
+                                    <p className="mt-2 text-sm text-slate-400 sm:text-base">
+                                        Jelajahi portofolio kami yang lain.
+                                    </p>
                                 </div>
-                                <Link href="/#portfolio" className="text-blue-400 hover:text-blue-300 flex items-center gap-2 font-medium group">
-                                    Lihat Semua <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+
+                                <Link
+                                    href="/#portfolio"
+                                    className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 transition-colors duration-300 hover:text-white"
+                                >
+                                    Lihat Semua
+                                    <ArrowRight
+                                        size={16}
+                                        className="transition-transform duration-300 group-hover:translate-x-1"
+                                    />
                                 </Link>
                             </div>
 
-                            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-                                {relatedPortfolios.map((item) => (
-                                    <Link key={item.id} href={route('portfolio.show', item.slug)} className="group block">
-                                        <div className="rounded-xl overflow-hidden mb-4 relative aspect-[4/3] bg-gray-900 border border-white/5 shadow-lg">
-                                            <img
-                                                src={`/storage/${item.image}`}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                                                <span className="text-white text-sm font-medium flex items-center gap-2">
-                                                    Lihat Detail <ArrowRight size={14} />
-                                                </span>
+                            <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-8">
+                                {relatedPortfolios.map((item) => {
+                                    const relatedImage = getImageUrl(item.image);
+
+                                    return (
+                                        <Link
+                                            key={item.id}
+                                            href={route('portfolio.show', item.slug)}
+                                            className="group block"
+                                        >
+                                            <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 shadow-[0_0_35px_rgba(0,132,255,.18)] backdrop-blur-xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_0_65px_rgba(0,132,255,0.35)]">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
+
+                                                {relatedImage ? (
+                                                    <img
+                                                        src={relatedImage}
+                                                        alt={item.title}
+                                                        className="relative z-10 h-full w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100"
+                                                    />
+                                                ) : (
+                                                    <div className="relative z-10 flex h-full w-full items-center justify-center text-slate-500">
+                                                        No Image
+                                                    </div>
+                                                )}
+
+                                                <div className="absolute inset-0 z-20 flex items-end bg-gradient-to-t from-[#020817]/90 via-transparent to-transparent p-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-white">
+                                                        Lihat Detail
+                                                        <ArrowRight size={14} />
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <h3 className="font-bold text-lg text-white group-hover:text-blue-400 transition-colors truncate">
-                                            {item.title}
-                                        </h3>
-                                        <p className="text-sm text-gray-500">{item.category}</p>
-                                    </Link>
-                                ))}
+
+                                            <h3 className="truncate text-lg font-bold text-white transition-colors duration-300 group-hover:text-cyan-300">
+                                                {item.title}
+                                            </h3>
+
+                                            <p className="text-sm text-slate-500">
+                                                {item.category}
+                                            </p>
+                                        </Link>
+                                    );
+                                })}
                             </div>
                         </div>
                     </section>
@@ -214,6 +404,23 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
             </main>
 
             <Footer settings={settings} />
+
+            <style>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.96);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                .animate-fadeIn {
+                    animation: fadeIn 0.25s ease-out;
+                }
+            `}</style>
         </div>
     );
 }
