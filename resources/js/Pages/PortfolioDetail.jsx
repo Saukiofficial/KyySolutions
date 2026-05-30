@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
@@ -12,7 +12,9 @@ import {
     Sparkles,
     ExternalLink,
     Eye,
-    Zap
+    Zap,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react';
 import AnimatedNavbar from '@/Components/Landing/Navbar';
 import Footer from '@/Components/Landing/Footer';
@@ -21,6 +23,7 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
     if (!portfolio) return null;
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     const formatDate = (dateString) => {
         if (!dateString) return '-';
@@ -45,7 +48,81 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
         return `/storage/${image}`;
     };
 
+    const galleryImages = useMemo(() => {
+        const images = [];
+
+        if (portfolio.image) {
+            images.push(portfolio.image);
+        }
+
+        if (portfolio.gallery && Array.isArray(portfolio.gallery)) {
+            portfolio.gallery.forEach((img) => {
+                if (img && !images.includes(img)) {
+                    images.push(img);
+                }
+            });
+        }
+
+        return images;
+    }, [portfolio]);
+
     const mainImage = getImageUrl(portfolio.image);
+
+    const openLightbox = (image) => {
+        const index = galleryImages.findIndex((img) => img === image);
+
+        setSelectedImage(image);
+        setSelectedImageIndex(index >= 0 ? index : 0);
+    };
+
+    const closeLightbox = () => {
+        setSelectedImage(null);
+    };
+
+    const handleNextImage = (e) => {
+        if (e) e.stopPropagation();
+
+        if (!galleryImages.length) return;
+
+        const nextIndex = (selectedImageIndex + 1) % galleryImages.length;
+
+        setSelectedImageIndex(nextIndex);
+        setSelectedImage(galleryImages[nextIndex]);
+    };
+
+    const handlePrevImage = (e) => {
+        if (e) e.stopPropagation();
+
+        if (!galleryImages.length) return;
+
+        const prevIndex =
+            (selectedImageIndex - 1 + galleryImages.length) % galleryImages.length;
+
+        setSelectedImageIndex(prevIndex);
+        setSelectedImage(galleryImages[prevIndex]);
+    };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (!selectedImage) return;
+
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+
+            if (e.key === 'ArrowRight') {
+                handleNextImage(e);
+            }
+
+            if (e.key === 'ArrowLeft') {
+                handlePrevImage(e);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [selectedImage, selectedImageIndex, galleryImages]);
 
     return (
         <div className="min-h-screen bg-[#020817] font-sans text-white">
@@ -57,25 +134,55 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
             {selectedImage && (
                 <div
                     className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-[#020817]/95 p-4 backdrop-blur-2xl animate-fadeIn"
-                    onClick={() => setSelectedImage(null)}
+                    onClick={closeLightbox}
                 >
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,132,255,0.18),transparent_45%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
+
                     <div className="absolute inset-0 opacity-[0.14] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
                     <button
-                        onClick={() => setSelectedImage(null)}
-                        className="absolute right-5 top-5 z-20 rounded-full border border-blue-300/35 bg-blue-500/15 p-3 text-cyan-100 shadow-[0_0_30px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-red-400/70 hover:bg-red-500/30 hover:text-white sm:right-8 sm:top-8"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            closeLightbox();
+                        }}
+                        className="absolute right-5 top-5 z-30 rounded-full border border-blue-300/35 bg-blue-500/15 p-3 text-cyan-100 shadow-[0_0_30px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-red-400/70 hover:bg-red-500/30 hover:text-white sm:right-8 sm:top-8"
                     >
                         <X size={28} />
                     </button>
 
-                    <div className="relative z-10 max-h-[90vh] max-w-6xl overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 p-3 shadow-[0_0_90px_rgba(0,132,255,.35)] backdrop-blur-xl">
+                    {galleryImages.length > 1 && (
+                        <>
+                            <button
+                                onClick={handlePrevImage}
+                                className="absolute left-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-blue-300/35 bg-blue-500/15 p-3 text-cyan-100 shadow-[0_0_30px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:bg-blue-500/25 hover:text-white sm:left-8 sm:p-4"
+                            >
+                                <ChevronLeft size={28} />
+                            </button>
+
+                            <button
+                                onClick={handleNextImage}
+                                className="absolute right-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-blue-300/35 bg-blue-500/15 p-3 text-cyan-100 shadow-[0_0_30px_rgba(0,132,255,.28)] backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/70 hover:bg-blue-500/25 hover:text-white sm:right-8 sm:p-4"
+                            >
+                                <ChevronRight size={28} />
+                            </button>
+                        </>
+                    )}
+
+                    <div
+                        className="relative z-10 max-h-[90vh] max-w-6xl overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 p-3 shadow-[0_0_90px_rgba(0,132,255,.35)] backdrop-blur-xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <img
                             src={getImageUrl(selectedImage)}
                             alt="Full Preview"
                             className="max-h-[84vh] max-w-full rounded-2xl object-contain"
-                            onClick={(e) => e.stopPropagation()}
                         />
+
+                        {galleryImages.length > 1 && (
+                            <div className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2 rounded-full border border-blue-300/35 bg-[#020817]/70 px-4 py-2 text-xs font-semibold text-cyan-100 shadow-[0_0_24px_rgba(0,132,255,.28)] backdrop-blur-xl">
+                                {selectedImageIndex + 1} / {galleryImages.length}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -83,8 +190,11 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
             <main className="relative overflow-hidden">
                 {/* Global Background */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,132,255,0.22),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(0,180,255,0.18),transparent_34%),linear-gradient(135deg,#020817_0%,#041126_48%,#020817_100%)]" />
+
                 <div className="absolute inset-0 opacity-[0.16] bg-[linear-gradient(rgba(0,140,255,.45)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.45)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent" />
+
                 <div className="absolute -right-28 top-20 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
                 <div className="absolute -left-28 top-96 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -161,9 +271,10 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
                             {/* Main Image */}
                             <div
                                 className="group relative cursor-zoom-in overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 shadow-[0_0_60px_rgba(0,132,255,.22)] backdrop-blur-xl md:col-span-2 lg:col-span-2 lg:row-span-2"
-                                onClick={() => setSelectedImage(portfolio.image)}
+                                onClick={() => openLightbox(portfolio.image)}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
+
                                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,140,255,.16)_1px,transparent_1px),linear-gradient(90deg,rgba(0,140,255,.16)_1px,transparent_1px)] bg-[size:42px_42px] opacity-25" />
 
                                 <div className="absolute left-4 top-4 z-20 h-6 w-6 border-l-2 border-t-2 border-blue-200/80" />
@@ -197,7 +308,7 @@ export default function PortfolioDetail({ portfolio, relatedPortfolios, settings
                                     <div
                                         key={idx}
                                         className="group relative h-64 cursor-zoom-in overflow-hidden rounded-3xl border border-blue-400/30 bg-[#031024]/80 shadow-[0_0_35px_rgba(0,132,255,.18)] backdrop-blur-xl md:h-auto"
-                                        onClick={() => setSelectedImage(img)}
+                                        onClick={() => openLightbox(img)}
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/12 via-transparent to-cyan-400/10" />
 
